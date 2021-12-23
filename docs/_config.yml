@@ -49,17 +49,17 @@ social:
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
 
-google_site_verification: google_meta_tag_verification # change to your verification string
+#google_site_verification: google_meta_tag_verification # change to your verification string
 
 # ↑ --------------------------
 
 
-google_analytics:
-  id: ''              # fill in your Google Analytics ID
+#google_analytics:
+#  id: ''              # fill in your Google Analytics ID
   # Google Analytics pageviews report settings
-  pv:
-    proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
-    cache_path:       # the local PV cache data, friendly to visitors from GFW region
+#  pv:
+#    proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
+#    cache_path:       # the local PV cache data, friendly to visitors from GFW region
 
 # Prefer color scheme setting.
 #
@@ -72,7 +72,7 @@ google_analytics:
 #     light  - Use the light color scheme
 #     dark   - Use the dark color scheme
 #
-theme_mode:   # [light|dark]
+theme_mode:  light # [light|dark]
 
 # The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url
