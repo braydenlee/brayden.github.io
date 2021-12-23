@@ -1,0 +1,8 @@
+// Placeholder to allow defining custom styles that override everything else.
+// (Use `_sass/minima/custom-variables.scss` to override variable defaults)
+/* SIDEBAR */
+nav.toc {float:right;width:30%;max-width:320px;margin-top:-100px;}
+nav.toc ul {list-style:none;padding-left:0;margin-left:0;}
+div.wrapper {max-width:960px;margin-left:5%;}
+div.post-content > p {width:65%;max-width:640;}
+table,hr,p,div.highlight {width:65%;max-width:640;}
