@@ -7,7 +7,7 @@ author:
 - Nelson Mandela Muntz
 meta: "Springfield"
 ---
-<nav class="toc-fixed" markdown="1">
+<nav class="toc" markdown="1">
 * TOC
 {:toc}
 </nav>
