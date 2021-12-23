@@ -7,8 +7,3 @@
 #
 layout: home
 ---
-
-<nav class="toc" markdown="1">
-* TOC
-{:toc}
-</nav>
