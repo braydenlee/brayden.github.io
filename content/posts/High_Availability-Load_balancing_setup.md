@@ -14,7 +14,7 @@ categories = [
 ]
 menu = "main"
 +++
-# Introduction
+## Introduction
 
 High availability and Load Balancing are the most important features for online services, especially for services in production.
 
@@ -27,24 +27,24 @@ In this experimental setup, three servers are used
 
 First we shall implement a load balancer to serve the incoming access request to the API server using HAproxy, then implement high availability using keepalived for the HAproxy itself so there's no actual single point of failure in this setup. Note that, this guide implemented a active\-passive mode high availability. 
 
-# Prerequisites
+## Prerequisites
 
 The procedure is validated on Ubuntu 22.04 daily build 20211128.
 
 1. Make sure the apt source is configured properly, or you have the required packages and their dependencies offline.
 2. Packages HAproxy and keepalived
 
-# Detailed steps
+## Detailed steps
 
 We shall deploy the HAproxy and keepalived on the same servers \(node\-101 & node\-102\) where the k8s api server resides. Note that it's not neccessary to be on the same servers, and on heavy loaded system, would be better to have dedicated load balancer servers to host HAproxy.
 
-## Install the required packages
+### Install the required packages
 
 Execute the following command on both node\-101 and node\-102
 
     sudo apt install haproxy keepalived
 
-## Configure Load Balancer
+### Configure Load Balancer
 
 Apply the configuration on both node\-101 and node\-102
 
@@ -115,7 +115,7 @@ Now restart the HAproxy
 
     sudo systemctl restart haproxy
 
-## Configure High availability for HAproxy
+### Configure High availability for HAproxy
 
 Apply the configuration on both node\-101 and node 102
 
@@ -188,7 +188,7 @@ restart the keepalived service
 
     sudo systemctl restart keepalived
 
-# Completion
+## Completion
 
 If everything works as expected, you now should be able to see the virtual IP@ on eno2 in server node\-101:
 
@@ -209,7 +209,7 @@ and try to access the service:
     nc \-vz 192.168.8.100 8443  
     Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 
-# Reference
+## Reference
 
 [Adding HAProxy as load balancer to the Kubernetes cluster | Dominique St\-Amand \(domstamand.com\)](https://www.domstamand.com/adding-haproxy-as-load-balancer-to-the-kubernetes-cluster/)  
 [Create a Highly Available Kubernetes Cluster Using Keepalived and HAproxy | by KubeSphere | ITNEXT](https://itnext.io/create-a-highly-available-kubernetes-cluster-using-keepalived-and-haproxy-37769d0a65ba)  
