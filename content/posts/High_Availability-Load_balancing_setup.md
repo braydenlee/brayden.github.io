@@ -1,5 +1,5 @@
----
-title = "(Hu)go Template Primer"
++++
+title = "High Availability & Load Balancing Setup"
 description = ""
 tags = [
     "HA",
@@ -13,7 +13,7 @@ categories = [
     "tips",
 ]
 menu = "main"
----
++++
 # Introduction
 
 High availability and Load Balancing are the most important features for online services, especially for services in production.
