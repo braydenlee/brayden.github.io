@@ -1,0 +1,531 @@
+<!doctype html><html lang=en dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Deploy k8s Cluster Using kubespray #  K8s kubespray
+Introduction #  Nowadays, there&rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
+This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content>
+<meta property="og:description" content="Deploy k8s Cluster Using kubespray #  K8s kubespray
+Introduction #  Nowadays, there&rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
+This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://braydenlee.github.io/posts/deploy_k8s_cluster_using_kubespray/"><meta property="article:section" content="posts">
+<title>Deploy K8s Cluster Using Kubespray | My New Hugo Site</title>
+<link rel=manifest href=/manifest.json>
+<link rel=icon href=/favicon.png type=image/x-icon>
+<link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
+<script defer src=/flexsearch.min.js></script>
+<script defer src=/en.search.min.1f7a425f07054afe72758308f30603b9d8c0c8c08480209ef041aedc6cfdf747.js integrity="sha256-H3pCXwcFSv5ydYMI8wYDudjAyMCEgCCe8EGu3Gz990c=" crossorigin=anonymous></script>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=/><span>My New Hugo Site</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li class=book-section-flat>
+<a href=https://braydenlee.github.io/docs/example/>Brayden's Notes</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/>Table of Contents</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/with-toc/>With ToC</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/without-toc/>Without ToC</a>
+</li>
+</ul>
+</li>
+<li>
+<input type=checkbox id=section-4e46b01272d410b3a99461d79326ddf4 class=toggle>
+<label for=section-4e46b01272d410b3a99461d79326ddf4 class="flex justify-between">
+<a role=button>Collapsed</a>
+</label>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/>3rd Level</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/4th-level/>4th Level</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class=book-section-flat>
+<span>Shortcodes</span>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/buttons/>Buttons</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/columns/>Columns</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/details/>Details</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/expand/>Expand</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/hints/>Hints</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/katex/>Katex</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/mermaid/>Mermaid</a>
+</li>
+<li>
+<input type=checkbox id=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class=toggle>
+<label for=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class="flex justify-between">
+<a href=https://braydenlee.github.io/docs/shortcodes/section/>Section</a>
+</label>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/section/first-page/>First Page</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/section/second-page/>Second Page</a>
+</li>
+</ul>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/tabs/>Tabs</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<a href=/posts/>
+Blog
+</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>Deploy K8s Cluster Using Kubespray</strong>
+<label for=toc-control>
+<img src=/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#prepare-the-env>Prepare the Env</a>
+<ul>
+<li><a href=#disable-swap>Disable swap</a></li>
+<li><a href=#enable-passwordless-login-via-ssh>Enable passwordless login via ssh</a></li>
+<li><a href=#enable-passwordless-sudo>Enable passwordless sudo</a></li>
+<li><a href=#dependencies>Dependencies</a></li>
+<li><a href=#download-kubespray>Download kubespray</a></li>
+</ul>
+</li>
+<li><a href=#configure-the-cluster-setup>Configure the cluster setup</a>
+<ul>
+<li><a href=#required-workaround>Required Workaround</a></li>
+<li><a href=#update-the-hosts-file>Update the hosts file</a></li>
+</ul>
+</li>
+<li><a href=#provision-the-cluster>Provision the Cluster</a></li>
+<li><a href=#kubectl-conf-settings>Kubectl conf settings</a></li>
+<li><a href=#troubleshootings>Troubleshootings</a>
+<ul>
+<li><a href=#failed-to-download-container-images>Failed to download container images</a></li>
+<li><a href=#node-102--node-103-failed-to-join-controller-node-101>Node-102 & Node-103 failed to join controller node-101</a></li>
+<li><a href=#coredns-service-crashedbackoff>coredns service crashedbackoff</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown>
+<h1>
+<a href=/posts/deploy_k8s_cluster_using_kubespray/>Deploy K8s Cluster Using Kubespray</a>
+</h1>
+<h1 id=deploy-k8s-cluster-using-kubespray>
+Deploy k8s Cluster Using kubespray
+<a class=anchor href=#deploy-k8s-cluster-using-kubespray>#</a>
+</h1>
+<p><code>K8s</code> <code>kubespray</code></p>
+<h1 id=introduction>
+Introduction
+<a class=anchor href=#introduction>#</a>
+</h1>
+<p>Nowadays, there&rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.</p>
+<p>This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Role</th>
+<th>Etcd</th>
+<th>External IP</th>
+<th>Internal IP</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>node-101</td>
+<td>Controller</td>
+<td>yes</td>
+<td></td>
+<td>192.168.8.101</td>
+<td>ubuntu22.04</td>
+</tr>
+<tr>
+<td>node-102</td>
+<td>Controller</td>
+<td>yes</td>
+<td></td>
+<td>192.168.8.102</td>
+<td>ubuntu22.04</td>
+</tr>
+<tr>
+<td>node-103</td>
+<td>Controller & worker</td>
+<td>yes</td>
+<td></td>
+<td>192.168.8.103</td>
+<td>ubuntu22.04</td>
+</tr>
+</tbody>
+</table>
+<h1 id=prerequisites>
+Prerequisites
+<a class=anchor href=#prerequisites>#</a>
+</h1>
+<ol>
+<li>3 servers, with reasonable CPU, memory and disk space</li>
+<li>At least 2 Ethernet interfaces per server
+<ol>
+<li>One interface for Internet access as some packages are downloaded on the fly;</li>
+<li>The other interface used for the cluster management, (as well as pods network in this setup);</li>
+</ol>
+</li>
+<li>Assume ubuntu 22.04 installed;</li>
+</ol>
+<h1 id=detailed-steps>
+Detailed Steps
+<a class=anchor href=#detailed-steps>#</a>
+</h1>
+<h2 id=prepare-the-env>
+Prepare the Env
+<a class=anchor href=#prepare-the-env>#</a>
+</h2>
+<h3 id=disable-swap>
+Disable swap
+<a class=anchor href=#disable-swap>#</a>
+</h3>
+<p>This is required on every node</p>
+<p>$ swapoff -a</p>
+<h3 id=enable-passwordless-login-via-ssh>
+Enable passwordless login via ssh
+<a class=anchor href=#enable-passwordless-login-via-ssh>#</a>
+</h3>
+<p>This is to enable the passwordless login to the target nodes, so this is required to run on the deployment server (where we run the kubespray).</p>
+<p>Generate ssh keys by running ssh-keygen, simply press &ldquo;enter&rdquo; on asking the passphrase.</p>
+<p>$ ssh-keygen</p>
+<p>Copy the ssh key id to target server, enter the password following the prompt.</p>
+<p>$ ssh-copy-id <a href=mailto:brayden@192.168.8.101>brayden@192.168.8.101</a></p>
+<p>$ ssh-copy-id <a href=mailto:brayden@192.168.8.102>brayden@192.168.8.102</a></p>
+<p>$ ssh-copy-id <a href=mailto:brayden@192.168.8.103>brayden@192.168.8.103</a></p>
+<h3 id=enable-passwordless-sudo>
+Enable passwordless sudo
+<a class=anchor href=#enable-passwordless-sudo>#</a>
+</h3>
+<p>Add the line in <strong>BOLD</strong>  as shown below in the %sudo section, for the user used to provision the k8s cluster. This is required on every node.</p>
+<p>$ sudo vim /etc/sudoers</p>
+<p># Allow members of group sudo to execute any command</p>
+<p>%sudo   ALL=(ALL:ALL) ALL</p>
+<p><strong>brayden ALL=(ALL:ALL) NOPASSWD:ALL</strong></p>
+<h3 id=dependencies>
+Dependencies
+<a class=anchor href=#dependencies>#</a>
+</h3>
+<p>$ sudo apt install python3-pip</p>
+<p>$ sudo pip3 install --upgrade pip</p>
+<p>$ pip --version</p>
+<p>pip 21.3.1 from /home/brayden/.local/lib/python3.9/site-packages/pip (python 3.9)</p>
+<h3 id=download-kubespray>
+Download kubespray
+<a class=anchor href=#download-kubespray>#</a>
+</h3>
+<p>$ git clone <a href=https://github.com/kubernetes>https://github.com/kubernetes</a>-sigs/kubespray.git</p>
+<p>$ cd kubespray</p>
+<p>$ sudo pip install -r requirements.txt</p>
+<h2 id=configure-the-cluster-setup>
+Configure the cluster setup
+<a class=anchor href=#configure-the-cluster-setup>#</a>
+</h2>
+<p>Copy the required configuration files, scripts to a dedicated folder to this cluster, in this example, the new folder is named as k8s-100-cluster, as the controller api server will be available at 192.168.8.100.</p>
+<p>$ cp -rfp inventory/sampe inventory/k8s-100-cluster</p>
+<p>The major configuration about the cluster is done by the inventory.ini, which consists of four major sections</p>
+<ul>
+<li><strong>all</strong></li>
+<li><strong>kube_control_plane</strong></li>
+<li><strong>etcd</strong></li>
+<li><strong>kube_node</strong></li>
+</ul>
+<p>$ vim inventory/k8s-100-cluster/inventory.ini</p>
+<p># ## Configure &lsquo;ip&rsquo; variable to bind kubernetes services on a # ## different ip than the default iface # ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value. [all] <strong>node-101 ansible_host=192.168.8.101   ip=192.168.8.101 etcd_member_name=etcd1 node-102 ansible_host=192.168.8.102   ip=192.168.8.102 etcd_member_name=etcd2 node-103 ansible_host=192.168.8.103   ip=192.168.8.103 etcd_member_name=etcd3</strong># ## configure a bastion host if your nodes are not directly reachable # [bastion] # bastion ansible_host=x.x.x.x ansible_user=some_user [kube_control_plane]<strong>node-101 node-102 node-103</strong>[etcd]<strong>node-101 node-102 node-103</strong>[kube_node]</p>
+<p><strong>node-103</strong></p>
+<p>Another important configuration file we shall touch is inventory/k8s-100-cluster/group_vars/all/all.yml.</p>
+<p>Here we disable the internal nginx based proxy, and use external load balanced implemented with haproxy.</p>
+<p><strong>apiserver_loadbalancer_domain_name: &ldquo;lb.npg.intel&rdquo;</strong></p>
+<p><strong>loadbalancer_apiserver:</strong></p>
+<p><strong>addres: 192.168.8.100</strong></p>
+<p><strong>port: 8443</strong></p>
+<p><strong>loadbalancer_apiserver_localhost: false</strong></p>
+<p><strong>#loadbalancer_apiserver_port: 6443</strong></p>
+<p><strong>#loadbalancer_apiserver_healthcheck_port: 8081</strong></p>
+<p><strong>upstream_dns_servers:</strong></p>
+<p><strong>- 8.8.8.8</strong></p>
+<p><strong>- 8.8.4.4</strong></p>
+<p># Set the proxy, will be populated to apt source and container runtime proxy conf</p>
+<p><strong>http_proxy: &ldquo;http://child-prc.intel.com:913&rdquo;</strong></p>
+<p><strong>https_proxy: &ldquo;http://child-prc.intel.com:913&rdquo;</strong></p>
+<p>inventory/k8s-100-cluster/group_vars/k8s_cluster/k8s-cluster.yml</p>
+<p><strong>kube_service_addresses: 192.168.0.0/18</strong></p>
+<p><strong>kube_pods_subnet: 192.168.64.0/18</strong></p>
+<p><strong>container_manager: docker #containerd</strong></p>
+<p><strong>kubelet_deployment_type: host</strong></p>
+<h3 id=required-workaround>
+Required Workaround
+<a class=anchor href=#required-workaround>#</a>
+</h3>
+<p>Only required if docker is selected as the container runtime.</p>
+<p>At the time this memo is being written, the ubuntu 22.04 is not yet GA, so some of the URLs or versions for the docker packages are not valid, hardcode required to fix the issue.</p>
+<p>diff --git a/roles/container-engine/docker/vars/ubuntu.yml b/roles/container-engine/docker/vars/ubuntu.yml</p>
+<p>index 253dbf17..c0077ebf 100644</p>
+<p>--- a/roles/container-engine/docker/vars/ubuntu.yml</p>
+<p>+++ b/roles/container-engine/docker/vars/ubuntu.yml</p>
+<p>@@ -17,16 +17,16 @@ docker_versioned_pkg:</p>
+<p>   &lsquo;latest&rsquo;: docker-ce</p>
+<p>   &lsquo;18.09&rsquo;: docker-ce=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>   &lsquo;19.03&rsquo;: docker-ce=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>-  &lsquo;20.10&rsquo;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>-  &lsquo;stable&rsquo;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>+  &lsquo;20.10&rsquo;: docker-ce=5:20.10.12~3-0~ubuntu-focal</p>
+<p>+  &lsquo;stable&rsquo;: docker-ce=5:20.10.12~3-0~ubuntu-focal</p>
+<p>   &lsquo;edge&rsquo;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>docker_cli_versioned_pkg:</p>
+<p>   &lsquo;latest&rsquo;: docker-ce-cli</p>
+<p>   &lsquo;18.09&rsquo;: docker-ce-cli=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>   &lsquo;19.03&rsquo;: docker-ce-cli=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>-  &lsquo;20.10&rsquo;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>-  &lsquo;stable&rsquo;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>+  &lsquo;20.10&rsquo;: docker-ce-cli=5:20.10.12~3-0~ubuntu-focal</p>
+<p>+  &lsquo;stable&rsquo;: docker-ce-cli=5:20.10.12~3-0~ubuntu-focal</p>
+<p>   &lsquo;edge&rsquo;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}</p>
+<p>docker_package_info:</p>
+<p>@@ -44,5 +44,8 @@ docker_repo_info:</p>
+<p>   repos:</p>
+<p>     - ></p>
+<p>       deb [arch={{ host_architecture }}] {{ docker_ubuntu_repo_base_url }}</p>
+<p>-      {{ ansible_distribution_release|lower }}</p>
+<p>+      focal</p>
+<p>       stable</p>
+<p>diff --git a/roles/kubernetes/node/tasks/main.yml b/roles/kubernetes/node/tasks/main.yml</p>
+<p>index a342d940..9118a3e6 100644</p>
+<p>--- a/roles/kubernetes/node/tasks/main.yml</p>
+<p>+++ b/roles/kubernetes/node/tasks/main.yml</p>
+<p>@@ -107,7 +107,7 @@</p>
+<p>- name: Modprobe nf_conntrack_ipv4</p>
+<p>   modprobe:</p>
+<p>-    name: nf_conntrack_ipv4</p>
+<p>+    name: nf_conntrack</p>
+<p>     state: present</p>
+<p>   register: modprobe_nf_conntrack_ipv4</p>
+<p>   ignore_errors: true  # noqa ignore-errors</p>
+<h3 id=update-the-hosts-file>
+Update the hosts file
+<a class=anchor href=#update-the-hosts-file>#</a>
+</h3>
+<p>you may want to add one line for the virtual ip:</p>
+<p>$ sudo vim /etc/hosts</p>
+<p>192.168.8.100 lb.npg.intel</p>
+<h2 id=provision-the-cluster>
+Provision the Cluster
+<a class=anchor href=#provision-the-cluster>#</a>
+</h2>
+<p>$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root cluster.yml</p>
+<p>If error occured during the provistion, it&rsquo;s better to reset the cluster, fix the issue, and relaunch the provision.</p>
+<p>$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root reset.yml</p>
+<p>$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root cluster.yml</p>
+<h2 id=kubectl-conf-settings>
+Kubectl conf settings
+<a class=anchor href=#kubectl-conf-settings>#</a>
+</h2>
+<p>$ cd ~</p>
+<p>$ mkdir .kube</p>
+<p>$ cp /etc/kubernetes/admin.conf .kube/</p>
+<p>$ echo &ldquo;export KUBECONFIG=/home/brayden/.kube/admin.conf&rdquo;</p>
+<p>$ kubectl get pods -n kube-system</p>
+<p>NAME                                      READY   STATUS    RESTARTS      AGE</p>
+<p>calico-kube-controllers-5788f6558-kkbf4   1/1     Running   0             38h</p>
+<p>calico-node-hcdh4                         1/1     Running   0             38h</p>
+<p>calico-node-xfbcq                         1/1     Running   0             38h</p>
+<p>calico-node-z7qpt                         1/1     Running   0             38h</p>
+<p>coredns-8474476ff8-7l69z                  1/1     Running   0             38h</p>
+<p>coredns-8474476ff8-886gw                  1/1     Running   0             38h</p>
+<p>dns-autoscaler-5ffdc7f89d-jqq5m           1/1     Running   0             38h</p>
+<p>kube-apiserver-node-101                   1/1     Running   1 (38h ago)   39h</p>
+<p>kube-apiserver-node-102                   1/1     Running   1 (38h ago)   39h</p>
+<p>kube-apiserver-node-103                   1/1     Running   1 (38h ago)   39h</p>
+<p>kube-controller-manager-node-101          1/1     Running   1             39h</p>
+<p>kube-controller-manager-node-102          1/1     Running   2 (38h ago)   39h</p>
+<p>kube-controller-manager-node-103          1/1     Running   1             39h</p>
+<p>kube-proxy-fzlvr                          1/1     Running   0             39h</p>
+<p>kube-proxy-k9z6g                          1/1     Running   0             39h</p>
+<p>kube-proxy-wrhd7                          1/1     Running   0             39h</p>
+<p>kube-scheduler-node-101                   1/1     Running   2 (38h ago)   39h</p>
+<p>kube-scheduler-node-102                   1/1     Running   1             39h</p>
+<p>kube-scheduler-node-103                   1/1     Running   1             39h</p>
+<p>nodelocaldns-285cc                        1/1     Running   0             38h</p>
+<p>nodelocaldns-2d477                        1/1     Running   0             38h</p>
+<p>nodelocaldns-cpckx                        1/1     Running   0             38h</p>
+<h2 id=troubleshootings>
+Troubleshootings
+<a class=anchor href=#troubleshootings>#</a>
+</h2>
+<h3 id=failed-to-download-container-images>
+Failed to download container images
+<a class=anchor href=#failed-to-download-container-images>#</a>
+</h3>
+<p>Initially, the container runtime is default to containerd, and kubespray uses nerdctl which is docker compatible tools to pull the container images.</p>
+<p>kubespray populated the proxy setting for apt source and containerd service according to the all.yml. However, nerdctl is not able to pull the container image, and no luck with --extra-vars to the ansiable-playbook.</p>
+<p>ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden cluster.yml --extra-vars &ldquo;https_proxy=http://child-prc.intel.com:913,http_proxy=http://child-prc.intel.com:913&rdquo;</p>
+<p>While manually run the nerdctl from command line could pull the images successfully.</p>
+<p>So this memo switch the container runtime to docker, which could pull the images with the proxy settings.</p>
+<h3 id=node-102--node-103-failed-to-join-controller-node-101>
+Node-102 & Node-103 failed to join controller node-101
+<a class=anchor href=#node-102--node-103-failed-to-join-controller-node-101>#</a>
+</h3>
+<p>One of the error message reads:</p>
+<p>error execution phase preflight: couldn&rsquo;t validate the identity of the API Server: configmaps &ldquo;cluster-info&rdquo; is forbidden: User &ldquo;system:anonymous&rdquo; cannot get resource &ldquo;configmaps&rdquo; in API group "" in the namespace &ldquo;kube-public&rdquo;</p>
+<p>No dedicated effort spent to root cause this issue, a few changes made and the node could join the cluster successfully.</p>
+<ul>
+<li>Do reset before relaunch the provision procedure. Refer to section &ldquo;Provision the Cluster&rdquo;.</li>
+<li>Clean up the ip routing, name server setting.
+<ul>
+<li>Configure the Ethernet and nameserver explicitely in /etc/netplan/00-installer-config.yaml</li>
+</ul>
+</li>
+</ul>
+<p># This is the network config written by &lsquo;subiquity&rsquo;</p>
+<p>network:</p>
+<p>  ethernets:</p>
+<p>    eno1:</p>
+<p>      dhcp4: true</p>
+<p>      dhcp6: false</p>
+<p>      match:</p>
+<p>        macaddress: 00:1e:67:e6:14:ad</p>
+<p>      nameservers:</p>
+<p>        addresses:</p>
+<p>        - 10.248.2.5</p>
+<p>        - 10.239.27.228</p>
+<p>    eno2:</p>
+<p>      dhcp4: false</p>
+<p>      addresses:</p>
+<p>      - 192.168.8.101/24</p>
+<p>      match:</p>
+<p>        macaddress: 00:1e:67:e6:14:ae</p>
+<pre><code>* Cleanup the /etc/resolve.conf, remove the local addresses.
+* Make sure &quot;sudo apt update&quot; could be executed successfully.
+</code></pre>
+<h3 id=coredns-service-crashedbackoff>
+coredns service crashedbackoff
+<a class=anchor href=#coredns-service-crashedbackoff>#</a>
+</h3>
+<p>Server&rsquo;s console will continuous show:</p>
+<p>[19713.675335] IPVS: rr: UDP 192.168.0.3:53 - no destination available</p>
+<p>coredns is in crashloopBackoff status:</p>
+<p>kube-system    coredns-576cbf47c7-8phwt    0/1    CrashLoopBackOff        8</p>
+<p>And the coredns container&rsquo;s log reads</p>
+<p>plugin/loop: <strong>Loop</strong> (127.0.0.1:55953 -> :53) <strong>detected for zone &ldquo;."</strong>, see <a href=https://coredns.io/plugins/loop>https://coredns.io/plugins/loop</a>#troubleshooting. Query: &ldquo;HINFO 4547991504243258144.3688648895315093531.&rdquo;</p>
+<p>There are also some logs reads</p>
+<p>&ldquo;&mldr; 192.168.0.1 connection refused &mldr;&rdquo;</p>
+<p>This was due to miss-configuration of nameserver, after  correct the settings in all.yml, and clean up the /etc/resolv.conf, the issue is fixed.</p>
+<h1 id=reference>
+Reference
+<a class=anchor href=#reference>#</a>
+</h1>
+<p><a href=https://computingforgeeks.com/deploy-kubernetes-cluster-debian-with-kubespray/>Install Kubernetes Cluster on Debian 10 with Kubespray | ComputingForGeeks</a></p>
+<p><a href="https://www.youtube.com/watch?v=CJ5G4GpqDy0">Deploying kubernetes using Kubespray - YouTube</a></p>
+<p><a href=https://coredns.io/plugins/loop/#troubleshooting>loop (coredns.io)</a></p>
+<p><a href=https://dev.to/mrturkmen/setup-highly-available-kubernetes-cluster-with-haproxy-2dm8>Setup Highly Available Kubernetes Cluster with HAProxy 🇬🇧 - DEV Community</a></p>
+<p><a href=https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>Install Docker Engine on Ubuntu | Docker Documentation</a></p>
+<p><a href=https://stdworkflow.com/1247/k8s-join-user-system-anonymous-cannot-get-resource-configmaps-in-api-group-in-the-namespace>k8s join User “system:anonymous“ cannot get resource “configmaps“ in API group ““ in the namespace - stdworkflow</a></p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#prepare-the-env>Prepare the Env</a>
+<ul>
+<li><a href=#disable-swap>Disable swap</a></li>
+<li><a href=#enable-passwordless-login-via-ssh>Enable passwordless login via ssh</a></li>
+<li><a href=#enable-passwordless-sudo>Enable passwordless sudo</a></li>
+<li><a href=#dependencies>Dependencies</a></li>
+<li><a href=#download-kubespray>Download kubespray</a></li>
+</ul>
+</li>
+<li><a href=#configure-the-cluster-setup>Configure the cluster setup</a>
+<ul>
+<li><a href=#required-workaround>Required Workaround</a></li>
+<li><a href=#update-the-hosts-file>Update the hosts file</a></li>
+</ul>
+</li>
+<li><a href=#provision-the-cluster>Provision the Cluster</a></li>
+<li><a href=#kubectl-conf-settings>Kubectl conf settings</a></li>
+<li><a href=#troubleshootings>Troubleshootings</a>
+<ul>
+<li><a href=#failed-to-download-container-images>Failed to download container images</a></li>
+<li><a href=#node-102--node-103-failed-to-join-controller-node-101>Node-102 & Node-103 failed to join controller node-101</a></li>
+<li><a href=#coredns-service-crashedbackoff>coredns service crashedbackoff</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!doctype html><html lang=en dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="High Availability & Load balancing setup #  HA HAproxy keepalived K8s
+Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content>
+<meta property="og:description" content="High Availability & Load balancing setup #  HA HAproxy keepalived K8s
+Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://braydenlee.github.io/posts/high_availability-load_balancing_setup/"><meta property="article:section" content="posts">
+<title>High Availability Load Balancing Setup | My New Hugo Site</title>
+<link rel=manifest href=/manifest.json>
+<link rel=icon href=/favicon.png type=image/x-icon>
+<link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
+<script defer src=/flexsearch.min.js></script>
+<script defer src=/en.search.min.1f7a425f07054afe72758308f30603b9d8c0c8c08480209ef041aedc6cfdf747.js integrity="sha256-H3pCXwcFSv5ydYMI8wYDudjAyMCEgCCe8EGu3Gz990c=" crossorigin=anonymous></script>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=/><span>My New Hugo Site</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li class=book-section-flat>
+<a href=https://braydenlee.github.io/docs/example/>Brayden's Notes</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/>Table of Contents</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/with-toc/>With ToC</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/example/table-of-contents/without-toc/>Without ToC</a>
+</li>
+</ul>
+</li>
+<li>
+<input type=checkbox id=section-4e46b01272d410b3a99461d79326ddf4 class=toggle>
+<label for=section-4e46b01272d410b3a99461d79326ddf4 class="flex justify-between">
+<a role=button>Collapsed</a>
+</label>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/>3rd Level</a>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/4th-level/>4th Level</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class=book-section-flat>
+<span>Shortcodes</span>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/buttons/>Buttons</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/columns/>Columns</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/details/>Details</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/expand/>Expand</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/hints/>Hints</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/katex/>Katex</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/mermaid/>Mermaid</a>
+</li>
+<li>
+<input type=checkbox id=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class=toggle>
+<label for=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class="flex justify-between">
+<a href=https://braydenlee.github.io/docs/shortcodes/section/>Section</a>
+</label>
+<ul>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/section/first-page/>First Page</a>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/section/second-page/>Second Page</a>
+</li>
+</ul>
+</li>
+<li>
+<a href=https://braydenlee.github.io/docs/shortcodes/tabs/>Tabs</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<a href=/posts/>
+Blog
+</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>High Availability Load Balancing Setup</strong>
+<label for=toc-control>
+<img src=/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#install-the-required-packages>Install the required packages</a></li>
+<li><a href=#configure-load-balancer>Configure Load Balancer</a></li>
+<li><a href=#configure-high-availability-for-haproxy>Configure High availability for HAproxy</a></li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown>
+<h1>
+<a href=/posts/high_availability-load_balancing_setup/>High Availability Load Balancing Setup</a>
+</h1>
+<h1 id=high-availability--load-balancing-setup>
+High Availability & Load balancing setup
+<a class=anchor href=#high-availability--load-balancing-setup>#</a>
+</h1>
+<p><code>HA</code> <code>HAproxy</code> <code>keepalived</code> <code>K8s</code></p>
+<h1 id=introduction>
+Introduction
+<a class=anchor href=#introduction>#</a>
+</h1>
+<p>High availability and Load Balancing are the most important features for online services, especially for services in production.</p>
+<p>This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server.  You could use a dummy web service hosted by nginx or httpd as well.</p>
+<p>In this experimental setup, three servers are used</p>
+<p>node-101 192.168.8.101 # K8s master node node-102 192.168.8.102 # K8s master node node-103 192.168.8.103 # K8s master node & worker node</p>
+<p>First we shall implement a load balancer to serve the incoming access request to the API server using HAproxy, then implement high availability using keepalived for the HAproxy itself  so there&rsquo;s no actual single point of failure in this setup. Note that, this guide implemented a active-passive mode high availability.</p>
+<h1 id=prerequisites>
+Prerequisites
+<a class=anchor href=#prerequisites>#</a>
+</h1>
+<p>The procedure is validated on Ubuntu 22.04 daily build 20211128.</p>
+<ol>
+<li>Make sure the apt source is configured properly, or you have the required packages and their dependencies offline.</li>
+<li>Packages HAproxy and keepalived</li>
+</ol>
+<h1 id=detailed-steps>
+Detailed steps
+<a class=anchor href=#detailed-steps>#</a>
+</h1>
+<p>We shall deploy the HAproxy and keepalived on the same servers (node-101 & node-102) where the k8s api server resides. Note that it&rsquo;s not neccessary to be on the same servers, and on heavy loaded system, would be better to have dedicated load balancer servers to host HAproxy.</p>
+<h2 id=install-the-required-packages>
+Install the required packages
+<a class=anchor href=#install-the-required-packages>#</a>
+</h2>
+<p>Execute the following command on both node-101 and node-102</p>
+<p>sudo apt install haproxy keepalived</p>
+<h2 id=configure-load-balancer>
+Configure Load Balancer
+<a class=anchor href=#configure-load-balancer>#</a>
+</h2>
+<p>Apply the configuration on both node-101 and node-102</p>
+<p>sudo vim /etc/haproxy/haproxy.cfg</p>
+<p>Add the frontend and backend sections to the end of the cfg file as shown below:</p>
+<p>global</p>
+<p>        log /dev/log    local0</p>
+<p>        log /dev/log    local1 notice</p>
+<p>        chroot /var/lib/haproxy</p>
+<p>        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners</p>
+<p>        stats timeout 30s</p>
+<p>        user haproxy</p>
+<p>        group haproxy</p>
+<p>        daemon</p>
+<p>        # Default SSL material locations</p>
+<p>        ca-base /etc/ssl/certs</p>
+<p>        crt-base /etc/ssl/private</p>
+<p>        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate</p>
+<p>        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384</p>
+<p>        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256</p>
+<p>        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets</p>
+<p>defaults</p>
+<p>        log     global</p>
+<p>        mode    http</p>
+<p>        option  httplog</p>
+<p>        option  dontlognull</p>
+<p>        timeout connect 5000</p>
+<p>        timeout client  50000</p>
+<p>        timeout server  50000</p>
+<p>        errorfile 400 /etc/haproxy/errors/400.http</p>
+<p>        errorfile 403 /etc/haproxy/errors/403.http</p>
+<p>        errorfile 408 /etc/haproxy/errors/408.http</p>
+<p>        errorfile 500 /etc/haproxy/errors/500.http</p>
+<p>        errorfile 502 /etc/haproxy/errors/502.http</p>
+<p>        errorfile 503 /etc/haproxy/errors/503.http</p>
+<p>        errorfile 504 /etc/haproxy/errors/504.http</p>
+<p>frontend k8s-apiserver</p>
+<p>        bind <strong>192.168.8.100:8443</strong> #ssl crt /etc/ssl/certs/haproxy.pem</p>
+<p>        mode tcp</p>
+<p>        default_backend kubernetes-apiserver</p>
+<p>        #option forwardfor</p>
+<p>backend kubernetes-apiserver</p>
+<p>        mode tcp</p>
+<p>        balance roundrobin</p>
+<p>        <strong>server node-101 192.168.8.101:6443</strong> check verify none inter 10000</p>
+<p>        <strong>server node-102 192.168.8.102:6443</strong> check verify none inter 10000</p>
+<p>        <strong>server node-103 192.168.8.103:6443</strong> check verify none inter 10000</p>
+<p>listen stats</p>
+<p>        bind 192.168.8.100:80</p>
+<p>        mode http</p>
+<p>        stats enable</p>
+<p>        stats uri /</p>
+<p>Note that, 192.168.8.100 is the virtual IP which is also known as floating IP, which will be implemented by keepalived in later section. The k8s API server is provisioned and accessible via port 6443 on master nodes, and we expose the API server on <strong>192.168.8.100:8443</strong></p>
+<p>Now restart the HAproxy</p>
+<p>sudo systemctl restart haproxy</p>
+<h2 id=configure-high-availability-for-haproxy>
+Configure High availability for HAproxy
+<a class=anchor href=#configure-high-availability-for-haproxy>#</a>
+</h2>
+<p>Apply the configuration on both node-101 and node 102</p>
+<p>sudo vim /etc/keepalived/keepalived.conf</p>
+<p># Global Settings for notifications</p>
+<p>global_defs {</p>
+<p>    notification_email {</p>
+<p>        &lt;yourid>@&lt;yourdomain>.com     # Email address for notifications</p>
+<p>    }</p>
+<p>    notification_email_from &lt;yourid>@&lt;yourdomain>.com        # The from address for the notifications</p>
+<p>    smtp_server 127.0.0.1                       # SMTP server address</p>
+<p>    smtp_connect_timeout 15</p>
+<p>}</p>
+<p># Define the script used to check if haproxy is still working</p>
+<p>vrrp_script chk_haproxy {</p>
+<p>    script &ldquo;/usr/bin/killall -0 haproxy&rdquo;</p>
+<p>    interval 2</p>
+<p>    weight 2</p>
+<p>}</p>
+<p># Configuration for Virtual Interface</p>
+<p>vrrp_instance LB_VIP {</p>
+<p>    <strong>interface eno2</strong></p>
+<p>    <strong>state MASTER</strong>           # set to MASTER on primary server, node-101</p>
+<p>#    state BACKUP       # set to BACKUP on the secondary server node-102</p>
+<p>    <strong>priority 101</strong>        # set to  101 on primary server, node-101</p>
+<p>#  priority 99          # set to 99 on secondary server, node-102</p>
+<p>                               # so by default, node-101 will be elected as the active proxy server (load balancer).</p>
+<p>    virtual_router_id 51</p>
+<p>    smtp_alert          # Enable Notifications Via Email</p>
+<p>    authentication {</p>
+<p>        auth_type AH</p>
+<p>        auth_pass myP@ssword    # Password for accessing vrrpd. Same on all devices</p>
+<p>    }</p>
+<p>    unicast_src_ip <strong>192.168.8.101</strong> # Private IP address of this haproxy server, set to 8.102 for node-102</p>
+<p>    unicast_peer {</p>
+<p>        <strong>192.168.8.102</strong>           # Private IP address of the peer haproxy proxy server, set to 8.101 for node-102</p>
+<p>   }</p>
+<p>    # The virtual ip address shared between the two loadbalancers</p>
+<p>    virtual_ipaddress {</p>
+<p>        <strong>192.168.8.100</strong></p>
+<p>    }</p>
+<p>    # Use the Defined Script to Check whether to initiate a fail over</p>
+<p>    track_script {</p>
+<p>        chk_haproxy</p>
+<p>    }</p>
+<p>}</p>
+<p>restart the keepalived service</p>
+<p>sudo systemctl restart keepalived</p>
+<h1 id=completion>
+Completion
+<a class=anchor href=#completion>#</a>
+</h1>
+<p>If everything works as expected, you now should be able to see the virtual IP@ on eno2 in server node-101:</p>
+<p>ip addr show eno2</p>
+<p>4: eno2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000</p>
+<p>    link/ether 00:1e:67:e6:14:ae brd ff:ff:ff:ff:ff:ff</p>
+<p>    altname enp3s0f3</p>
+<p>    inet 192.168.8.101/24 scope global eno2</p>
+<p>       valid_lft forever preferred_lft forever</p>
+<p>    inet 192.168.8.100/32 scope global eno2</p>
+<p>       valid_lft forever preferred_lft forever</p>
+<p>    inet6 fe80::21e:67ff:fee6:14ae/64 scope link</p>
+<p>       valid_lft forever preferred_lft forever</p>
+<p>and try to access the service:</p>
+<p>nc -vz 192.168.8.100 8443</p>
+<p>Connection to 192.168.8.100 8443 port [tcp/https] succeeded!</p>
+<h1 id=reference>
+Reference
+<a class=anchor href=#reference>#</a>
+</h1>
+<p><a href=https://www.domstamand.com/adding-haproxy-as-load-balancer-to-the-kubernetes-cluster/>Adding HAProxy as load balancer to the Kubernetes cluster | Dominique St-Amand (domstamand.com)</a></p>
+<p><a href=https://itnext.io/create-a-highly-available-kubernetes-cluster-using-keepalived-and-haproxy-37769d0a65ba>Create a Highly Available Kubernetes Cluster Using Keepalived and HAproxy | by KubeSphere | ITNEXT</a></p>
+<p><a href=https://kifarunix.com/configure-highly-available-haproxy-with-keepalived-on-ubuntu-20-04/>Configure Highly Available HAProxy with Keepalived on Ubuntu 20.04 -</a> <a href=http://kifarunix.com>kifarunix.com</a></p>
+<p><a href=https://kifarunix.com/install-and-setup-haproxy-on-ubuntu-20-04/#haproxyconfigurationfile>Install and Setup HAProxy on Ubuntu 20.04 - kifarunix.com</a></p>
+<p><a href=https://www.retinadata.com/blog/keeping-ips-alive-without-keepalived/>Keeping IPs alive without keepalived - retinadata</a></p>
+<p><a href=https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/high_availability_guide/index>High Availability Guide Red Hat CloudForms 4.6 | Red Hat Customer Portal</a></p>
+<p><a href=https://docs.d2iq.com/mesosphere/dcos/services/kubernetes/2.4.2-1.15.3/operations/exposing-the-kubernetes-api/>Exposing the Kubernetes API - D2iQ Docs</a></p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#install-the-required-packages>Install the required packages</a></li>
+<li><a href=#configure-load-balancer>Configure Load Balancer</a></li>
+<li><a href=#configure-high-availability-for-haproxy>Configure High availability for HAproxy</a></li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>
