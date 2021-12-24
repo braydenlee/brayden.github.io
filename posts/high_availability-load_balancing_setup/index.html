@@ -2,22 +2,24 @@
 <head>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="High Availability & Load balancing setup #  HA HAproxy keepalived K8s
-Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
-This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.">
+<meta name=description content="Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
+In this experimental setup, three servers are used">
 <meta name=theme-color content="#FFFFFF">
-<meta name=color-scheme content="light dark"><meta property="og:title" content>
-<meta property="og:description" content="High Availability & Load balancing setup #  HA HAproxy keepalived K8s
-Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
-This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="High Availability & Load Balancing Setup">
+<meta property="og:description" content="Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
+In this experimental setup, three servers are used">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://braydenlee.github.io/posts/high_availability-load_balancing_setup/"><meta property="article:section" content="posts">
-<title>High Availability Load Balancing Setup | My New Hugo Site</title>
+<meta property="article:published_time" content="2021-12-22T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-12-22T00:00:00+00:00">
+<title>High Availability & Load Balancing Setup | My New Hugo Site</title>
 <link rel=manifest href=/manifest.json>
 <link rel=icon href=/favicon.png type=image/x-icon>
 <link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
 <script defer src=/flexsearch.min.js></script>
-<script defer src=/en.search.min.1f7a425f07054afe72758308f30603b9d8c0c8c08480209ef041aedc6cfdf747.js integrity="sha256-H3pCXwcFSv5ydYMI8wYDudjAyMCEgCCe8EGu3Gz990c=" crossorigin=anonymous></script>
+<script defer src=/en.search.min.5fd68c79efe3e9f71d89453d1f8abab475faebcb05ae7202183c880fdbcbde92.js integrity="sha256-X9aMee/j6fcdiUU9H4q6tHX668sFrnICGDyID9vL3pI=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -129,7 +131,7 @@ Blog
 <label for=menu-control>
 <img src=/svg/menu.svg class=book-icon alt=Menu>
 </label>
-<strong>High Availability Load Balancing Setup</strong>
+<strong>High Availability & Load Balancing Setup</strong>
 <label for=toc-control>
 <img src=/svg/toc.svg class=book-icon alt="Table of Contents">
 </label>
@@ -146,13 +148,19 @@ Blog
 </header>
 <article class=markdown>
 <h1>
-<a href=/posts/high_availability-load_balancing_setup/>High Availability Load Balancing Setup</a>
+<a href=/posts/high_availability-load_balancing_setup/>High Availability & Load Balancing Setup</a>
 </h1>
-<h1 id=high-availability--load-balancing-setup>
-High Availability & Load balancing setup
-<a class=anchor href=#high-availability--load-balancing-setup>#</a>
-</h1>
-<p><code>HA</code> <code>HAproxy</code> <code>keepalived</code> <code>K8s</code></p>
+<h5>December 22, 2021</h5>
+<div>
+<a href=/categories/memo/>memo</a>,
+<a href=/categories/tips/>tips</a>
+</div>
+<div>
+<a href=/tags/ha/>HA</a>,
+<a href=/tags/haproxy/>HAproxy</a>,
+<a href=/tags/keepalived/>keepalived</a>,
+<a href=/tags/load-balancer/>Load balancer</a>
+</div>
 <h1 id=introduction>
 Introduction
 <a class=anchor href=#introduction>#</a>
@@ -160,7 +168,11 @@ Introduction
 <p>High availability and Load Balancing are the most important features for online services, especially for services in production.</p>
 <p>This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server.  You could use a dummy web service hosted by nginx or httpd as well.</p>
 <p>In this experimental setup, three servers are used</p>
-<p>node-101 192.168.8.101 # K8s master node node-102 192.168.8.102 # K8s master node node-103 192.168.8.103 # K8s master node & worker node</p>
+<blockquote>
+<p>node-101 192.168.8.101 # K8s master node<br>
+node-102 192.168.8.102 # K8s master node<br>
+node-103 192.168.8.103 # K8s master node & worker node</p>
+</blockquote>
 <p>First we shall implement a load balancer to serve the incoming access request to the API server using HAproxy, then implement high availability using keepalived for the HAproxy itself  so there&rsquo;s no actual single point of failure in this setup. Note that, this guide implemented a active-passive mode high availability.</p>
 <h1 id=prerequisites>
 Prerequisites
