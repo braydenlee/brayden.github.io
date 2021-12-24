@@ -1,7 +1,19 @@
-# High Availability & Load balancing setup
-
-`HA` `HAproxy` `keepalived` `K8s`
-
+---
+title = "(Hu)go Template Primer"
+description = ""
+tags = [
+    "HA",
+    "HAproxy",
+    "keepalived",
+    "Load balancer",
+]
+date = "2021-12-22"
+categories = [
+    "memo",
+    "tips",
+]
+menu = "main"
+---
 # Introduction
 
 High availability and Load Balancing are the most important features for online services, especially for services in production.
@@ -9,8 +21,9 @@ High availability and Load Balancing are the most important features for online 
 This memo will provide a step\-by\-step guide for how\-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server.  You could use a dummy web service hosted by nginx or httpd as well.
 
 In this experimental setup, three servers are used
-
-node\-101 192.168.8.101 \# K8s master node node\-102 192.168.8.102 \# K8s master node node\-103 192.168.8.103 \# K8s master node & worker node
+>node\-101 192.168.8.101 \# K8s master node  
+>node\-102 192.168.8.102 \# K8s master node   
+>node\-103 192.168.8.103 \# K8s master node & worker node
 
 First we shall implement a load balancer to serve the incoming access request to the API server using HAproxy, then implement high availability using keepalived for the HAproxy itself  so there's no actual single point of failure in this setup. Note that, this guide implemented a active\-passive mode high availability. 
 
