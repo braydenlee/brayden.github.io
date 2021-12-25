@@ -15,6 +15,6 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
       with:
         #Source warehouse
-        source-repo: "git@github.com:brayden/brayden.github.io.git"
+        source-repo: "git@github.com:braydenlee/braydenlee.github.io.git"
         #Target warehouse
-        destination-repo: "git@gitee.com:braydenlee/brayden.git"
+        destination-repo: "git@gitee.com:braydenlee/braydenlee.git"
