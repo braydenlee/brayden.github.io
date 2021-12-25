@@ -19,7 +19,7 @@ This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespr
 <link rel=icon href=/favicon.png type=image/x-icon>
 <link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
 <script defer src=/flexsearch.min.js></script>
-<script defer src=/en.search.min.f93aae903af77f2002958cf6ebd7117de564ab7d00a31032f121f28a9ee3c4be.js integrity="sha256-+TqukDr3fyAClYz269cRfeVkq30AoxAy8SHyip7jxL4=" crossorigin=anonymous></script>
+<script defer src=/en.search.min.a443a4e5f0b33e8aafdaa7be6d1b46766fdddddc730bf9e5490a7e0db7c9ea54.js integrity="sha256-pEOk5fCzPoqv2qe+bRtGdm/d3dxzC/nlSQp+DbfJ6lQ=" crossorigin=anonymous></script>
 </head>
 <body dir=ltr>
 <input type=checkbox class="hidden toggle" id=menu-control>
@@ -250,7 +250,7 @@ Disable swap
 <a class=anchor href=#disable-swap>#</a>
 </h3>
 <p>This is required on every node</p>
-<pre><code>$ swapoff \-a
+<pre><code>$ swapoff -a
 </code></pre>
 <h3 id=enable-passwordless-login-via-ssh>
 Enable passwordless login via ssh
@@ -261,9 +261,9 @@ Enable passwordless login via ssh
 <pre><code>$ ssh-keygen
 </code></pre>
 <p>Copy the ssh key id to target server, enter the password following the prompt.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>$ ssh<span style=color:#ae81ff>\-</span>copy<span style=color:#ae81ff>\-</span>id brayden@192.168.8.101
-$ ssh<span style=color:#ae81ff>\-</span>copy<span style=color:#ae81ff>\-</span>id brayden@192.168.8.102
-$ ssh<span style=color:#ae81ff>\-</span>copy<span style=color:#ae81ff>\-</span>id brayden@192.168.8.103  
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>$ ssh-copy-id brayden@192.168.8.101
+$ ssh-copy-id brayden@192.168.8.102
+$ ssh-copy-id brayden@192.168.8.103  
 </code></pre></div><h3 id=enable-passwordless-sudo>
 Enable passwordless sudo
 <a class=anchor href=#enable-passwordless-sudo>#</a>
@@ -271,30 +271,30 @@ Enable passwordless sudo
 <p>Add the line in <strong>BOLD</strong>  as shown below in the %sudo section, for the user used to provision the k8s cluster. This is required on every node.</p>
 <pre tabindex=0><code>$ sudo vim /etc/sudoers
 
-\# Allow members of group sudo to execute any command
-%sudo   ALL=\(ALL:ALL\) ALL
-brayden ALL=\(ALL:ALL\) NOPASSWD:ALL
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+brayden ALL=(ALL:ALL) NOPASSWD:ALL
 </code></pre><h3 id=dependencies>
 Dependencies
 <a class=anchor href=#dependencies>#</a>
 </h3>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Bash data-lang=Bash>$ sudo apt install python3<span style=color:#ae81ff>\-</span>pip
-$ sudo pip3 install <span style=color:#ae81ff>\-\-</span>upgrade pip
-$ pip <span style=color:#ae81ff>\-\-</span>version
-pip 21.3.1 from /home/brayden/.local/lib/python3.9/site<span style=color:#ae81ff>\-</span>packages/pip <span style=color:#ae81ff>\(</span>python 3.9<span style=color:#ae81ff>\)</span>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Bash data-lang=Bash>$ sudo apt install python3-pip
+$ sudo pip3 install --upgrade pip
+$ pip --version
+pip 21.3.1 from /home/brayden/.local/lib/python3.9/site-packages/pip <span style=color:#f92672>(</span>python 3.9<span style=color:#f92672>)</span>
 </code></pre></div><h3 id=download-kubespray>
 Download kubespray
 <a class=anchor href=#download-kubespray>#</a>
 </h3>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ git clone https://github.com/kubernetes<span style=color:#ae81ff>\-</span>sigs/kubespray.git
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ git clone https://github.com/kubernetes-sigs/kubespray.git
 $ cd kubespray
-$ sudo pip install <span style=color:#ae81ff>\-</span>r requirements.txt
+$ sudo pip install -r requirements.txt
 </code></pre></div><h3 id=configure-the-cluster-setup>
 Configure the cluster setup
 <a class=anchor href=#configure-the-cluster-setup>#</a>
 </h3>
 <p>Copy the required configuration files, scripts to a dedicated folder to this cluster, in this example, the new folder is named as k8s-100-cluster, as the controller api server will be available at 192.168.8.100.</p>
-<pre><code>$ cp \-rfp inventory/sampe inventory/k8s\-100\-cluster
+<pre><code>$ cp -rfp inventory/sampe inventory/k8s-100-cluster
 </code></pre>
 <p>The major configuration about the cluster is done by the inventory.ini, which consists of four major sections</p>
 <ul>
@@ -303,51 +303,51 @@ Configure the cluster setup
 <li><strong>etcd</strong></li>
 <li><strong>kube_node</strong></li>
 </ul>
-<pre tabindex=0><code>$ vim inventory/k8s\-100\-cluster/inventory.ini
+<pre tabindex=0><code>$ vim inventory/k8s-100-cluster/inventory.ini
 
-\# \#\# Configure 'ip' variable to bind kubernetes services on a   
-\# \#\# different ip than the default iface 
-\# \#\# We should set etcd\_member\_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value. 
-\[all\] 
-**node\-101 ansible\_host=192.168.8.101   ip=192.168.8.101 etcd\_member\_name=etcd1  
-node\-102 ansible\_host=192.168.8.102   ip=192.168.8.102 etcd\_member\_name=etcd2   
-node\-103 ansible\_host=192.168.8.103   ip=192.168.8.103 etcd\_member\_name=etcd3**
+# ## Configure 'ip' variable to bind kubernetes services on a   
+# ## different ip than the default iface 
+# ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value. 
+[all] 
+**node-101 ansible_host=192.168.8.101   ip=192.168.8.101 etcd_member_name=etcd1  
+node-102 ansible_host=192.168.8.102   ip=192.168.8.102 etcd_member_name=etcd2   
+node-103 ansible_host=192.168.8.103   ip=192.168.8.103 etcd_member_name=etcd3**
 
-\# \#\# configure a bastion host if your nodes are not directly reachable 
-\# \[bastion\] 
-\# bastion ansible\_host=x.x.x.x ansible\_user=some\_user 
+# ## configure a bastion host if your nodes are not directly reachable 
+# [bastion] 
+# bastion ansible_host=x.x.x.x ansible_user=some_user 
 
-\[kube\_control\_plane\]
-**node\-101 
-node\-102 
-node\-103**
-\[etcd\]
-**node\-101 
-node\-102 
-node\-103**
+[kube_control_plane]
+**node-101 
+node-102 
+node-103**
+[etcd]
+**node-101 
+node-102 
+node-103**
 
-\[kube\_node\] 
-**node\-103**
-</code></pre><p>Another important configuration file we shall touch is <code>inventory\k8s-100-cluster\group_vars\all\all.yml</code>.</p>
+[kube_node] 
+**node-103**
+</code></pre><p>Another important configuration file we shall touch is <code>inventoryk8s-100-clustergroup_varsallall.yml</code>.</p>
 <p>Here we disable the internal nginx based proxy, and use external load balanced implemented with haproxy.</p>
 <pre tabindex=0><code>**apiserver_loadbalancer_domain_name: &quot;lb.npg.intel&quot;**  
-**loadbalancer\_apiserver:**  
+**loadbalancer_apiserver:**  
 **addres: 192.168.8.100**  
 **port: 8443**  
-**loadbalancer\_apiserver\_localhost: false**  
-**\#loadbalancer\_apiserver\_port: 6443**  
-**\#loadbalancer\_apiserver\_healthcheck\_port: 8081**  
-**upstream\_dns\_servers:**  
-**\- 8.8.8.8**  
-**\- 8.8.4.4**  
-\# Set the proxy, will be populated to apt source and container runtime proxy conf
-**http\_proxy: &quot;http://child\-prc.intel.com:913&quot;**
-**https\_proxy: &quot;http://child\-prc.intel.com:913&quot;**
+**loadbalancer_apiserver_localhost: false**  
+**#loadbalancer_apiserver_port: 6443**  
+**#loadbalancer_apiserver_healthcheck_port: 8081**  
+**upstream_dns_servers:**  
+**- 8.8.8.8**  
+**- 8.8.4.4**  
+# Set the proxy, will be populated to apt source and container runtime proxy conf
+**http_proxy: &quot;http://child-prc.intel.com:913&quot;**
+**https_proxy: &quot;http://child-prc.intel.com:913&quot;**
 </code></pre><p>inventory/k8s-100-cluster/group_vars/k8s_cluster/k8s-cluster.yml</p>
-<pre tabindex=0><code>**kube\_service\_addresses: 192.168.0.0/18**  
-**kube\_pods\_subnet: 192.168.64.0/18**  
-**container\_manager: docker \#containerd**  
-**kubelet\_deployment\_type: host**
+<pre tabindex=0><code>**kube_service_addresses: 192.168.0.0/18**  
+**kube_pods_subnet: 192.168.64.0/18**  
+**container_manager: docker #containerd**  
+**kubelet_deployment_type: host**
 </code></pre><h3 id=required-workaround>
 Required Workaround
 <a class=anchor href=#required-workaround>#</a>
@@ -356,49 +356,49 @@ Required Workaround
 <p>Only required if docker is selected as the container runtime.</p>
 </blockquote>
 <p>At the time this memo is being written, the ubuntu 22.04 is not yet GA, so some of the URLs or versions for the docker packages are not valid, hardcode required to fix the issue.</p>
-<pre tabindex=0><code>diff \-\-git a/roles/container\-engine/docker/vars/ubuntu.yml b/roles/container\-engine/docker/vars/ubuntu.yml
+<pre tabindex=0><code>diff --git a/roles/container-engine/docker/vars/ubuntu.yml b/roles/container-engine/docker/vars/ubuntu.yml
 index 253dbf17..c0077ebf 100644
 
-\-\-\- a/roles/container\-engine/docker/vars/ubuntu.yml
-\+\+\+ b/roles/container\-engine/docker/vars/ubuntu.yml
-@@ \-17,16 \+17,16 @@ docker\_versioned\_pkg:
-  'latest': docker\-ce
-  '18.09': docker\-ce=5:18.09.9~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-  '19.03': docker\-ce=5:19.03.15~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-- '20.10': docker\-ce=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-- 'stable': docker\-ce=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-+ '20.10': docker\-ce=5:20.10.12~3\-0~ubuntu\-focal
-+ 'stable': docker\-ce=5:20.10.12~3\-0~ubuntu\-focal
-  'edge': docker\-ce=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
+--- a/roles/container-engine/docker/vars/ubuntu.yml
++++ b/roles/container-engine/docker/vars/ubuntu.yml
+@@ -17,16 +17,16 @@ docker_versioned_pkg:
+  'latest': docker-ce
+  '18.09': docker-ce=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+  '19.03': docker-ce=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- '20.10': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- 'stable': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
++ '20.10': docker-ce=5:20.10.12~3-0~ubuntu-focal
++ 'stable': docker-ce=5:20.10.12~3-0~ubuntu-focal
+  'edge': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
 
-docker\_cli\_versioned\_pkg:
+docker_cli_versioned_pkg:
 
-  'latest': docker\-ce\-cli
-  '18.09': docker\-ce\-cli=5:18.09.9~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-  '19.03': docker\-ce\-cli=5:19.03.15~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
+  'latest': docker-ce-cli
+  '18.09': docker-ce-cli=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+  '19.03': docker-ce-cli=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
 
-- '20.10': docker\-ce\-cli=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-- 'stable': docker\-ce\-cli=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
-+ '20.10': docker\-ce\-cli=5:20.10.12~3\-0~ubuntu\-focal
-+ 'stable': docker\-ce\-cli=5:20.10.12~3\-0~ubuntu\-focal
-  'edge': docker\-ce\-cli=5:20.10.11~3\-0~ubuntu\-{{ ansible\_distribution\_release|lower }}
+- '20.10': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- 'stable': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
++ '20.10': docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
++ 'stable': docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
+  'edge': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
 
-docker\_package\_info:
+docker_package_info:
 
-@@ \-44,5 \+44,8 @@ docker\_repo\_info:
+@@ -44,5 +44,8 @@ docker_repo_info:
 
 repos:
   - &gt;
-    deb \[arch={{ host\_architecture }}\] {{ docker\_ubuntu\_repo\_base\_url }}
--     {{ ansible\_distribution\_release|lower }}
+    deb [arch={{ host_architecture }}] {{ docker_ubuntu_repo_base_url }}
+-     {{ ansible_distribution_release|lower }}
 +     focal
       stable
 
-diff \-\-git a/roles/kubernetes/node/tasks/main.yml b/roles/kubernetes/node/tasks/main.yml
+diff --git a/roles/kubernetes/node/tasks/main.yml b/roles/kubernetes/node/tasks/main.yml
 index a342d940..9118a3e6 100644
 --- a/roles/kubernetes/node/tasks/main.yml
 +++ b/roles/kubernetes/node/tasks/main.yml
-@@ \-107,7 \+107,7 @@
+@@ -107,7 +107,7 @@
 - name: Modprobe nf_conntrack_ipv4
   modprobe:
 -   name: nf_conntrack_ipv4
@@ -406,7 +406,7 @@ index a342d940..9118a3e6 100644
 
   state: present
   register: modprobe_nf_conntrack_ipv4
-  ignore_errors: true \# noqa ignore\-errors
+  ignore_errors: true # noqa ignore-errors
 </code></pre><h4 id=update-the-hosts-file>
 Update the hosts file
 <a class=anchor href=#update-the-hosts-file>#</a>
@@ -418,11 +418,11 @@ Update the hosts file
 Provision the Cluster
 <a class=anchor href=#provision-the-cluster>#</a>
 </h2>
-<pre><code>$ ansible\-playbook \-i inventory/k8s\-100\-cluster/inventory.ini \-\-become \-\-user=brayden \-\-become\-user=root cluster.yml
+<pre><code>$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root cluster.yml
 </code></pre>
 <p>If error occured during the provistion, it&rsquo;s better to reset the cluster, fix the issue, and relaunch the provision.</p>
-<pre><code>$ ansible\-playbook \-i inventory/k8s\-100\-cluster/inventory.ini \-\-become \-\-user=brayden \-\-become\-user=root reset.yml
-$ ansible\-playbook \-i inventory/k8s\-100\-cluster/inventory.ini \-\-become \-\-user=brayden \-\-become\-user=root cluster.yml
+<pre><code>$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root reset.yml
+$ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden --become-user=root cluster.yml
 </code></pre>
 <h3 id=kubectl-conf-settings>
 Kubectl conf settings
@@ -433,31 +433,31 @@ $ mkdir .kube
 $ cp /etc/kubernetes/admin.conf .kube/
 $ echo &quot;export KUBECONFIG=/home/brayden/.kube/admin.conf&quot;
 
-$ kubectl get pods \-n kube\-system
+$ kubectl get pods -n kube-system
 
-NAME                                         READY    STATUS    RESTARTS    AGE
-calico\-kube\-controllers\-5788f6558\-kkbf4    1/1    Running    0          38h
-calico\-node\-hcdh4                            1/1    Running    0          38h
-calico\-node\-xfbcq                            1/1    Running    0          38h
-calico\-node\-z7qpt                            1/1    Running    0          38h
-coredns\-8474476ff8\-7l69z                     1/1    Running    0          38h
-coredns\-8474476ff8\-88                        1/1    Running    0          38h
-dns\-autoscaler\-5ffdc7f89d\-jqq5m             1/1    Running    0          38h
-kube\-apiserver\-node\-101                     1/1    Running    1 (38h ago) 39h
-kube\-apiserver\-node\-102                     1/1    Running    1 (38h ago) 39h
-kube\-apiserver\-node\-103                     1/1    Running    1 (38h ago) 39h
-kube\-controller\-manager\-node\-101           1/1    Running    1          39h
-kube\-controller\-manager\-node\-102           1/1    Running    2 (38h ago) 39h
-kube\-controller\-manager\-node\-103           1/1    Running    1          39h
-kube\-proxy\-fzlvr                             1/1    Running    0          39h
-kube\-proxy\-k9z6g                             1/1    Running    0          39h
-kube\-proxy\-wrhd7                             1/1    Running    0          39h
-kube\-scheduler\-node\-101                     1/1    Running    2 (38h ago) 39h
-kube\-scheduler\-node\-102                     1/1    Running    1          39h
-kube\-scheduler\-node\-103                     1/1    Running    1          39h
-nodelocaldns\-285cc                            1/1    Running    0          38h
-nodelocaldns\-2d477                            1/1    Running    0          38h
-nodelocaldns\-cpckx                            1/1    Running    0          38h
+NAME                                         READY  STATUS     RESTARTS   AGE
+calico-kube-controllers-5788f6558-kkbf4      1/1    Running    0          38h
+calico-node-hcdh4                            1/1    Running    0          38h
+calico-node-xfbcq                            1/1    Running    0          38h
+calico-node-z7qpt                            1/1    Running    0          38h
+coredns-8474476ff8-7l69z                     1/1    Running    0          38h
+coredns-8474476ff8-88                        1/1    Running    0          38h
+dns-autoscaler-5ffdc7f89d-jqq5m              1/1    Running    0          38h
+kube-apiserver-node-101                      1/1    Running    1 (38h ago) 39h
+kube-apiserver-node-102                      1/1    Running    1 (38h ago) 39h
+kube-apiserver-node-103                      1/1    Running    1 (38h ago) 39h
+kube-controller-manager-node-101             1/1    Running    1          39h
+kube-controller-manager-node-102             1/1    Running    2 (38h ago) 39h
+kube-controller-manager-node-103             1/1    Running    1          39h
+kube-proxy-fzlvr                             1/1    Running    0          39h
+kube-proxy-k9z6g                             1/1    Running    0          39h
+kube-proxy-wrhd7                             1/1    Running    0          39h
+kube-scheduler-node-101                      1/1    Running    2 (38h ago) 39h
+kube-scheduler-node-102                      1/1    Running    1          39h
+kube-scheduler-node-103                      1/1    Running    1          39h
+nodelocaldns-285cc                           1/1    Running    0          38h
+nodelocaldns-2d477                           1/1    Running    0          38h
+nodelocaldns-cpckx                           1/1    Running    0          38h
 </code></pre><h2 id=troubleshootings>
 Troubleshootings
 <a class=anchor href=#troubleshootings>#</a>
@@ -467,8 +467,8 @@ Failed to download container images
 <a class=anchor href=#failed-to-download-container-images>#</a>
 </h3>
 <p>Initially, the container runtime is default to containerd, and kubespray uses nerdctl which is docker compatible tools to pull the container images.</p>
-<p>kubespray populated the proxy setting for apt source and containerd service according to the all.yml. However, nerdctl is not able to pull the container image, and no luck with --extra-vars to the ansiable-playbook.</p>
-<pre><code>ansible\-playbook \-i inventory/k8s\-100\-cluster/inventory.ini \-\-become \-\-user=brayden cluster.yml \-\-extra\-vars &quot;https\_proxy=http://child\-prc.intel.com:913,http\_proxy=http://child\-prc.intel.com:913&quot;
+<p>kubespray populated the proxy setting for apt source and containerd service according to the all.yml. However, nerdctl is not able to pull the container image, and no luck with &ndash;extra-vars to the ansiable-playbook.</p>
+<pre><code>ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden cluster.yml --extra-vars &quot;https_proxy=http://child-prc.intel.com:913,http_proxy=http://child-prc.intel.com:913&quot;
 </code></pre>
 <p>While manually run the nerdctl from command line could pull the images successfully.</p>
 <p>So this memo switch the container runtime to docker, which could pull the images with the proxy settings.</p>
@@ -477,7 +477,7 @@ Node-102 & Node-103 failed to join controller node-101
 <a class=anchor href=#node-102--node-103-failed-to-join-controller-node-101>#</a>
 </h3>
 <p>One of the error message reads:</p>
-<pre><code>error execution phase preflight: couldn't validate the identity of the API Server: configmaps &quot;cluster\-info&quot; is forbidden: User &quot;system:anonymous&quot; cannot get resource &quot;configmaps&quot; in API group &quot;&quot; in the namespace &quot;kube\-public&quot;
+<pre><code>error execution phase preflight: couldn't validate the identity of the API Server: configmaps &quot;cluster-info&quot; is forbidden: User &quot;system:anonymous&quot; cannot get resource &quot;configmaps&quot; in API group &quot;&quot; in the namespace &quot;kube-public&quot;
 </code></pre>
 <p>No dedicated effort spent to root cause this issue, a few changes made and the node could join the cluster successfully.</p>
 <ul>
@@ -517,10 +517,10 @@ coredns service crashedbackoff
 <pre><code>[19713.675335] IPVS: rr: UDP 192.168.0.3:53 - no destination available
 </code></pre>
 <p>coredns is in crashloopBackoff status:</p>
-<pre><code>kube-system    coredns\-576cbf47c7\-8phwt    0/1    CrashLoopBackOff     8  
+<pre><code>kube-system    coredns-576cbf47c7-8phwt    0/1    CrashLoopBackOff     8  
 </code></pre>
 <p>And the coredns container&rsquo;s log reads</p>
-<pre><code>plugin/loop: **Loop** \(127.0.0.1:55953 \-\&gt; :53\) **detected for zone &quot;.&quot;**, see https://coredns.io/plugins/loop\#troubleshooting. Query: &quot;HINFO 4547991504243258144.3688648895315093531.&quot;
+<pre><code>plugin/loop: **Loop** (127.0.0.1:55953 -&gt; :53) **detected for zone &quot;.&quot;**, see https://coredns.io/plugins/loop#troubleshooting. Query: &quot;HINFO 4547991504243258144.3688648895315093531.&quot;
 </code></pre>
 <p>There are also some logs reads</p>
 <pre><code>&quot;... 192.168.0.1 connection refused ...&quot;
