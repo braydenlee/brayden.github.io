@@ -11,7 +11,6 @@ categories = [
     "memo",
     "tips",
 ]
-menu = "main"
 +++ 
 
 ## Introduction
