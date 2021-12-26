@@ -37,6 +37,7 @@ params:
     comments:
         enabled: true
         provider: disqus
+        disqusShortname: brayblog
 
         disqusjs:
             shortname: brayblog
