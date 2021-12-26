@@ -27,4 +27,4 @@ jobs:
         gitee-username: braydenlee
         gitee-password: ${{ secrets.GITEE_PASSWD }}
         gitee-repo: braydenlee/braydenlee
-        branch: main
+        branch: gh-pages
