@@ -1,174 +1,51 @@
-<!doctype html><html lang=en dir=ltr>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="Move static content to static #  Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
-▾ <root>/ ▾ images/ logo.png  should become
-▾ <root>/ ▾ static/ ▾ images/ logo.png  Additionally, you&rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.">
-<meta name=theme-color content="#FFFFFF">
-<meta name=color-scheme content="light dark"><meta property="og:title" content="Migrate to Hugo from Jekyll">
-<meta property="og:description" content="Move static content to static #  Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
-▾ <root>/ ▾ images/ logo.png  should become
-▾ <root>/ ▾ static/ ▾ images/ logo.png  Additionally, you&rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://braydenlee.github.io/posts/migrate-from-jekyll/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2014-03-10T00:00:00+00:00">
-<meta property="article:modified_time" content="2014-03-10T00:00:00+00:00">
-<title>Migrate to Hugo from Jekyll | Brayden's Blog</title>
-<link rel=manifest href=/manifest.json>
-<link rel=icon href=/favicon.png type=image/x-icon>
-<link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
-<script defer src=/flexsearch.min.js></script>
-<script defer src=/en.search.min.a443a4e5f0b33e8aafdaa7be6d1b46766fdddddc730bf9e5490a7e0db7c9ea54.js integrity="sha256-pEOk5fCzPoqv2qe+bRtGdm/d3dxzC/nlSQp+DbfJ6lQ=" crossorigin=anonymous></script>
+<!doctype html><html lang>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
+▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static."><title>Migrate to Hugo from Jekyll</title>
+<link rel=canonical href=/posts/migrate-from-jekyll/>
+<link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Migrate to Hugo from Jekyll">
+<meta property="og:description" content="Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
+▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.">
+<meta property="og:url" content="/posts/migrate-from-jekyll/">
+<meta property="og:site_name" content>
+<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:published_time" content="2014-03-10T00:00:00+00:00"><meta property="article:modified_time" content="2014-03-10T00:00:00+00:00">
+<meta name=twitter:title content="Migrate to Hugo from Jekyll">
+<meta name=twitter:description content="Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
+▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.">
 </head>
-<body dir=ltr>
-<input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control>
-<main class="container flex">
-<aside class=book-menu>
-<div class=book-menu-content>
-<nav>
-<h2 class=book-brand>
-<a class="flex align-center" href=/><span>Brayden's Blog</span>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
 </a>
-</h2>
-<div class=book-search>
-<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
-<div class="book-search-spinner hidden"></div>
-<ul id=book-search-results></ul>
 </div>
-<ul>
-<li class=book-section-flat>
-<a href=https://braydenlee.github.io/docs/example/>Brayden's Notes</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/>Table of Contents</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/with-toc/>With ToC</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/without-toc/>Without ToC</a>
-</li>
-</ul>
-</li>
-<li>
-<input type=checkbox id=section-4e46b01272d410b3a99461d79326ddf4 class=toggle>
-<label for=section-4e46b01272d410b3a99461d79326ddf4 class="flex justify-between">
-<a role=button>Collapsed</a>
-</label>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/>3rd Level</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/4th-level/>4th Level</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class=book-section-flat>
-<span>Shortcodes</span>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/buttons/>Buttons</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/columns/>Columns</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/details/>Details</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/expand/>Expand</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/hints/>Hints</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/katex/>Katex</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/mermaid/>Mermaid</a>
-</li>
-<li>
-<input type=checkbox id=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class=toggle>
-<label for=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class="flex justify-between">
-<a href=https://braydenlee.github.io/docs/shortcodes/section/>Section</a>
-</label>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/section/first-page/>First Page</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/section/second-page/>Second Page</a>
-</li>
-</ul>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/tabs/>Tabs</a>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>
-<a href=/posts/>
-Blog
-</a>
-</li>
-</ul>
-</nav>
-<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-</div>
-</aside>
-<div class=book-page>
-<header class=book-header>
-<div class="flex align-center justify-between">
-<label for=menu-control>
-<img src=/svg/menu.svg class=book-icon alt=Menu>
-</label>
-<strong>Migrate to Hugo from Jekyll</strong>
-<label for=toc-control>
-<img src=/svg/toc.svg class=book-icon alt="Table of Contents">
-</label>
-</div>
-<aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#move-static-content-to-static>Move static content to <code>static</code></a></li>
-<li><a href=#create-your-hugo-configuration-file>Create your Hugo configuration file</a></li>
-<li><a href=#set-your-configuration-publish-folder-to-_site>Set your configuration publish folder to <code>_site</code></a></li>
-<li><a href=#convert-jekyll-templates-to-hugo-templates>Convert Jekyll templates to Hugo templates</a></li>
-<li><a href=#convert-jekyll-plugins-to-hugo-shortcodes>Convert Jekyll plugins to Hugo shortcodes</a>
-<ul>
-<li><a href=#implementation>Implementation</a></li>
-<li><a href=#usage>Usage</a></li>
-</ul>
-</li>
-<li><a href=#finishing-touches>Finishing touches</a>
-<ul>
-<li><a href=#fix-content>Fix content</a></li>
-<li><a href=#clean-up>Clean up</a></li>
-</ul>
-</li>
-<li><a href=#a-practical-example-in-a-diff>A practical example in a diff</a></li>
-</ul>
-</nav>
-</aside>
-</header>
-<article class=markdown>
-<h1>
+<main class="main full-width">
+<article class=main-article>
+<header class=article-header>
+<div class=article-details>
+<h2 class=article-title>
 <a href=/posts/migrate-from-jekyll/>Migrate to Hugo from Jekyll</a>
-</h1>
-<h5>March 10, 2014</h5>
-<h2 id=move-static-content-to-static>
-Move static content to <code>static</code>
-<a class=anchor href=#move-static-content-to-static>#</a>
 </h2>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Mar 10, 2014</time>
+</div>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>
+4 minute read
+</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<h2 id=move-static-content-to-static>Move static content to <code>static</code></h2>
 <p>Jekyll has a rule that any directory not starting with <code>_</code> will be copied as-is to the <code>_site</code> output. Hugo keeps all static content under <code>static</code>. You should therefore move it all there.
 With Jekyll, something that looked like</p>
 <pre><code>▾ &lt;root&gt;/
@@ -182,16 +59,10 @@ With Jekyll, something that looked like</p>
             logo.png
 </code></pre>
 <p>Additionally, you&rsquo;ll want any files that should reside at the root (such as <code>CNAME</code>) to be moved to <code>static</code>.</p>
-<h2 id=create-your-hugo-configuration-file>
-Create your Hugo configuration file
-<a class=anchor href=#create-your-hugo-configuration-file>#</a>
-</h2>
-<p>Hugo can read your configuration as JSON, YAML or TOML. Hugo supports parameters custom configuration too. Refer to the <a href=/overview/configuration/>Hugo configuration documentation</a> for details.</p>
-<h2 id=set-your-configuration-publish-folder-to-_site>
-Set your configuration publish folder to <code>_site</code>
-<a class=anchor href=#set-your-configuration-publish-folder-to-_site>#</a>
-</h2>
-<p>The default is for Jekyll to publish to <code>_site</code> and for Hugo to publish to <code>public</code>. If, like me, you have <a href=http://blog.blindgaenger.net/generate_github_pages_in_a_submodule.html><code>_site</code> mapped to a git submodule on the <code>gh-pages</code> branch</a>, you&rsquo;ll want to do one of two alternatives:</p>
+<h2 id=create-your-hugo-configuration-file>Create your Hugo configuration file</h2>
+<p>Hugo can read your configuration as JSON, YAML or TOML. Hugo supports parameters custom configuration too. Refer to the <a class=link href=/overview/configuration/>Hugo configuration documentation</a> for details.</p>
+<h2 id=set-your-configuration-publish-folder-to-_site>Set your configuration publish folder to <code>_site</code></h2>
+<p>The default is for Jekyll to publish to <code>_site</code> and for Hugo to publish to <code>public</code>. If, like me, you have <a class=link href=http://blog.blindgaenger.net/generate_github_pages_in_a_submodule.html target=_blank rel=noopener><code>_site</code> mapped to a git submodule on the <code>gh-pages</code> branch</a>, you&rsquo;ll want to do one of two alternatives:</p>
 <ol>
 <li>
 <p>Change your submodule to point to map <code>gh-pages</code> to public instead of <code>_site</code> (recommended).</p>
@@ -210,22 +81,13 @@ Set your configuration publish folder to <code>_site</code>
 </code></pre>
 </li>
 </ol>
-<h2 id=convert-jekyll-templates-to-hugo-templates>
-Convert Jekyll templates to Hugo templates
-<a class=anchor href=#convert-jekyll-templates-to-hugo-templates>#</a>
-</h2>
-<p>That&rsquo;s the bulk of the work right here. The documentation is your friend. You should refer to <a href=http://jekyllrb.com/docs/templates/>Jekyll&rsquo;s template documentation</a> if you need to refresh your memory on how you built your blog and <a href=/layout/templates/>Hugo&rsquo;s template</a> to learn Hugo&rsquo;s way.</p>
-<p>As a single reference data point, converting my templates for <a href=http://heyitsalex.net/>heyitsalex.net</a> took me no more than a few hours.</p>
-<h2 id=convert-jekyll-plugins-to-hugo-shortcodes>
-Convert Jekyll plugins to Hugo shortcodes
-<a class=anchor href=#convert-jekyll-plugins-to-hugo-shortcodes>#</a>
-</h2>
-<p>Jekyll has <a href=http://jekyllrb.com/docs/plugins/>plugins</a>; Hugo has <a href=/doc/shortcodes/>shortcodes</a>. It&rsquo;s fairly trivial to do a port.</p>
-<h3 id=implementation>
-Implementation
-<a class=anchor href=#implementation>#</a>
-</h3>
-<p>As an example, I was using a custom <a href=https://github.com/alexandre-normand/alexandre-normand/blob/74bb12036a71334fdb7dba84e073382fc06908ec/_plugins/image_tag.rb><code>image_tag</code></a> plugin to generate figures with caption when running Jekyll. As I read about shortcodes, I found Hugo had a nice built-in shortcode that does exactly the same thing.</p>
+<h2 id=convert-jekyll-templates-to-hugo-templates>Convert Jekyll templates to Hugo templates</h2>
+<p>That&rsquo;s the bulk of the work right here. The documentation is your friend. You should refer to <a class=link href=http://jekyllrb.com/docs/templates/ target=_blank rel=noopener>Jekyll&rsquo;s template documentation</a> if you need to refresh your memory on how you built your blog and <a class=link href=/layout/templates/>Hugo&rsquo;s template</a> to learn Hugo&rsquo;s way.</p>
+<p>As a single reference data point, converting my templates for <a class=link href=http://heyitsalex.net/ target=_blank rel=noopener>heyitsalex.net</a> took me no more than a few hours.</p>
+<h2 id=convert-jekyll-plugins-to-hugo-shortcodes>Convert Jekyll plugins to Hugo shortcodes</h2>
+<p>Jekyll has <a class=link href=http://jekyllrb.com/docs/plugins/ target=_blank rel=noopener>plugins</a>; Hugo has <a class=link href=/doc/shortcodes/>shortcodes</a>. It&rsquo;s fairly trivial to do a port.</p>
+<h3 id=implementation>Implementation</h3>
+<p>As an example, I was using a custom <a class=link href=https://github.com/alexandre-normand/alexandre-normand/blob/74bb12036a71334fdb7dba84e073382fc06908ec/_plugins/image_tag.rb target=_blank rel=noopener><code>image_tag</code></a> plugin to generate figures with caption when running Jekyll. As I read about shortcodes, I found Hugo had a nice built-in shortcode that does exactly the same thing.</p>
 <p>Jekyll&rsquo;s plugin:</p>
 <pre><code>module Jekyll
   class ImageTag &lt; Liquid::Tag
@@ -301,10 +163,7 @@ Liquid::Template.register_tag('image', Jekyll::ImageTag)
 &lt;/figure&gt;
 &lt;!-- image --&gt;
 </code></pre>
-<h3 id=usage>
-Usage
-<a class=anchor href=#usage>#</a>
-</h3>
+<h3 id=usage>Usage</h3>
 <p>I simply changed:</p>
 <pre><code>{% image full http://farm5.staticflickr.com/4136/4829260124_57712e570a_o_d.jpg &quot;One of my favorite touristy-type photos. I secretly waited for the good light while we were &quot;having fun&quot; and took this. Only regret: a stupid pole in the top-left corner of the frame I had to clumsily get rid of at post-processing.&quot; -&gt;http://www.flickr.com/photos/alexnormand/4829260124/in/set-72157624547713078/ %}
 </code></pre>
@@ -312,37 +171,72 @@ Usage
 <pre><code>{{% fig class=&quot;full&quot; src=&quot;http://farm5.staticflickr.com/4136/4829260124_57712e570a_o_d.jpg&quot; title=&quot;One of my favorite touristy-type photos. I secretly waited for the good light while we were having fun and took this. Only regret: a stupid pole in the top-left corner of the frame I had to clumsily get rid of at post-processing.&quot; link=&quot;http://www.flickr.com/photos/alexnormand/4829260124/in/set-72157624547713078/&quot; %}}
 </code></pre>
 <p>As a bonus, the shortcode named parameters are, arguably, more readable.</p>
-<h2 id=finishing-touches>
-Finishing touches
-<a class=anchor href=#finishing-touches>#</a>
-</h2>
-<h3 id=fix-content>
-Fix content
-<a class=anchor href=#fix-content>#</a>
-</h3>
+<h2 id=finishing-touches>Finishing touches</h2>
+<h3 id=fix-content>Fix content</h3>
 <p>Depending on the amount of customization that was done with each post with Jekyll, this step will require more or less effort. There are no hard and fast rules here except that <code>hugo server --watch</code> is your friend. Test your changes and fix errors as needed.</p>
-<h3 id=clean-up>
-Clean up
-<a class=anchor href=#clean-up>#</a>
-</h3>
+<h3 id=clean-up>Clean up</h3>
 <p>You&rsquo;ll want to remove the Jekyll configuration at this point. If you have anything else that isn&rsquo;t used, delete it.</p>
-<h2 id=a-practical-example-in-a-diff>
-A practical example in a diff
-<a class=anchor href=#a-practical-example-in-a-diff>#</a>
-</h2>
-<p><a href=http://heyitsalex.net/>Hey, it&rsquo;s Alex</a> was migrated in less than a <em>father-with-kids day</em> from Jekyll to Hugo. You can see all the changes (and screw-ups) by looking at this <a href=https://github.com/alexandre-normand/alexandre-normand/compare/869d69435bd2665c3fbf5b5c78d4c22759d7613a...b7f6605b1265e83b4b81495423294208cc74d610>diff</a>.</p>
-</article>
-<footer class=book-footer>
-<div class="flex flex-wrap justify-between">
-</div>
-<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+<h2 id=a-practical-example-in-a-diff>A practical example in a diff</h2>
+<p><a class=link href=http://heyitsalex.net/ target=_blank rel=noopener>Hey, it&rsquo;s Alex</a> was migrated in less than a <em>father-with-kids day</em> from Jekyll to Hugo. You can see all the changes (and screw-ups) by looking at this <a class=link href=https://github.com/alexandre-normand/alexandre-normand/compare/869d69435bd2665c3fbf5b5c78d4c22759d7613a...b7f6605b1265e83b4b81495423294208cc74d610 target=_blank rel=noopener>diff</a>.</p>
+</section>
+<footer class=article-footer>
 </footer>
-<div class=book-comments>
+</article>
+<aside class=related-contents--wrapper>
+</aside>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2021
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.5.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
 </div>
-<label for=menu-control class="hidden book-menu-overlay"></label>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
 </div>
-<aside class=book-toc>
-<div class=book-toc-content>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
 <nav id=TableOfContents>
 <ul>
 <li><a href=#move-static-content-to-static>Move static content to <code>static</code></a></li>
@@ -365,7 +259,10 @@ A practical example in a diff
 </ul>
 </nav>
 </div>
+</section>
 </aside>
-</main>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
 </body>
 </html>

@@ -1,178 +1,59 @@
-<!doctype html><html lang=en dir=ltr>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+<!doctype html><html lang>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Introduction High availability and Load Balancing are the most important features for online services, especially for services in production.
+This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
+In this experimental setup, three servers are used"><title>High Availability & Load Balancing Setup</title>
+<link rel=canonical href=/posts/high_availability-load_balancing_setup/>
+<link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="High Availability & Load Balancing Setup">
+<meta property="og:description" content="Introduction High availability and Load Balancing are the most important features for online services, especially for services in production.
 This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
 In this experimental setup, three servers are used">
-<meta name=theme-color content="#FFFFFF">
-<meta name=color-scheme content="light dark"><meta property="og:title" content="High Availability & Load Balancing Setup">
-<meta property="og:description" content="Introduction #  High availability and Load Balancing are the most important features for online services, especially for services in production.
+<meta property="og:url" content="/posts/high_availability-load_balancing_setup/">
+<meta property="og:site_name" content>
+<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="HA"><meta property="article:tag" content="HAproxy"><meta property="article:tag" content="keepalived"><meta property="article:tag" content="Load balancer"><meta property="article:published_time" content="2021-12-22T00:00:00+00:00"><meta property="article:modified_time" content="2021-12-22T00:00:00+00:00">
+<meta name=twitter:title content="High Availability & Load Balancing Setup">
+<meta name=twitter:description content="Introduction High availability and Load Balancing are the most important features for online services, especially for services in production.
 This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
 In this experimental setup, three servers are used">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://braydenlee.github.io/posts/high_availability-load_balancing_setup/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-12-22T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-12-22T00:00:00+00:00">
-<title>High Availability & Load Balancing Setup | Brayden's Blog</title>
-<link rel=manifest href=/manifest.json>
-<link rel=icon href=/favicon.png type=image/x-icon>
-<link rel=stylesheet href=/book.min.46181bc93375ba932026e753b37c40e6ff8bb16a9ef770c78bcc663e4577b1ba.css integrity="sha256-RhgbyTN1upMgJudTs3xA5v+LsWqe93DHi8xmPkV3sbo=" crossorigin=anonymous>
-<script defer src=/flexsearch.min.js></script>
-<script defer src=/en.search.min.a443a4e5f0b33e8aafdaa7be6d1b46766fdddddc730bf9e5490a7e0db7c9ea54.js integrity="sha256-pEOk5fCzPoqv2qe+bRtGdm/d3dxzC/nlSQp+DbfJ6lQ=" crossorigin=anonymous></script>
 </head>
-<body dir=ltr>
-<input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control>
-<main class="container flex">
-<aside class=book-menu>
-<div class=book-menu-content>
-<nav>
-<h2 class=book-brand>
-<a class="flex align-center" href=/><span>Brayden's Blog</span>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
 </a>
-</h2>
-<div class=book-search>
-<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
-<div class="book-search-spinner hidden"></div>
-<ul id=book-search-results></ul>
 </div>
-<ul>
-<li class=book-section-flat>
-<a href=https://braydenlee.github.io/docs/example/>Brayden's Notes</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/>Table of Contents</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/with-toc/>With ToC</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/example/table-of-contents/without-toc/>Without ToC</a>
-</li>
-</ul>
-</li>
-<li>
-<input type=checkbox id=section-4e46b01272d410b3a99461d79326ddf4 class=toggle>
-<label for=section-4e46b01272d410b3a99461d79326ddf4 class="flex justify-between">
-<a role=button>Collapsed</a>
-</label>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/>3rd Level</a>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/example/collapsed/3rd-level/4th-level/>4th Level</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class=book-section-flat>
-<span>Shortcodes</span>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/buttons/>Buttons</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/columns/>Columns</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/details/>Details</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/expand/>Expand</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/hints/>Hints</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/katex/>Katex</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/mermaid/>Mermaid</a>
-</li>
-<li>
-<input type=checkbox id=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class=toggle>
-<label for=section-d3fc1bf6d66cd84b896a0af9f40cb1d5 class="flex justify-between">
-<a href=https://braydenlee.github.io/docs/shortcodes/section/>Section</a>
-</label>
-<ul>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/section/first-page/>First Page</a>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/section/second-page/>Second Page</a>
-</li>
-</ul>
-</li>
-<li>
-<a href=https://braydenlee.github.io/docs/shortcodes/tabs/>Tabs</a>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>
-<a href=/posts/>
-Blog
+<main class="main full-width">
+<article class=main-article>
+<header class=article-header>
+<div class=article-details>
+<header class=article-category>
+<a href=/categories/memo/>
+memo
 </a>
-</li>
-</ul>
-</nav>
-<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-</div>
-</aside>
-<div class=book-page>
-<header class=book-header>
-<div class="flex align-center justify-between">
-<label for=menu-control>
-<img src=/svg/menu.svg class=book-icon alt=Menu>
-</label>
-<strong>High Availability & Load Balancing Setup</strong>
-<label for=toc-control>
-<img src=/svg/toc.svg class=book-icon alt="Table of Contents">
-</label>
-</div>
-<aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#introduction>Introduction</a></li>
-<li><a href=#prerequisites>Prerequisites</a></li>
-<li><a href=#detailed-steps>Detailed steps</a>
-<ul>
-<li><a href=#install-the-required-packages>Install the required packages</a></li>
-<li><a href=#configure-load-balancer>Configure Load Balancer</a></li>
-<li><a href=#configure-high-availability-for-haproxy>Configure High availability for HAproxy</a></li>
-</ul>
-</li>
-<li><a href=#completion>Completion</a></li>
-<li><a href=#reference>Reference</a></li>
-</ul>
-</nav>
-</aside>
+<a href=/categories/tips/>
+tips
+</a>
 </header>
-<article class=markdown>
-<h1>
+<h2 class=article-title>
 <a href=/posts/high_availability-load_balancing_setup/>High Availability & Load Balancing Setup</a>
-</h1>
-<h5>December 22, 2021</h5>
-<div>
-<a href=/categories/memo/>memo</a>,
-<a href=/categories/tips/>tips</a>
-</div>
-<div>
-<a href=/tags/ha/>HA</a>,
-<a href=/tags/haproxy/>HAproxy</a>,
-<a href=/tags/keepalived/>keepalived</a>,
-<a href=/tags/load-balancer/>Load balancer</a>
-</div>
-<h2 id=introduction>
-Introduction
-<a class=anchor href=#introduction>#</a>
 </h2>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Dec 22, 2021</time>
+</div>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>
+5 minute read
+</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<h2 id=introduction>Introduction</h2>
 <p>High availability and Load Balancing are the most important features for online services, especially for services in production.</p>
 <p>This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.</p>
 <p>In this experimental setup, three servers are used</p>
@@ -182,31 +63,19 @@ node-102 192.168.8.102 # K8s master node<br>
 node-103 192.168.8.103 # K8s master node & worker node</p>
 </blockquote>
 <p>First we shall implement a load balancer to serve the incoming access request to the API server using HAproxy, then implement high availability using keepalived for the HAproxy itself so there&rsquo;s no actual single point of failure in this setup. Note that, this guide implemented a active-passive mode high availability.</p>
-<h2 id=prerequisites>
-Prerequisites
-<a class=anchor href=#prerequisites>#</a>
-</h2>
+<h2 id=prerequisites>Prerequisites</h2>
 <p>The procedure is validated on Ubuntu 22.04 daily build 20211128.</p>
 <ol>
 <li>Make sure the apt source is configured properly, or you have the required packages and their dependencies offline.</li>
 <li>Packages HAproxy and keepalived</li>
 </ol>
-<h2 id=detailed-steps>
-Detailed steps
-<a class=anchor href=#detailed-steps>#</a>
-</h2>
+<h2 id=detailed-steps>Detailed steps</h2>
 <p>We shall deploy the HAproxy and keepalived on the same servers (node-101 & node-102) where the k8s api server resides. Note that it&rsquo;s not neccessary to be on the same servers, and on heavy loaded system, would be better to have dedicated load balancer servers to host HAproxy.</p>
-<h3 id=install-the-required-packages>
-Install the required packages
-<a class=anchor href=#install-the-required-packages>#</a>
-</h3>
+<h3 id=install-the-required-packages>Install the required packages</h3>
 <p>Execute the following command on both node-101 and node-102</p>
 <pre><code>sudo apt install haproxy keepalived
 </code></pre>
-<h3 id=configure-load-balancer>
-Configure Load Balancer
-<a class=anchor href=#configure-load-balancer>#</a>
-</h3>
+<h3 id=configure-load-balancer>Configure Load Balancer</h3>
 <p>Apply the configuration on both node-101 and node-102</p>
 <pre><code>sudo vim /etc/haproxy/haproxy.cfg
 </code></pre>
@@ -272,10 +141,7 @@ listen stats
 <p>Now restart the HAproxy</p>
 <pre><code>sudo systemctl restart haproxy
 </code></pre>
-<h3 id=configure-high-availability-for-haproxy>
-Configure High availability for HAproxy
-<a class=anchor href=#configure-high-availability-for-haproxy>#</a>
-</h3>
+<h3 id=configure-high-availability-for-haproxy>Configure High availability for HAproxy</h3>
 <p>Apply the configuration on both node-101 and node 102</p>
 <pre><code>sudo vim /etc/keepalived/keepalived.conf
 
@@ -345,10 +211,7 @@ vrrp\_instance LB\_VIP {
 <p>restart the keepalived service</p>
 <pre><code>sudo systemctl restart keepalived
 </code></pre>
-<h2 id=completion>
-Completion
-<a class=anchor href=#completion>#</a>
-</h2>
+<h2 id=completion>Completion</h2>
 <p>If everything works as expected, you now should be able to see the virtual IP@ on eno2 in server node-101:</p>
 <pre><code>ip addr show eno2
 4: eno2: \&lt;BROADCAST,MULTICAST,UP,LOWER\_UP\&gt; mtu 1500 qdisc mq state UP group default qlen 1000
@@ -366,30 +229,92 @@ inet6 fe80::21e:67ff:fee6:14ae/64 scope link
 <pre><code>nc \-vz 192.168.8.100 8443  
 Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 </code></pre>
-<h2 id=reference>
-Reference
-<a class=anchor href=#reference>#</a>
-</h2>
-<p><a href=https://www.domstamand.com/adding-haproxy-as-load-balancer-to-the-kubernetes-cluster/>Adding HAProxy as load balancer to the Kubernetes cluster | Dominique St-Amand (domstamand.com)</a><br>
-<a href=https://itnext.io/create-a-highly-available-kubernetes-cluster-using-keepalived-and-haproxy-37769d0a65ba>Create a Highly Available Kubernetes Cluster Using Keepalived and HAproxy | by KubeSphere | ITNEXT</a><br>
-<a href=https://kifarunix.com/configure-highly-available-haproxy-with-keepalived-on-ubuntu-20-04/>Configure Highly Available HAProxy with Keepalived on Ubuntu 20.04</a><br>
-<a href=http://kifarunix.com>kifarunix.com</a><br>
-<a href=https://kifarunix.com/install-and-setup-haproxy-on-ubuntu-20-04/#haproxyconfigurationfile>Install and Setup HAProxy on Ubuntu 20.04 - kifarunix.com</a><br>
-<a href=https://www.retinadata.com/blog/keeping-ips-alive-without-keepalived/>Keeping IPs alive without keepalived - retinadata</a><br>
-<a href=https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/high_availability_guide/index>High Availability Guide Red Hat CloudForms 4.6 | Red Hat Customer Portal</a><br>
-<a href=https://docs.d2iq.com/mesosphere/dcos/services/kubernetes/2.4.2-1.15.3/operations/exposing-the-kubernetes-api/>Exposing the Kubernetes API - D2iQ Docs</a></p>
-</article>
-<footer class=book-footer>
-<div class="flex flex-wrap justify-between">
-</div>
-<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+<h2 id=reference>Reference</h2>
+<p><a class=link href=https://www.domstamand.com/adding-haproxy-as-load-balancer-to-the-kubernetes-cluster/ target=_blank rel=noopener>Adding HAProxy as load balancer to the Kubernetes cluster | Dominique St-Amand (domstamand.com)</a><br>
+<a class=link href=https://itnext.io/create-a-highly-available-kubernetes-cluster-using-keepalived-and-haproxy-37769d0a65ba target=_blank rel=noopener>Create a Highly Available Kubernetes Cluster Using Keepalived and HAproxy | by KubeSphere | ITNEXT</a><br>
+<a class=link href=https://kifarunix.com/configure-highly-available-haproxy-with-keepalived-on-ubuntu-20-04/ target=_blank rel=noopener>Configure Highly Available HAProxy with Keepalived on Ubuntu 20.04</a><br>
+<a class=link href=http://kifarunix.com target=_blank rel=noopener>kifarunix.com</a><br>
+<a class=link href=https://kifarunix.com/install-and-setup-haproxy-on-ubuntu-20-04/#haproxyconfigurationfile target=_blank rel=noopener>Install and Setup HAProxy on Ubuntu 20.04 - kifarunix.com</a><br>
+<a class=link href=https://www.retinadata.com/blog/keeping-ips-alive-without-keepalived/ target=_blank rel=noopener>Keeping IPs alive without keepalived - retinadata</a><br>
+<a class=link href=https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/high_availability_guide/index target=_blank rel=noopener>High Availability Guide Red Hat CloudForms 4.6 | Red Hat Customer Portal</a><br>
+<a class=link href=https://docs.d2iq.com/mesosphere/dcos/services/kubernetes/2.4.2-1.15.3/operations/exposing-the-kubernetes-api/ target=_blank rel=noopener>Exposing the Kubernetes API - D2iQ Docs</a></p>
+</section>
+<footer class=article-footer>
+<section class=article-tags>
+<a href=/tags/ha/>HA</a>
+<a href=/tags/haproxy/>HAproxy</a>
+<a href=/tags/keepalived/>keepalived</a>
+<a href=/tags/load-balancer/>Load balancer</a>
+</section>
 </footer>
-<div class=book-comments>
+</article>
+<aside class=related-contents--wrapper>
+<h2 class=section-title>Related contents</h2>
+<div class=related-contents>
+<div class="flex article-list--tile">
+<article>
+<a href=/post/high_availability-load_balancing_setup/>
+<div class=article-details>
+<h2 class=article-title>High Availability & Load Balancing Setup</h2>
 </div>
-<label for=menu-control class="hidden book-menu-overlay"></label>
+</a>
+</article>
 </div>
-<aside class=book-toc>
-<div class=book-toc-content>
+</div>
+</aside>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2021
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.5.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
 <nav id=TableOfContents>
 <ul>
 <li><a href=#introduction>Introduction</a></li>
@@ -406,7 +331,10 @@ Reference
 </ul>
 </nav>
 </div>
+</section>
 </aside>
-</main>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
 </body>
 </html>
