@@ -10,7 +10,6 @@ on:
 
 jobs:
   sync:
-    needs: deploy
     runs-on: ubuntu-latest
     steps:
     - name: Sync to Gitee
