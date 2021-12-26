@@ -1,7 +1,7 @@
 ---
 date: 2014-03-10
 title: Migrate to Hugo from Jekyll
-weight: 10
+; weight: 10
 ---
 
 ## Move static content to `static`
