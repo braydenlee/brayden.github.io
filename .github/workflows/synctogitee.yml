@@ -21,3 +21,10 @@ jobs:
         source-repo: "git@github.com:braydenlee/braydenlee.github.io.git"
         #Target warehouse
         destination-repo: "git@gitee.com:braydenlee/braydenlee.git"
+    - name: Build Gitee Pages
+      uses: yanglbme/gitee-pages-action@main
+      with:
+        gitee-username: braydenlee
+        gitee-password: ${{ secrets.GITEE_PASSWD }}
+        gitee-repo: git@gitee.com:braydenlee/braydenlee.git
+        branch: main
