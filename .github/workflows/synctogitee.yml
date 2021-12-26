@@ -1,10 +1,12 @@
 name: Sync Github Repos To Gitee
 
 on:
-  push:
+  workflow_run:
+    workflows: ["github pages"]
     branches:
       - main
-      - gh-pages
+    types:
+      - completed
 
 jobs:
   sync:
