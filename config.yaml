@@ -4,6 +4,9 @@ module:
         min: "0.87.0"
 title: "Brayden's Blog"
 
+disqusShortname: brayblog
+
+
 params:
     mainSections:
         - posts
@@ -40,10 +43,9 @@ params:
     comments:
         enabled: true
         provider: disqus
-        disqusShortname: brayblog
 
         disqusjs:
-            shortname: brayblog
+            shortname: #brayblog
               #            apiUrl: https://disqus.com/api/oauth/2.0/authorize/
               #apiKey: hjqNg8NLUaIonBRcJHUY7cWsu2oM8vGJiTxrz09a73gpXzSvBhKYj3nDFxjMVKnb
               #admin: brayden
