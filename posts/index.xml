@@ -7,7 +7,7 @@ Linux basics One of the most comprehensive knowledge base about linux operating 
 This memo is a note for deploy a &amp;lsquo;product&amp;rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.
 Node Role Etcd External IP Internal IP node-101 Controller yes 192.</description></item><item><title>High Availability &amp; Load Balancing Setup</title><link>/posts/high_availability-load_balancing_setup/</link><pubDate>Wed, 22 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/high_availability-load_balancing_setup/</guid><description>Introduction High availability and Load Balancing are the most important features for online services, especially for services in production.
 This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
-In this experimental setup, three servers are used</description></item><item><title>Chinese Test</title><link>/posts/test-chinese/</link><pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate><guid>/posts/test-chinese/</guid><description>正文测试 simple test
+In this experimental setup, three servers are used</description></item><item><title>中文测试</title><link>/posts/%E4%B8%AD%E6%B5%8B%E8%AF%95/</link><pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate><guid>/posts/%E4%B8%AD%E6%B5%8B%E8%AF%95/</guid><description>正文测试 simple test
 引用 思念是最暖的忧伤像一双翅膀
 让我停不了飞不远在过往游荡
 不告而别的你 就算为了我着想
