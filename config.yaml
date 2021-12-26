@@ -35,15 +35,15 @@ params:
             default: Licensed under CC BY-NC-SA 4.0
 
     comments:
-        enabled: false
+        enabled: true
         provider: disqus
 
         disqusjs:
-            shortname:
-            apiUrl:
-            apiKey:
-            admin:
-            adminLabel:
+            shortname: brayblog
+            apiUrl: https://disqus.com/api/oauth/2.0/authorize/
+            apiKey: hjqNg8NLUaIonBRcJHUY7cWsu2oM8vGJiTxrz09a73gpXzSvBhKYj3nDFxjMVKnb
+            admin: brayden
+            adminLabel: braydenblog
 
         utterances:
             repo:
