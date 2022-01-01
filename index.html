@@ -7,7 +7,7 @@
 <meta property="og:description" content>
 <meta property="og:url" content="/">
 <meta property="og:site_name" content="Brayden's Blog">
-<meta property="og:type" content="website"><meta property="og:updated_time" content=" 2021-12-26T00:00:00+00:00 ">
+<meta property="og:type" content="website"><meta property="og:updated_time" content=" 2022-01-01T00:00:00+00:00 ">
 <meta name=twitter:title content="Brayden's Blog">
 <meta name=twitter:description content><link rel=alternate type=application/rss+xml href=/index.xml>
 </head>
@@ -48,9 +48,22 @@
 </aside>
 <main class="main full-width">
 <section class=article-list>
-<article>
+<article class=has-image>
 <header class=article-header>
+<div class=article-image>
+<a href=/posts/getting_started/>
+<img src=/images/Getting_started.jpg loading=lazy alt="Featured image of post Where to start">
+</a>
+</div>
 <div class=article-details>
+<header class=article-category>
+<a href=/categories/memos/>
+memos
+</a>
+<a href=/categories/resources/>
+resources
+</a>
+</header>
 <h2 class=article-title>
 <a href=/posts/getting_started/>Where to start</a>
 </h2>
@@ -67,12 +80,47 @@
 </div>
 </header>
 </article>
+<article class=has-image>
+<header class=article-header>
+<div class=article-image>
+<a href=/posts/dual_home_ubuntu/>
+<img src=/images/Networking.jpg loading=lazy alt="Featured image of post Route setting in Multihomed Server">
+</a>
+</div>
+<div class=article-details>
+<header class=article-category>
+<a href=/categories/tips/>
+tips
+</a>
+<a href=/categories/memos/>
+memos
+</a>
+</header>
+<h2 class=article-title>
+<a href=/posts/dual_home_ubuntu/>Route setting in Multihomed Server</a>
+</h2>
+<h3 class=article-subtitle>
+For dual homed servers which connects to Internet and internal networks, used to have routing issues. This guide provides a approach to correct the routing settings.
+</h3>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jan 01, 2022</time>
+</div>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>
+2 minute read
+</time>
+</div>
+</footer>
+</div>
+</header>
+</article>
 <article>
 <header class=article-header>
 <div class=article-details>
 <header class=article-category>
-<a href=/categories/memo/>
-memo
+<a href=/categories/memos/>
+memos
 </a>
 <a href=/categories/tips/>
 tips
@@ -286,33 +334,6 @@ Guide to emoji usage in Hugo
 </div>
 </header>
 </article>
-<article>
-<header class=article-header>
-<div class=article-details>
-<header class=article-category>
-<a href=/categories/development/>
-Development
-</a>
-<a href=/categories/golang/>
-golang
-</a>
-</header>
-<h2 class=article-title>
-<a href=/posts/hugo_template_primer/>(Hu)go Template Primer</a>
-</h2>
-<footer class=article-time>
-<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published>Apr 02, 2014</time>
-</div>
-<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-<time class=article-time--reading>
-7 minute read
-</time>
-</div>
-</footer>
-</div>
-</header>
-</article>
 </section>
 <nav class=pagination>
 <span class="page-link current">1</span>
@@ -321,7 +342,8 @@ golang
 <footer class=site-footer>
 <section class=copyright>
 &copy;
-2021 Brayden's Blog
+2021 -
+2022 Brayden's Blog
 </section>
 <section class=powerby>
 Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
@@ -343,6 +365,12 @@ Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=
 </div>
 <h2 class="widget-title section-title">Archives</h2>
 <div class=widget-archive--list>
+<div class=archives-year>
+<a href=/pages/archives/#2022>
+<span class=year>2022</span>
+<span class=count>1</span>
+</a>
+</div>
 <div class=archives-year>
 <a href=/pages/archives/#2021>
 <span class=year>2021</span>
@@ -383,6 +411,9 @@ markdown
 <a href=/tags/themes/ class=font_size_2>
 themes
 </a>
+<a href=/tags/container/ class=font_size_1>
+container
+</a>
 <a href=/tags/css/ class=font_size_1>
 css
 </a>
@@ -394,9 +425,6 @@ HA
 </a>
 <a href=/tags/haproxy/ class=font_size_1>
 HAproxy
-</a>
-<a href=/tags/html/ class=font_size_1>
-html
 </a>
 </div>
 </section>
