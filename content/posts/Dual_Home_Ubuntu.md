@@ -36,33 +36,35 @@ As a result, most of the services resides on the external network are un-reachab
 
 As my internal network is quite simply, all the other nodes are in the same subnet, and don't really need a gateway, so a simply fix is to disable the default route for the internal internface. 
 Following netplan conf is an example:  
-	$ cat /etc/netplan/00-installer-config.yaml
-	# This is the network config written by 'subiquity'
-	network:
-	  ethernets:
-		ens260f0:
-		  critical: true
-		  dhcp-identifier: mac
-		  dhcp4: true
-		ens260f1:
-		  critical: true
-		  dhcp-identifier: mac
-		  dhcp4: true
-		  dhcp4-overrides:
-			use-routes: false
-	  version: 2
+
+    $ cat /etc/netplan/00-installer-config.yaml
+    # This is the network config written by 'subiquity'
+    network:
+      ethernets:
+	ens260f0:
+	  critical: true
+	  dhcp-identifier: mac
+	  dhcp4: true
+	ens260f1:
+          critical: true
+          dhcp-identifier: mac
+          dhcp4: true
+          dhcp4-overrides:
+            use-routes: false
+       version: 2
 
 Then apply the settings  
-	$ sudo netplan apply
+
+    $ sudo netplan apply
 Now check the routing table  
-	$ sudo ip route
+    $ sudo ip route
 	
-	default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-	10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
-	10.67.126.1 dev eno1 proto dhcp scope link src 10.67.126.153 metric 100
-	10.239.27.228 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-	10.248.2.5 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-	172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+    default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+    10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
+    10.67.126.1 dev eno1 proto dhcp scope link src 10.67.126.153 metric 100
+    10.239.27.228 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+    10.248.2.5 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+    172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 
 ## References
 
