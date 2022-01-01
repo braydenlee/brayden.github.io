@@ -9,7 +9,7 @@ tags:
 categories:
   - memos
   - resources
-image: "images/Getting_started.jpg"
+image: "Getting_started.jpg"
 type: posts
 ---
 
