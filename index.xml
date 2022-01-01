@@ -96,18 +96,16 @@ dhcp4-overrides:
 use-routes: false
 version: 2
 &lt;/code>&lt;/pre>
-&lt;p>Then apply the settings&lt;/p>
-&lt;pre>&lt;code>$ sudo netplan apply
-&lt;/code>&lt;/pre>
-&lt;p>Now check the routing table&lt;br>
-$ sudo ip route&lt;/p>
-&lt;pre>&lt;code>default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+&lt;p>Then apply the settings&lt;br>
+$ sudo netplan apply&lt;br>
+Now check the routing table&lt;br>
+$ sudo ip route
+default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
 10.67.126.1 dev eno1 proto dhcp scope link src 10.67.126.153 metric 100
 10.239.27.228 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 10.248.2.5 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-&lt;/code>&lt;/pre>
+172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100&lt;/p>
 &lt;h2 id="references">References&lt;/h2>
 &lt;p>&lt;a class="link" href="https://askubuntu.com/questions/1042582/how-to-set-default-route-with-netplan-ubuntu-18-04-server-2-nic" target="_blank" rel="noopener"
 >Set default route with netplan on Ubuntu&lt;/a>&lt;/p></description></item><item><title>Deploy k8s Cluster Using kubespray</title><link>/posts/deploy_k8s_cluster_using_kubespray/</link><pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/deploy_k8s_cluster_using_kubespray/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>

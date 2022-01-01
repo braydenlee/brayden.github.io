@@ -75,11 +75,11 @@ Following netplan conf is an example:</p>
 # This is the network config written by 'subiquity'
 network:
   ethernets:
-ens260f0:
+    ens260f0:
   critical: true
   dhcp-identifier: mac
   dhcp4: true
-ens260f1:
+    ens260f1:
       critical: true
       dhcp-identifier: mac
       dhcp4: true
@@ -87,18 +87,16 @@ ens260f1:
         use-routes: false
    version: 2
 </code></pre>
-<p>Then apply the settings</p>
-<pre><code>$ sudo netplan apply
-</code></pre>
-<p>Now check the routing table<br>
-$ sudo ip route</p>
-<pre><code>default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
+<p>Then apply the settings<br>
+$ sudo netplan apply<br>
+Now check the routing table<br>
+$ sudo ip route
+default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
 10.67.126.1 dev eno1 proto dhcp scope link src 10.67.126.153 metric 100
 10.239.27.228 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 10.248.2.5 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
-</code></pre>
+172.17.6.9 via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100</p>
 <h2 id=references>References</h2>
 <p><a class=link href=https://askubuntu.com/questions/1042582/how-to-set-default-route-with-netplan-ubuntu-18-04-server-2-nic target=_blank rel=noopener>Set default route with netplan on Ubuntu</a></p>
 </section>
