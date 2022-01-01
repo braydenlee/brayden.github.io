@@ -12,6 +12,7 @@ categories = [
     "memo",
     "tips",
 ]
+image="images/load-balancer.jpg"
 +++
 ## Introduction
 

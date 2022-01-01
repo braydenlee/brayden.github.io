@@ -11,6 +11,7 @@ categories = [
     "memos",
     "tips",
 ]
+image="images/kubernetes-horizontal-color.png"
 +++ 
 
 ## Introduction
@@ -334,6 +335,7 @@ This was due to miss-configuration of nameserver, after correct the settings in 
 
 [Install Kubernetes Cluster on Debian 10 with Kubespray | ComputingForGeeks](https://computingforgeeks.com/deploy-kubernetes-cluster-debian-with-kubespray/)  
 [Deploying kubernetes using Kubespray - YouTube](https://www.youtube.com/watch?v=CJ5G4GpqDy0)  
+[Kubespray](https://kubespray.io/#/)  
 [loop (coredns.io)](https://coredns.io/plugins/loop/#troubleshooting)  
 [Setup Highly Available Kubernetes Cluster with HAProxy 🇬🇧 - DEV Community](https://dev.to/mrturkmen/setup-highly-available-kubernetes-cluster-with-haproxy-2dm8)  
 [Install Docker Engine on Ubuntu | Docker Documentation](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)  
