@@ -70,25 +70,27 @@ default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 <p>As a result, most of the services resides on the external network are un-reachable as the traffic would be directed to the wrong network.</p>
 <h2 id=the-solution>The solution</h2>
 <p>As my internal network is quite simply, all the other nodes are in the same subnet, and don&rsquo;t really need a gateway, so a simply fix is to disable the default route for the internal internface.
-Following netplan conf is an example:<br>
-$ cat /etc/netplan/00-installer-config.yaml
-# This is the network config written by &lsquo;subiquity&rsquo;
+Following netplan conf is an example:</p>
+<pre><code>$ cat /etc/netplan/00-installer-config.yaml
+# This is the network config written by 'subiquity'
 network:
-ethernets:
+  ethernets:
 ens260f0:
-critical: true
-dhcp-identifier: mac
-dhcp4: true
+  critical: true
+  dhcp-identifier: mac
+  dhcp4: true
 ens260f1:
-critical: true
-dhcp-identifier: mac
-dhcp4: true
-dhcp4-overrides:
-use-routes: false
-version: 2</p>
-<p>Then apply the settings<br>
-$ sudo netplan apply
-Now check the routing table<br>
+      critical: true
+      dhcp-identifier: mac
+      dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
+   version: 2
+</code></pre>
+<p>Then apply the settings</p>
+<pre><code>$ sudo netplan apply
+</code></pre>
+<p>Now check the routing table<br>
 $ sudo ip route</p>
 <pre><code>default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
