@@ -10,11 +10,12 @@ This memo will provide a step-by-step guide for how-to setup the load balancing 
 In this experimental setup, three servers are used">
 <meta property="og:url" content="/posts/high_availability-load_balancing_setup/">
 <meta property="og:site_name" content="Brayden's Blog">
-<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="HA"><meta property="article:tag" content="HAproxy"><meta property="article:tag" content="keepalived"><meta property="article:tag" content="Load balancer"><meta property="article:published_time" content="2021-12-22T00:00:00+00:00"><meta property="article:modified_time" content="2021-12-22T00:00:00+00:00">
+<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="HA"><meta property="article:tag" content="HAproxy"><meta property="article:tag" content="keepalived"><meta property="article:tag" content="Load balancer"><meta property="article:published_time" content="2021-12-22T00:00:00+00:00"><meta property="article:modified_time" content="2021-12-22T00:00:00+00:00"><meta property="og:image" content="/images/load-balancer.jpg">
 <meta name=twitter:title content="High Availability & Load Balancing Setup">
 <meta name=twitter:description content="Introduction High availability and Load Balancing are the most important features for online services, especially for services in production.
 This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.
-In this experimental setup, three servers are used">
+In this experimental setup, three servers are used"><meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="/images/load-balancer.jpg">
 </head>
 <body class="article-page has-toc">
 <script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
@@ -26,8 +27,13 @@ extended">
 </a>
 </div>
 <main class="main full-width">
-<article class=main-article>
+<article class="has-image main-article">
 <header class=article-header>
+<div class=article-image>
+<a href=/posts/high_availability-load_balancing_setup/>
+<img src=/images/load-balancer.jpg loading=lazy alt="Featured image of post High Availability & Load Balancing Setup">
+</a>
+</div>
 <div class=article-details>
 <header class=article-category>
 <a href=/categories/memo/>

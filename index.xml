@@ -178,7 +178,7 @@ UserKnownHostsFile ~/.ssh/icx129-ubuntu2204.known_hosts
 &lt;/code>&lt;/pre>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a class="link" href="https://unix.stackexchange.com/questions/521269/ssh-accept-two-key-fingerprints-for-the-same-server-ip" target="_blank" rel="noopener"
->Dual boot - ssh fingerprints for two OSs instances&lt;/a>&lt;/p></description></item><item><title>Deploy k8s Cluster Using kubespray</title><link>/posts/deploy_k8s_cluster_using_kubespray/</link><pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/deploy_k8s_cluster_using_kubespray/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+>Dual boot - ssh fingerprints for two OSs instances&lt;/a>&lt;/p></description></item><item><title>Deploy k8s Cluster Using kubespray</title><link>/posts/deploy_k8s_cluster_using_kubespray/</link><pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/deploy_k8s_cluster_using_kubespray/</guid><description>&lt;img src="/images/kubernetes-horizontal-color.png" alt="Featured image of post Deploy k8s Cluster Using kubespray" />&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.&lt;/p>
 &lt;p>This memo is a note for deploy a &amp;lsquo;product&amp;rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.&lt;/p>
 &lt;table>
@@ -458,6 +458,8 @@ macaddress: 00:1e:67:e6:14:ae
 >Install Kubernetes Cluster on Debian 10 with Kubespray | ComputingForGeeks&lt;/a>&lt;br>
 &lt;a class="link" href="https://www.youtube.com/watch?v=CJ5G4GpqDy0" target="_blank" rel="noopener"
 >Deploying kubernetes using Kubespray - YouTube&lt;/a>&lt;br>
+&lt;a class="link" href="https://kubespray.io/#/" target="_blank" rel="noopener"
+>Kubespray&lt;/a>&lt;br>
 &lt;a class="link" href="https://coredns.io/plugins/loop/#troubleshooting" target="_blank" rel="noopener"
 >loop (coredns.io)&lt;/a>&lt;br>
 &lt;a class="link" href="https://dev.to/mrturkmen/setup-highly-available-kubernetes-cluster-with-haproxy-2dm8" target="_blank" rel="noopener"
@@ -465,7 +467,7 @@ macaddress: 00:1e:67:e6:14:ae
 &lt;a class="link" href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository" target="_blank" rel="noopener"
 >Install Docker Engine on Ubuntu | Docker Documentation&lt;/a>&lt;br>
 &lt;a class="link" href="https://stdworkflow.com/1247/k8s-join-user-system-anonymous-cannot-get-resource-configmaps-in-api-group-in-the-namespace" target="_blank" rel="noopener"
->k8s join User “system:anonymous“ cannot get resource “configmaps“ in API group ““ in the namespace - stdworkflow&lt;/a>&lt;/p></description></item><item><title>High Availability &amp; Load Balancing Setup</title><link>/posts/high_availability-load_balancing_setup/</link><pubDate>Wed, 22 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/high_availability-load_balancing_setup/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+>k8s join User “system:anonymous“ cannot get resource “configmaps“ in API group ““ in the namespace - stdworkflow&lt;/a>&lt;/p></description></item><item><title>High Availability &amp; Load Balancing Setup</title><link>/posts/high_availability-load_balancing_setup/</link><pubDate>Wed, 22 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/high_availability-load_balancing_setup/</guid><description>&lt;img src="/images/load-balancer.jpg" alt="Featured image of post High Availability &amp; Load Balancing Setup" />&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>High availability and Load Balancing are the most important features for online services, especially for services in production.&lt;/p>
 &lt;p>This memo will provide a step-by-step guide for how-to setup the load balancing and High availability for an online web services. The web service used here as the experimental setup, is kubernetes api server. You could use a dummy web service hosted by nginx or httpd as well.&lt;/p>
 &lt;p>In this experimental setup, three servers are used&lt;/p>
