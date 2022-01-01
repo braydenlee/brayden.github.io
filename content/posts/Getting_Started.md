@@ -2,6 +2,16 @@
 title: Where to start
 date: 2021-12-26
 weight: 20
+tags = [
+    "linux",
+    "virtualization",
+    "container",
+]
+categories = [
+    "memos",
+    "resources",
+]
+image="images/Getting_started.jpg"
 type: posts
 ---
 

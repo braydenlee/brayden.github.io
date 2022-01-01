@@ -8,7 +8,7 @@ tags = [
 ]
 date = "2021-12-25"
 categories = [
-    "memo",
+    "memos",
     "tips",
 ]
 +++ 
