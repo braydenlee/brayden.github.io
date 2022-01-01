@@ -559,7 +559,64 @@ Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 &lt;a class="link" href="https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/high_availability_guide/index" target="_blank" rel="noopener"
 >High Availability Guide Red Hat CloudForms 4.6 | Red Hat Customer Portal&lt;/a>&lt;br>
 &lt;a class="link" href="https://docs.d2iq.com/mesosphere/dcos/services/kubernetes/2.4.2-1.15.3/operations/exposing-the-kubernetes-api/" target="_blank" rel="noopener"
->Exposing the Kubernetes API - D2iQ Docs&lt;/a>&lt;/p></description></item><item><title>Markdown Syntax Guide</title><link>/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>/posts/markdown-syntax/</guid><description>&lt;img src="/posts/markdown-syntax/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post Markdown Syntax Guide" />&lt;p>This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p>
+>Exposing the Kubernetes API - D2iQ Docs&lt;/a>&lt;/p></description></item><item><title>SSH: Fingerprint Mismatch for Dual-boot Servers</title><link>/posts/fingerprints_for_dual_boot_system/</link><pubDate>Wed, 22 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/fingerprints_for_dual_boot_system/</guid><description>&lt;img src="/images/man-in-the-middle.png" alt="Featured image of post SSH: Fingerprint Mismatch for Dual-boot Servers" />&lt;h1 id="ssh-fingerprint-mismatch-for-dual-boot-servers">SSH: Fingerprint Mismatch for Dual-boot Servers&lt;/h1>
+&lt;h2 id="the-issue">The issue&lt;/h2>
+&lt;p>For server with multiple operations systems installed, ssh tends to fail with the fingerprints check:&lt;/p>
+&lt;pre>&lt;code>$ ssh 10.67.126.129
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA.
+Please contact your system administrator.
+Add correct host key in /root/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /root/.ssh/known_hosts:91
+ECDSA host key for 10.67.126.129 has changed and you have requested strict checking.
+Host key verification failed.
+&lt;/code>&lt;/pre>
+&lt;p>One workaround would be remove the existing key in .ssh/known_hosts and then accept the new fingerprint.&lt;br>
+However, once you switch the server to another operation system, you will repeat the workaround again.&lt;br>
+There are a few solutions or kind of workarounds are available, depends on context of the usage.&lt;/p>
+&lt;h2 id="solution">Solution&lt;/h2>
+&lt;p>If we are within a private development env and no strict security/access control required, then all the options listed here could be used. Otherwise the option - create dedeciated host profile at client side is recommendated.&lt;/p>
+&lt;h3 id="bypass-the-local-known_host-file">Bypass the local known_host file&lt;/h3>
+&lt;pre>&lt;code>$ ssh -o UserKnownHostsFile=/dev/null 10.67.126.129 -i .ssh/id_rsa
+The authenticity of host '10.67.126.129 (10.67.126.129)' can't be established.
+ECDSA key fingerprint is SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA.
+ECDSA key fingerprint is MD5:46:22:d8:01:02:dd:10:10:ec:17:28:21:f7:97:22:f0.
+Are you sure you want to continue connecting (yes/no)?
+&lt;/code>&lt;/pre>
+&lt;p>Note that, with this method, you have to type yes to accept the fingerprint everytime, and enter the password if ssh key is not deployed.&lt;br>
+Or another option if passwordless enabled (ssh key is deployed) &lt;code>-o StrictHostKeyChecking=no&lt;/code> as:&lt;/p>
+&lt;pre>&lt;code>$ ssh -o StrictHostKeyChecking=no 10.67.126.129
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA.
+Please contact your system administrator.
+Add correct host key in /root/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /root/.ssh/known_hosts:91
+Password authentication is disabled to avoid man-in-the-middle attacks.
+Keyboard-interactive authentication is disabled to avoid man-in-the-middle attacks.
+Activate the web console with: systemctl enable --now cockpit.socket
+Last login: Sat Jan 1 22:34:40 2022 from 10.67.126.101
+&lt;/code>&lt;/pre>
+&lt;blockquote>
+&lt;p>Note that, if passwordless is not enabled, &lt;code>-o StrictHostKeyChecking=no&lt;/code> doesn&amp;rsquo;t work - it still complains the fingerprint and prohabits the login with password or keyboard interaction to mitigate the &amp;ldquo;man-in-the-middle&amp;rdquo; attacks.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="fake-single-server">Fake Single Server&lt;/h3>
+&lt;p>Another workaround would be copy one of the identity file from one OS to the other, so the two OS appears the same to fake the client to believe it is connecting the same instance.
+The identity files are under &lt;code>/etc/ssh/ssh_host*&lt;/code>, simply copy them to the other operating system.&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a class="link" href="https://unix.stackexchange.com/questions/521269/ssh-accept-two-key-fingerprints-for-the-same-server-ip" target="_blank" rel="noopener"
+>Dual boot - ssh fingerprints for two OSs instances&lt;/a>&lt;/p></description></item><item><title>Markdown Syntax Guide</title><link>/posts/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>/posts/markdown-syntax/</guid><description>&lt;img src="/posts/markdown-syntax/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post Markdown Syntax Guide" />&lt;p>This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p>
 &lt;h2 id="headings">Headings&lt;/h2>
 &lt;p>The following HTML &lt;code>&amp;lt;h1&amp;gt;&lt;/code>—&lt;code>&amp;lt;h6&amp;gt;&lt;/code> elements represent six levels of section headings. &lt;code>&amp;lt;h1&amp;gt;&lt;/code> is the highest section level while &lt;code>&amp;lt;h6&amp;gt;&lt;/code> is the lowest.&lt;/p>
 &lt;h1 id="h1">H1&lt;/h1>
