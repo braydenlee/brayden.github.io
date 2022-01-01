@@ -41,11 +41,11 @@ Following netplan conf is an example:
     # This is the network config written by 'subiquity'
     network:
       ethernets:
-	ens260f0:
+        ens260f0:
 	  critical: true
 	  dhcp-identifier: mac
 	  dhcp4: true
-	ens260f1:
+        ens260f1:
           critical: true
           dhcp-identifier: mac
           dhcp4: true
@@ -54,11 +54,9 @@ Following netplan conf is an example:
        version: 2
 
 Then apply the settings  
-
-    $ sudo netplan apply
+    $ sudo netplan apply  
 Now check the routing table  
     $ sudo ip route
-	
     default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
     10.67.126.0/23 dev eno1 proto kernel scope link src 10.67.126.153 metric 100
     10.67.126.1 dev eno1 proto dhcp scope link src 10.67.126.153 metric 100
