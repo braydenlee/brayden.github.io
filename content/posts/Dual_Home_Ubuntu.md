@@ -4,13 +4,13 @@ title = "Route setting in Multihomed Server"
 date = "2022-01-01"
 description = "For dual homed servers which connects to Internet and internal networks, used to have routing issues. This guide provides a approach to correct the routing settings."
 tags = [
-    "network",
-    "ubuntu",
-    "netplan",
-    "routing",
+	"network",
+	"ubuntu",
+	"netplan",
+	"routing",
 ]
 categories = [
-    "tips",
+	"tips",
 	"memos"
 ]
 image = "images/Networking.jpg"
