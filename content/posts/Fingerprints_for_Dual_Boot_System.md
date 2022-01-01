@@ -6,7 +6,7 @@ tags = [
     "fingerprint",
     "dual boot"
 ]
-date = "2021-12-22"
+date = "2022-01-01"
 categories = [
     "memo",
     "tips",
@@ -18,7 +18,7 @@ image="images/man-in-the-middle.png"
 
 ## The issue
 
-For server with multiple operations systems installed, ssh tends to fail with the fingerprints check:  
+For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:  
 
     $ ssh 10.67.126.129
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -51,7 +51,7 @@ If we are within a private development env and no strict security/access control
     ECDSA key fingerprint is MD5:46:22:d8:01:02:dd:10:10:ec:17:28:21:f7:97:22:f0.
     Are you sure you want to continue connecting (yes/no)?
 
-Note that, with this method, you have to type yes to accept the fingerprint everytime, and enter the password if ssh key is not deployed.  
+Note that, with this method, you have to type `yes` to accept the fingerprint everytime, and enter the password if ssh key is not deployed.  
 Or another option if passwordless enabled (ssh key is deployed) `-o StrictHostKeyChecking=no` as:  
 
     $ ssh -o StrictHostKeyChecking=no 10.67.126.129
@@ -78,6 +78,20 @@ Or another option if passwordless enabled (ssh key is deployed) `-o StrictHostKe
 
 Another workaround would be copy one of the identity file from one OS to the other, so the two OS appears the same to fake the client to believe it is connecting the same instance. 
 The identity files are under `/etc/ssh/ssh_host*`, simply copy them to the other operating system.
+
+### Dedicated Local Host Profiles
+
+This the recommended options, create a config file at the client side:
+
+    $cat config
+    Host icx129-centos8
+        Hostname 10.67.126.129
+        UserKnownHostsFile ~/.ssh/icx129-centos8.known_hosts
+
+    Host icx129-ubuntu2204
+        Hostname 10.67.126.129
+        UserKnownHostsFile ~/.ssh/icx129-ubuntu2204.known_hosts
+
  
 ## Reference
 [Dual boot - ssh fingerprints for two OSs instances](https://unix.stackexchange.com/questions/521269/ssh-accept-two-key-fingerprints-for-the-same-server-ip)
