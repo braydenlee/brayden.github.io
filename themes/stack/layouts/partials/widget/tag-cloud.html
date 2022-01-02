@@ -5,10 +5,18 @@
     <h2 class="widget-title section-title">{{ T "widget.tagCloud.title" }}</h2>
 
     <div class="tagCloud-tags">
+        <!-- 
         {{ range first .Site.Params.widgets.tagCloud.limit .Site.Taxonomies.tags.ByCount }}
             <a href="{{ .Page.RelPermalink }}" class="font_size_{{ .Count }}">
                 {{ .Page.Title }}
             </a>
         {{ end }}
+        -->
+        {{- range $name, $taxonomy := $.Site.Taxonomies.tags -}} 
+            {{- $currentTagCount := len $taxonomy.Pages -}}
+            {{- $currentFontSize := (add $smallestFontSize (mul (sub $currentTagCount $minCount) $sizeStep) ) -}}
+            <!--Current font size: {{$currentFontSize}}-->
+            <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" aria-label="{{ $name }} ({{$currentTagCount}} posts)" style="font-size:{{$currentFontSize}}{{$fontUnit}}">{{- $name -}}</a>
+        {{- end -}}   
     </div>
 </section>
