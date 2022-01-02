@@ -19,7 +19,7 @@
             {{- $currentTagCount := len $taxonomy.Pages -}}
             {{- $currentFontSize := (add $smallestFontSize (mul (sub $currentTagCount 1) 0.1) ) -}}
             <!--Current font size: {{$currentFontSize}}-->
-            <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" aria-label="{{ $name }} ({{$currentTagCount}} posts)" style="font-size:{{$currentFontSize}}{{$fontUnit}}">{{- $name -}}</a>
+            <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" aria-label="{{ $name }} ({{$currentTagCount}} posts)" style="font-size:{{$currentFontSize}}{{$fontUnit}}">{{- $name ($currentTagCount) -}}</a>
         {{- end -}}   
     </div>
 </section>
