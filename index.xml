@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 01 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 04 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
 &lt;p>Learn something new everyday and share something now and then&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="some-useful-tutorial">Some useful tutorial&lt;/h2>
@@ -65,7 +65,51 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;h3 id="performance-profiling--benchmark">Performance profiling &amp;amp; benchmark&lt;/h3>
 &lt;ul>
 &lt;li>WIP&lt;/li>
-&lt;/ul></description></item><item><title>Route setting in Multihomed Server</title><link>/posts/dual_home_ubuntu/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/dual_home_ubuntu/</guid><description>&lt;img src="/images/Networking.jpg" alt="Featured image of post Route setting in Multihomed Server" />&lt;h1 id="route-setting-in-multihomed-servers">Route setting in Multihomed servers&lt;/h1>
+&lt;/ul></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;h1 id="recover-ubuntu-from-initramfs-error-caused-by-improper-shutdown">Recover Ubuntu from initramfs error caused by improper shutdown&lt;/h1>
+&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;p>Following a force shutdown of the server, the system failed to boot with following message:&lt;/p>
+&lt;blockquote>
+&lt;p>initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;
+timeout waiting &amp;hellip;
+&amp;hellip;&lt;/p>
+&lt;/blockquote>
+&lt;p>Then the init process crashed with kernel panic.&lt;/p>
+&lt;h2 id="solution">Solution&lt;/h2>
+&lt;p>As if it&amp;rsquo;s due to initramfs damage by the improper shutdown, so the solution is to re-generate the initramfs.&lt;/p>
+&lt;h3 id="boot-from-a-live-cdusb">Boot from a live CD/USB&lt;/h3>
+&lt;p>Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope).&lt;/p>
+&lt;h3 id="enter-the-cli">Enter the CLI&lt;/h3>
+&lt;p>Once booted from the live CD, if it&amp;rsquo;s GUI, then press ALT + F2, to enter the CLI. We shall rebuild the initramfs from the CLI.&lt;/p>
+&lt;h3 id="the-magic">The Magic&lt;/h3>
+&lt;pre>&lt;code>sudo lvscan
+sudo mount /dev/ubuntu-vg/ubuntu-lv /mnt
+\# prepare chroot environment
+sudo mount /dev/sda2 /mnt/boot/ # replace sda2 here is my boot partition!
+sudo mount -o rbind /dev/ /mnt/dev/
+sudo mount -t proc proc /mnt/proc/
+sudo mount -t sysfs sys /mnt/sys/
+\# make dns available in chroot
+sudo cp /etc/resolv.conf /mnt/etc/resolv.conf
+\# enter chroot
+sudo chroot /mnt /bin/bash
+\# re-install missing packages
+apt install initramfs-tools
+\# re-generate (this might be done also by apt in the step before, I'm not sure)
+update-initramfs -u -k all
+\# Leave chroot environment - not sure if the following is really necessary...
+exit
+\# Write buffers to disk
+sudo sync
+\# Unmount file systems
+sudo umount /mnt/sys
+sudo umount /mnt/proc
+sudo umount /mnt/boot
+&lt;/code>&lt;/pre>
+&lt;h3 id="done">Done&lt;/h3>
+&lt;p>Reboot and you now should be able to boot into the original system.&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a class="link" href="https://newbedev.com/gave-up-waiting-for-root-device-ubuntu-vg-root-doesnt-exist" target="_blank" rel="noopener"
+>Gave up waiting for root device ubuntu-vg-root doesnt exist&lt;/a>&lt;/p></description></item><item><title>Route setting in Multihomed Server</title><link>/posts/dual_home_ubuntu/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/dual_home_ubuntu/</guid><description>&lt;img src="/images/Networking.jpg" alt="Featured image of post Route setting in Multihomed Server" />&lt;h1 id="route-setting-in-multihomed-servers">Route setting in Multihomed servers&lt;/h1>
 &lt;h2 id="the-issue">The Issue&lt;/h2>
 &lt;p>For servers with multiples interfaces connecting to differenct networks, tend to have routing issues if multiple interfaces have default route settings.
 For example, I have a server with two NICs, one connect to external network in subnet &lt;code>10.67.126.x/23&lt;/code>, and the other connects to internal network in subnet &lt;code>192.168.8.x/24&lt;/code>.
