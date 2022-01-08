@@ -11,7 +11,7 @@ categories = [
     "memos",
     "tips",
 ]
-image="initramfs.png"
+image="images/initramfs.png"
 +++ 
 
 ## Issue description
