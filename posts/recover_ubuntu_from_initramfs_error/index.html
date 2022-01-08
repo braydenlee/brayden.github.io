@@ -1,26 +1,33 @@
 <!doctype html><html lang>
 <head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Recover Ubuntu from initramfs error caused by improper shutdown Issue description Following a force shutdown of the server, the system failed to boot with following message:
- initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip; timeout waiting &amp;hellip; &amp;hellip;
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Issue description Following a force shutdown of the server, the system failed to boot with following message:
+ initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;
+timeout waiting &amp;hellip;
+&amp;hellip;
  Then the init process crashed with kernel panic.
 Solution As if it&amp;rsquo;s due to initramfs damage by the improper shutdown, so the solution is to re-generate the initramfs.
 Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope)."><title>Recover Ubuntu from initramfs error caused by improper shutdown</title>
 <link rel=canonical href=/posts/recover_ubuntu_from_initramfs_error/>
 <link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Recover Ubuntu from initramfs error caused by improper shutdown">
-<meta property="og:description" content="Recover Ubuntu from initramfs error caused by improper shutdown Issue description Following a force shutdown of the server, the system failed to boot with following message:
- initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip; timeout waiting &amp;hellip; &amp;hellip;
+<meta property="og:description" content="Issue description Following a force shutdown of the server, the system failed to boot with following message:
+ initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;
+timeout waiting &amp;hellip;
+&amp;hellip;
  Then the init process crashed with kernel panic.
 Solution As if it&amp;rsquo;s due to initramfs damage by the improper shutdown, so the solution is to re-generate the initramfs.
 Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope).">
 <meta property="og:url" content="/posts/recover_ubuntu_from_initramfs_error/">
 <meta property="og:site_name" content="Brayden's Blog">
-<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="recover"><meta property="article:tag" content="ubuntu"><meta property="article:tag" content="initramfs"><meta property="article:published_time" content="2022-01-04T00:00:00+00:00"><meta property="article:modified_time" content="2022-01-04T00:00:00+00:00">
+<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="recover"><meta property="article:tag" content="ubuntu"><meta property="article:tag" content="initramfs"><meta property="article:published_time" content="2022-01-04T00:00:00+00:00"><meta property="article:modified_time" content="2022-01-04T00:00:00+00:00"><meta property="og:image" content="/initramfs.png">
 <meta name=twitter:title content="Recover Ubuntu from initramfs error caused by improper shutdown">
-<meta name=twitter:description content="Recover Ubuntu from initramfs error caused by improper shutdown Issue description Following a force shutdown of the server, the system failed to boot with following message:
- initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip; timeout waiting &amp;hellip; &amp;hellip;
+<meta name=twitter:description content="Issue description Following a force shutdown of the server, the system failed to boot with following message:
+ initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;
+timeout waiting &amp;hellip;
+&amp;hellip;
  Then the init process crashed with kernel panic.
 Solution As if it&amp;rsquo;s due to initramfs damage by the improper shutdown, so the solution is to re-generate the initramfs.
-Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope).">
+Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope)."><meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="/initramfs.png">
 </head>
 <body class="article-page has-toc">
 <script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
@@ -32,8 +39,13 @@ extended">
 </a>
 </div>
 <main class="main full-width">
-<article class=main-article>
+<article class="has-image main-article">
 <header class=article-header>
+<div class=article-image>
+<a href=/posts/recover_ubuntu_from_initramfs_error/>
+<img src=/initramfs.png loading=lazy alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown">
+</a>
+</div>
 <div class=article-details>
 <section class=article-tags>
 <a href=/tags/recover/>recover</a>
@@ -56,12 +68,11 @@ extended">
 </div>
 </header>
 <section class=article-content>
-<h1 id=recover-ubuntu-from-initramfs-error-caused-by-improper-shutdown>Recover Ubuntu from initramfs error caused by improper shutdown</h1>
 <h2 id=issue-description>Issue description</h2>
 <p>Following a force shutdown of the server, the system failed to boot with following message:</p>
 <blockquote>
-<p>initramfs: waiting for /dev/mapper/ubuntu&ndash;vg-ubuntu&ndash;lv to appear &mldr;
-timeout waiting &mldr;
+<p>initramfs: waiting for /dev/mapper/ubuntu&ndash;vg-ubuntu&ndash;lv to appear &mldr;<br>
+timeout waiting &mldr;<br>
 &mldr;</p>
 </blockquote>
 <p>Then the init process crashed with kernel panic.</p>

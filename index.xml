@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 04 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 08 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
 &lt;p>Learn something new everyday and share something now and then&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="some-useful-tutorial">Some useful tutorial&lt;/h2>
@@ -65,12 +65,29 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;h3 id="performance-profiling--benchmark">Performance profiling &amp;amp; benchmark&lt;/h3>
 &lt;ul>
 &lt;li>WIP&lt;/li>
-&lt;/ul></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;h1 id="recover-ubuntu-from-initramfs-error-caused-by-improper-shutdown">Recover Ubuntu from initramfs error caused by improper shutdown&lt;/h1>
-&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;/ul></description></item><item><title>Headless vncserver with Container</title><link>/posts/headless_vncserver_with_container/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/headless_vncserver_with_container/</guid><description>&lt;img src="/images/real-vnc.png" alt="Featured image of post Headless vncserver with Container" />&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;ul>
+&lt;li>Docker intalled, up and running&lt;/li>
+&lt;/ul>
+&lt;h2 id="start-the-vncserver">Start the vncserver&lt;/h2>
+&lt;p>It&amp;rsquo;s quite straightforward to run the vncserver with container. Here we use the image from accetto.&lt;/p>
+&lt;pre>&lt;code>docker run -d -p 5920:5901 -p 6901:6901 accetto/ubuntu-vnc-xfce-firefox-g3
+&lt;/code>&lt;/pre>
+&lt;p>Docker will pull the image if not found in the localhost.&lt;/p>
+&lt;h2 id="connect-to-the-vncserver-via-vnc-viewer">Connect to the vncserver via vnc viewer&lt;/h2>
+&lt;p>Here I use realvnc viwer on windows, enter &lt;code>&amp;lt;IP@&amp;gt;:5920&lt;/code> to connect, and enter the password, &amp;ldquo;headless&amp;rdquo;.&lt;/p>
+&lt;h2 id="connect-to-the-vncserver-via-browser-html5-support-required">Connect to the vncserver via browser (HTML5 support required)&lt;/h2>
+&lt;p>Enter the url - &lt;code>&amp;lt;IP@&amp;gt;:6901/vnc.html&lt;/code> to connect. You will be prompted to enter the password.&lt;/p>
+&lt;h2 id="misc">MISC&lt;/h2>
+&lt;p>You could change the vnc window resolution by &lt;code>Application --&amp;gt; Settings --&amp;gt; Display&lt;/code>. Select the resolution fits your need.&lt;/p>
+&lt;p>Enjoy!&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a class="link" href="https://opensourcelibs.com/lib/ubuntu-vnc-xfce" target="_blank" rel="noopener"
+>Headless VNCSERVER with Container&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Following a force shutdown of the server, the system failed to boot with following message:&lt;/p>
 &lt;blockquote>
-&lt;p>initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;
-timeout waiting &amp;hellip;
+&lt;p>initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;&lt;br>
+timeout waiting &amp;hellip;&lt;br>
 &amp;hellip;&lt;/p>
 &lt;/blockquote>
 &lt;p>Then the init process crashed with kernel panic.&lt;/p>
@@ -109,8 +126,7 @@ sudo umount /mnt/boot
 &lt;p>Reboot and you now should be able to boot into the original system.&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a class="link" href="https://newbedev.com/gave-up-waiting-for-root-device-ubuntu-vg-root-doesnt-exist" target="_blank" rel="noopener"
->Gave up waiting for root device ubuntu-vg-root doesnt exist&lt;/a>&lt;/p></description></item><item><title>Route setting in Multihomed Server</title><link>/posts/dual_home_ubuntu/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/dual_home_ubuntu/</guid><description>&lt;img src="/images/Networking.jpg" alt="Featured image of post Route setting in Multihomed Server" />&lt;h1 id="route-setting-in-multihomed-servers">Route setting in Multihomed servers&lt;/h1>
-&lt;h2 id="the-issue">The Issue&lt;/h2>
+>Gave up waiting for root device ubuntu-vg-root doesnt exist&lt;/a>&lt;/p></description></item><item><title>Route setting in Multihomed Server</title><link>/posts/dual_home_ubuntu/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/dual_home_ubuntu/</guid><description>&lt;img src="/images/Networking.jpg" alt="Featured image of post Route setting in Multihomed Server" />&lt;h2 id="the-issue">The Issue&lt;/h2>
 &lt;p>For servers with multiples interfaces connecting to differenct networks, tend to have routing issues if multiple interfaces have default route settings.
 For example, I have a server with two NICs, one connect to external network in subnet &lt;code>10.67.126.x/23&lt;/code>, and the other connects to internal network in subnet &lt;code>192.168.8.x/24&lt;/code>.
 As the DHCP servers for the two subnets both provide default route, the routing table in my server will results in multiple default routes:&lt;/p>
@@ -155,8 +171,7 @@ default via 10.67.126.1 dev eno1 proto dhcp src 10.67.126.153 metric 100
 &lt;/code>&lt;/pre>
 &lt;h2 id="references">References&lt;/h2>
 &lt;p>&lt;a class="link" href="https://askubuntu.com/questions/1042582/how-to-set-default-route-with-netplan-ubuntu-18-04-server-2-nic" target="_blank" rel="noopener"
->Set default route with netplan on Ubuntu&lt;/a>&lt;/p></description></item><item><title>SSH: Fingerprint Mismatch for Dual-boot Servers</title><link>/posts/fingerprints_for_dual_boot_system/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/fingerprints_for_dual_boot_system/</guid><description>&lt;img src="/images/man-in-the-middle.png" alt="Featured image of post SSH: Fingerprint Mismatch for Dual-boot Servers" />&lt;h1 id="ssh-fingerprint-mismatch-for-dual-boot-servers">SSH: Fingerprint Mismatch for Dual-boot Servers&lt;/h1>
-&lt;h2 id="the-issue">The issue&lt;/h2>
+>Set default route with netplan on Ubuntu&lt;/a>&lt;/p></description></item><item><title>SSH: Fingerprint Mismatch for Dual-boot Servers</title><link>/posts/fingerprints_for_dual_boot_system/</link><pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/fingerprints_for_dual_boot_system/</guid><description>&lt;img src="/images/man-in-the-middle.png" alt="Featured image of post SSH: Fingerprint Mismatch for Dual-boot Servers" />&lt;h2 id="the-issue">The issue&lt;/h2>
 &lt;p>For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:&lt;/p>
 &lt;pre>&lt;code>$ ssh 10.67.126.129
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

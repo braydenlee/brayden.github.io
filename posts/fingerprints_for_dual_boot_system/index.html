@@ -1,16 +1,16 @@
 <!doctype html><html lang>
 <head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="SSH: Fingerprint Mismatch for Dual-boot Servers The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
 $ ssh 10.67.126.129 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY! Someone could be eavesdropping on you right now (man-in-the-middle attack)! It is also possible that a host key has just been changed. The fingerprint for the ECDSA key sent by the remote host is SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA."><title>SSH: Fingerprint Mismatch for Dual-boot Servers</title>
 <link rel=canonical href=/posts/fingerprints_for_dual_boot_system/>
 <link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="SSH: Fingerprint Mismatch for Dual-boot Servers">
-<meta property="og:description" content="SSH: Fingerprint Mismatch for Dual-boot Servers The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
+<meta property="og:description" content="The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
 $ ssh 10.67.126.129 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY! Someone could be eavesdropping on you right now (man-in-the-middle attack)! It is also possible that a host key has just been changed. The fingerprint for the ECDSA key sent by the remote host is SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA.">
 <meta property="og:url" content="/posts/fingerprints_for_dual_boot_system/">
 <meta property="og:site_name" content="Brayden's Blog">
 <meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="ssh"><meta property="article:tag" content="fingerprint"><meta property="article:tag" content="dual boot"><meta property="article:published_time" content="2022-01-01T00:00:00+00:00"><meta property="article:modified_time" content="2022-01-01T00:00:00+00:00"><meta property="og:image" content="/images/man-in-the-middle.png">
 <meta name=twitter:title content="SSH: Fingerprint Mismatch for Dual-boot Servers">
-<meta name=twitter:description content="SSH: Fingerprint Mismatch for Dual-boot Servers The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
+<meta name=twitter:description content="The issue For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:
 $ ssh 10.67.126.129 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY! Someone could be eavesdropping on you right now (man-in-the-middle attack)! It is also possible that a host key has just been changed. The fingerprint for the ECDSA key sent by the remote host is SHA256:I4+yk7+wa9rETt+jKFZ2tEvmSecoXRsDYQc1G/f2exA."><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="/images/man-in-the-middle.png">
 </head>
@@ -53,7 +53,6 @@ extended">
 </div>
 </header>
 <section class=article-content>
-<h1 id=ssh-fingerprint-mismatch-for-dual-boot-servers>SSH: Fingerprint Mismatch for Dual-boot Servers</h1>
 <h2 id=the-issue>The issue</h2>
 <p>For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:</p>
 <pre><code>$ ssh 10.67.126.129
