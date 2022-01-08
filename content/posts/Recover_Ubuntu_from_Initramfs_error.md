@@ -11,16 +11,15 @@ categories = [
     "memos",
     "tips",
 ]
+image="initramfs.png"
 +++ 
-
-# Recover Ubuntu from initramfs error caused by improper shutdown
 
 ## Issue description
 
 Following a force shutdown of the server, the system failed to boot with following message:
 
-> initramfs: waiting for /dev/mapper/ubuntu--vg-ubuntu--lv to appear ...
-> timeout waiting ...
+> initramfs: waiting for /dev/mapper/ubuntu--vg-ubuntu--lv to appear ...  
+> timeout waiting ...  
 > ...
 
 Then the init process crashed with kernel panic.

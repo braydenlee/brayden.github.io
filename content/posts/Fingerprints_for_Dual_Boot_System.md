@@ -14,8 +14,6 @@ categories = [
 image="images/man-in-the-middle.png"
 +++
 
-# SSH: Fingerprint Mismatch for Dual-boot Servers
-
 ## The issue
 
 For server with multiple operating systems installed, ssh tends to fail with the fingerprints check:  

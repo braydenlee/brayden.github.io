@@ -16,8 +16,6 @@ categories = [
 image = "images/Networking.jpg"
 +++
 
-# Route setting in Multihomed servers
-
 ## The Issue
 
 For servers with multiples interfaces connecting to differenct networks, tend to have routing issues if multiple interfaces have default route settings.
