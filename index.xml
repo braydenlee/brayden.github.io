@@ -83,7 +83,7 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;p>Enjoy!&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a class="link" href="https://opensourcelibs.com/lib/ubuntu-vnc-xfce" target="_blank" rel="noopener"
->Headless VNCSERVER with Container&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+>Headless VNCSERVER with Container&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/images/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Following a force shutdown of the server, the system failed to boot with following message:&lt;/p>
 &lt;blockquote>
 &lt;p>initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;&lt;br>
