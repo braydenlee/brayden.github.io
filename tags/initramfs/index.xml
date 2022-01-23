@@ -4,4 +4,4 @@ timeout waiting &amp;hellip;
 &amp;hellip;
 Then the init process crashed with kernel panic.
 Solution As if it&amp;rsquo;s due to initramfs damage by the improper shutdown, so the solution is to re-generate the initramfs.
-Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope).</description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/setting_up_nfs_server/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/setting_up_nfs_server/</guid><description/></item></channel></rss>
+Boot from a live CD/USB Could either burn a live iso to a USB stick or mount the ISO to the server (how to mount the ISO to a server via its BMC/IPMI tools, is out of the scope).</description></item></channel></rss>

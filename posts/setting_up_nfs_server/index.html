@@ -1,83 +1,120 @@
 <!doctype html><html lang>
 <head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content><title>Recover Ubuntu from initramfs error caused by improper shutdown</title>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Setting up a NFS server is quite straight forward, there&amp;rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.
+This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.
+Set up the NFS server I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions."><title>Setting Up NFS Server</title>
 <link rel=canonical href=/posts/setting_up_nfs_server/>
-<link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Recover Ubuntu from initramfs error caused by improper shutdown">
-<meta property="og:description" content>
+<link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Setting Up NFS Server">
+<meta property="og:description" content="Setting up a NFS server is quite straight forward, there&amp;rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.
+This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.
+Set up the NFS server I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions.">
 <meta property="og:url" content="/posts/setting_up_nfs_server/">
 <meta property="og:site_name" content="Brayden's Blog">
-<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="recover"><meta property="article:tag" content="ubuntu"><meta property="article:tag" content="initramfs"><meta property="article:published_time" content="2022-01-04T00:00:00+00:00"><meta property="article:modified_time" content="2022-01-04T00:00:00+00:00"><meta property="og:image" content="/images/initramfs.png">
-<meta name=twitter:title content="Recover Ubuntu from initramfs error caused by improper shutdown">
-<meta name=twitter:description content><meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="/images/initramfs.png">
+<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="nfs"><meta property="article:tag" content="nfs server"><meta property="article:tag" content="ubuntu"><meta property="article:tag" content="centos"><meta property="article:published_time" content="2022-01-23T00:00:00+00:00"><meta property="article:modified_time" content="2022-01-23T00:00:00+00:00"><meta property="og:image" content="/images/kissclipart-nfs.png">
+<meta name=twitter:title content="Setting Up NFS Server">
+<meta name=twitter:description content="Setting up a NFS server is quite straight forward, there&amp;rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.
+This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.
+Set up the NFS server I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions."><meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="/images/kissclipart-nfs.png">
 </head>
-<body class=article-page>
+<body class="article-page has-toc">
 <script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
 <div class="container main-container flex
-on-phone--column extended">
-<aside class="sidebar left-sidebar sticky">
-<button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box>
-<span class=hamburger-inner></span>
-</span>
-</button>
-<header class=site-info>
-<figure class=site-avatar>
-<img src=/img/avatar_hu6027d67e909710aba7deabfe913427d0_113664_300x0_resize_box_3.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
-</figure>
-<h1 class=site-name><a href=/>Brayden's Blog</a></h1>
-<h2 class=site-description></h2></header>
-<ol class=menu id=main-menu>
-<li>
-<a href=/pages/about/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
-<span>About</span>
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
 </a>
-</li>
-<li>
-<a href=/pages/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-<span>Archives</span>
-</a>
-</li>
-<li>
-<a href=/pages/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
-<span>Search</span>
-</a>
-</li>
-<li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span>
-</li>
-</ol>
-</aside>
+</div>
 <main class="main full-width">
 <article class="has-image main-article">
 <header class=article-header>
 <div class=article-image>
 <a href=/posts/setting_up_nfs_server/>
-<img src=/images/initramfs.png loading=lazy alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown">
+<img src=/images/kissclipart-nfs.png loading=lazy alt="Featured image of post Setting Up NFS Server">
 </a>
 </div>
 <div class=article-details>
 <section class=article-tags>
-<a href=/tags/recover/>recover</a>
+<a href=/tags/nfs/>nfs</a>
+<a href=/tags/nfs-server/>nfs server</a>
 <a href=/tags/ubuntu/>ubuntu</a>
-<a href=/tags/initramfs/>initramfs</a>
+<a href=/tags/centos/>centos</a>
 </section>
 <h2 class=article-title>
-<a href=/posts/setting_up_nfs_server/>Recover Ubuntu from initramfs error caused by improper shutdown</a>
+<a href=/posts/setting_up_nfs_server/>Setting Up NFS Server</a>
 </h2>
 <footer class=article-time>
 <div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published>Jan 04, 2022</time>
+<time class=article-time--published>Jan 23, 2022</time>
 </div>
 <div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
 <time class=article-time--reading>
-0 minute read
+3 minute read
 </time>
 </div>
 </footer>
 </div>
 </header>
 <section class=article-content>
+<p>Setting up a NFS server is quite straight forward, there&rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.</p>
+<p>This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.</p>
+<h2 id=set-up-the-nfs-server>Set up the NFS server</h2>
+<p>I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions.
+<a class=link href=https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_file_systems/exporting-nfs-shares_managing-file-systems target=_blank rel=noopener>RHEL8 NFS server setup</a></p>
+<p>Do enable the services and ports as described in the user guide if you are running the firewall.</p>
+<pre><code>firewall-cmd --permanent --add-service mountd
+firewall-cmd --permanent --add-service rpc-bind
+firewall-cmd --permanent --add-service nfs
+firewall-cmd --permanent --add-port=2049/tcp
+firewall-cmd --reload
+</code></pre>
+<h3 id=failed-to-start-up-the-nfs-server>Failed to start up the NFS server</h3>
+<pre><code>$ systemctl status rpcbind
+\u25cf rpcbind.service - RPC bind service
+   Loaded: loaded (/usr/lib/systemd/system/rpcbind.service; indirect; vendor preset: enabled)
+   Active: failed (Result: exit-code) since Tue 2017-12-26 13:30:11 CST; 14s ago
+  Process: 20650 ExecStart=/sbin/rpcbind -w $RPCBIND_ARGS (code=exited, status=0/SUCCESS)
+ Main PID: 20653 (code=exited, status=1/FAILURE)
+
+Dec 26 13:30:11 8d58 systemd[1]: Starting RPC bind service...
+Dec 26 13:30:11 8d58 systemd[1]: Started RPC bind service.
+Dec 26 13:30:11 8d58 rpcbind[20650]: rpcbind: fork failed: No such device
+Dec 26 13:30:11 8d58 systemd[1]: rpcbind.service: main process exited, code=exited, status=1/FAILURE
+Dec 26 13:30:11 8d58 systemd[1]: Unit rpcbind.service entered failed state.
+Dec 26 13:30:11 8d58 systemd[1]: rpcbind.service failed.
+</code></pre>
+<p>The root cause might be /dev/null is not correctly labeled if selinux is on, or turn on/off in between. Normally reboot the system will resolve the issue - the system will relabel the file system at startup upon switching on/off selinux. Or <code>fixfile relabel</code> and <code>reboot</code>.</p>
+<h3 id=selinux-is-preventing-usrbinrpcidmapd-from-write-access-on-the-file-null>selinux is preventing /usr/bin/rpc.idmapd from write access on the file null</h3>
+<pre><code>*****  Plugin catchall (100. confidence) suggests   **************************
+                                
+If you believe that rpc.idmapd should be allowed write access on the null file by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do allow this access for now by executing:
+$ ausearch -c 'rpc.idmapd' --raw | audit2allow -M my-rpcidmapd
+$ semodule -i my-rpcidmapd.pp
+</code></pre>
+<h2 id=mount-the-nfs-share-on-client>Mount the NFS share on client</h2>
+<h3 id=mountnfs-no-such-device>mount.nfs no such device</h3>
+<p>For some clients, the mount might fail as:</p>
+<pre><code>mount 192.168.8.3:/store /mnt/nfs
+mount.nfs: No such device
+</code></pre>
+<p>Usually, it&rsquo;s because the nfs/nfsv4 module is not loaded, trying to load the module</p>
+<pre><code>$ modprobe nfs
+modprobe: ERROR: could not insert 'nfs': Invalid argument
+</code></pre>
+<p>from dmesg:</p>
+<pre><code>[2192390.701420] FS-Cache: Loaded
+[2192390.709699] lockd: `' invalid for parameter `nlm_tcpport'
+</code></pre>
+<p>This is caused by improper configurations of lockd.
+Update the <code>/etc/modprobe.d/lockd.conf</code> to add &ldquo;=&rdquo; between <code>nlm_xxxport</code> and <code>&lt;port></code>.</p>
+<pre><code>options lockd nlm_tcpport=60001
+options lockd nlm_udpport=60002
+</code></pre>
+<p>try <code>mount 192.168.8.3:/store /mnt/nfs</code> again, should be completed successfully.</p>
 </section>
 <footer class=article-footer>
 <header class=article-category>
@@ -173,6 +210,30 @@ Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=
 </div>
 </div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
 </main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#set-up-the-nfs-server>Set up the NFS server</a>
+<ul>
+<li><a href=#failed-to-start-up-the-nfs-server>Failed to start up the NFS server</a></li>
+<li><a href=#selinux-is-preventing-usrbinrpcidmapd-from-write-access-on-the-file-null>selinux is preventing /usr/bin/rpc.idmapd from write access on the file null</a></li>
+</ul>
+</li>
+<li><a href=#mount-the-nfs-share-on-client>Mount the NFS share on client</a>
+<ul>
+<li><a href=#mountnfs-no-such-device>mount.nfs no such device</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</section>
+</aside>
 </div>
 <script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script>
 <script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
