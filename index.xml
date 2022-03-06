@@ -68,7 +68,7 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;/ul></description></item><item><title>Setting Up NFS Server</title><link>/posts/setting_up_nfs_server/</link><pubDate>Sun, 23 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/setting_up_nfs_server/</guid><description>&lt;img src="/images/kissclipart-nfs.png" alt="Featured image of post Setting Up NFS Server" />&lt;p>Setting up a NFS server is quite straight forward, there&amp;rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.&lt;/p>
 &lt;p>This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.&lt;/p>
 &lt;h2 id="set-up-the-nfs-server">Set up the NFS server&lt;/h2>
-&lt;p>I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions.
+&lt;p>I would like to recomend the redhat user guide on setting up the NFS server, which has in depth and in detail explainations on the services and components, along with the step-by-step instructions.&lt;br>
 &lt;a class="link" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_file_systems/exporting-nfs-shares_managing-file-systems" target="_blank" rel="noopener"
 >RHEL8 NFS server setup&lt;/a>&lt;/p>
 &lt;p>Do enable the services and ports as described in the user guide if you are running the firewall.&lt;/p>
@@ -78,9 +78,10 @@ firewall-cmd --permanent --add-service nfs
 firewall-cmd --permanent --add-port=2049/tcp
 firewall-cmd --reload
 &lt;/code>&lt;/pre>
+&lt;p>Depends on the version and configurations of the server, the nfs server service might failed to start as shown below.&lt;/p>
 &lt;h3 id="failed-to-start-up-the-nfs-server">Failed to start up the NFS server&lt;/h3>
 &lt;pre>&lt;code>$ systemctl status rpcbind
-\u25cf rpcbind.service - RPC bind service
+rpcbind.service - RPC bind service
 Loaded: loaded (/usr/lib/systemd/system/rpcbind.service; indirect; vendor preset: enabled)
 Active: failed (Result: exit-code) since Tue 2017-12-26 13:30:11 CST; 14s ago
 Process: 20650 ExecStart=/sbin/rpcbind -w $RPCBIND_ARGS (code=exited, status=0/SUCCESS)
@@ -92,7 +93,7 @@ Dec 26 13:30:11 8d58 systemd[1]: rpcbind.service: main process exited, code=exit
 Dec 26 13:30:11 8d58 systemd[1]: Unit rpcbind.service entered failed state.
 Dec 26 13:30:11 8d58 systemd[1]: rpcbind.service failed.
 &lt;/code>&lt;/pre>
-&lt;p>The root cause might be /dev/null is not correctly labeled if selinux is on, or turn on/off in between. Normally reboot the system will resolve the issue - the system will relabel the file system at startup upon switching on/off selinux. Or &lt;code>fixfile relabel&lt;/code> and &lt;code>reboot&lt;/code>.&lt;/p>
+&lt;p>The root cause might be /dev/null is not correctly labeled if selinux is on, or turn on/off in between. Normally reboot the system will resolve the issue - the system will relabel the file system at startup upon switching on/off selinux. Or explicitely execute &lt;code>fixfile relabel&lt;/code> and &lt;code>reboot&lt;/code>.&lt;/p>
 &lt;h3 id="selinux-is-preventing-usrbinrpcidmapd-from-write-access-on-the-file-null">selinux is preventing /usr/bin/rpc.idmapd from write access on the file null&lt;/h3>
 &lt;pre>&lt;code>***** Plugin catchall (100. confidence) suggests **************************
 If you believe that rpc.idmapd should be allowed write access on the null file by default.
@@ -103,16 +104,17 @@ $ ausearch -c 'rpc.idmapd' --raw | audit2allow -M my-rpcidmapd
 $ semodule -i my-rpcidmapd.pp
 &lt;/code>&lt;/pre>
 &lt;h2 id="mount-the-nfs-share-on-client">Mount the NFS share on client&lt;/h2>
+&lt;p>Normally, the mount will automatically load the required kernel modules, like lockd, nfs, nfsv4 etc. However, the mount might fail due to missing dependencies or in-correct configurations.&lt;/p>
 &lt;h3 id="mountnfs-no-such-device">mount.nfs no such device&lt;/h3>
 &lt;p>For some clients, the mount might fail as:&lt;/p>
 &lt;pre>&lt;code>mount 192.168.8.3:/store /mnt/nfs
 mount.nfs: No such device
 &lt;/code>&lt;/pre>
-&lt;p>Usually, it&amp;rsquo;s because the nfs/nfsv4 module is not loaded, trying to load the module&lt;/p>
+&lt;p>Usually, it&amp;rsquo;s because the lockd, or nfs/nfsv4 module is not loaded, trying to load the module&lt;/p>
 &lt;pre>&lt;code>$ modprobe nfs
 modprobe: ERROR: could not insert 'nfs': Invalid argument
 &lt;/code>&lt;/pre>
-&lt;p>from dmesg:&lt;/p>
+&lt;p>From dmesg:&lt;/p>
 &lt;pre>&lt;code>[2192390.701420] FS-Cache: Loaded
 [2192390.709699] lockd: `' invalid for parameter `nlm_tcpport'
 &lt;/code>&lt;/pre>
@@ -121,7 +123,18 @@ Update the &lt;code>/etc/modprobe.d/lockd.conf&lt;/code> to add &amp;ldquo;=&amp
 &lt;pre>&lt;code>options lockd nlm_tcpport=60001
 options lockd nlm_udpport=60002
 &lt;/code>&lt;/pre>
-&lt;p>try &lt;code>mount 192.168.8.3:/store /mnt/nfs&lt;/code> again, should be completed successfully.&lt;/p></description></item><item><title>Headless vncserver with Container</title><link>/posts/headless_vncserver_with_container/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/headless_vncserver_with_container/</guid><description>&lt;img src="/images/real-vnc.png" alt="Featured image of post Headless vncserver with Container" />&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;p>Try &lt;code>mount 192.168.8.3:/store /mnt/nfs&lt;/code> again, should be completed successfully.&lt;/p>
+&lt;h3 id="missing-dependencies">Missing dependencies&lt;/h3>
+&lt;p>For ubuntu client, the mount might fail:&lt;/p>
+&lt;pre>&lt;code>$ sudo mount 192.168.8.3:/store /mnt
+[sudo] password for admin:
+mount: /mnt: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.&amp;lt;type&amp;gt; helper program.
+&lt;/code>&lt;/pre>
+&lt;p>The message indicates /sbin/mount.nfs is missing, so we shall need to install the missing dependencis.&lt;/p>
+&lt;pre>&lt;code>sudo apt install nfs-common
+&lt;/code>&lt;/pre>
+&lt;p>nfs-common as well as its dependencies will be installed. You could check now the existence of /sbin/mount.nfs by &lt;code>ls /sbin/mount.nfs&lt;/code>.&lt;/p>
+&lt;p>Now try to mount the nfs share again.&lt;/p></description></item><item><title>Headless vncserver with Container</title><link>/posts/headless_vncserver_with_container/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/headless_vncserver_with_container/</guid><description>&lt;img src="/images/real-vnc.png" alt="Featured image of post Headless vncserver with Container" />&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;ul>
 &lt;li>Docker intalled, up and running&lt;/li>
 &lt;/ul>
@@ -139,7 +152,83 @@ options lockd nlm_udpport=60002
 &lt;p>Enjoy!&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a class="link" href="https://opensourcelibs.com/lib/ubuntu-vnc-xfce" target="_blank" rel="noopener"
->Headless VNCSERVER with Container&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/images/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+>Headless VNCSERVER with Container&lt;/a>&lt;/p></description></item><item><title>Re-pack Ubuntu 22.04 live server ISO</title><link>/posts/re-pack-ubuntu-22.04-live-server-iso/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/re-pack-ubuntu-22.04-live-server-iso/</guid><description>&lt;img src="/images/iso_disc.png" alt="Featured image of post Re-pack Ubuntu 22.04 live server ISO" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;p>Previously, bootable ISO image usually has the efi.img and ISOLINUX embeded which is required to boot the ISO and facilitate the installer.&lt;br>
+However, Ubuntu 22.04 replaced ISOLINUX package with EI-Torito and the efi.img with the efi boot partition in the live filesystem on the ISO. So previous methods or commands that relies on the isolinux/isolinux.bin, and efi.img no longer work.&lt;br>
+My initial approach is to bring back the efi.img and add the isolinux package, that&amp;rsquo;s what I&amp;rsquo;m fimiliar with, and faster to get the bootable ISO created. Although the principle is quite straightforward, the detailed steps to accomplish is bit complex and in-elegent.&lt;br>
+This post will present another approach, which is used to create the Ubuntu 22.04 live ISO.&lt;/p>
+&lt;h2 id="solution">Solution&lt;/h2>
+&lt;h3 id="the-recipe-to-reproduce-the-iso">The recipe to reproduce the ISO&lt;/h3>
+&lt;p>xorriso provides show how the ISO is cooked and so you could use the same recipe to reproduce it:&lt;/p>
+&lt;pre tabindex="0">&lt;code>$ xorriso -indev ../jammy-live-server-amd64.iso -report_el_torito as_mkisofs
+xorriso 1.5.4 : RockRidge filesystem manipulator, libburnia project.
+xorriso : NOTE : Loading ISO image tree from LBA 0
+xorriso : UPDATE : 810 nodes read in 1 seconds
+libisofs: NOTE : Found hidden El-Torito image for EFI.
+libisofs: NOTE : EFI image start and size: 685590 * 2048 , 8504 * 512
+xorriso : NOTE : Detected El-Torito boot information which currently is set to be discarded
+Drive current: -indev &amp;#39;../jammy-live-server-amd64.iso&amp;#39;
+Media current: stdio file, overwriteable
+Media status : is written , is appendable
+Boot record : El Torito , MBR protective-msdos-label grub2-mbr cyl-align-off GPT
+Media summary: 1 session, 687882 data blocks, 1344m data, 802g free
+Volume id : &amp;#39;Ubuntu-Server 22.04 LTS amd64&amp;#39;
+-V &amp;#39;Ubuntu-Server 22.04 LTS amd64&amp;#39;
+--modification-date=&amp;#39;2022021411383300&amp;#39;
+--grub2-mbr --interval:local_fs:0s-15s:zero_mbrpt,zero_gpt:&amp;#39;../jammy-live-server-amd64.iso&amp;#39;
+--protective-msdos-label
+-partition_cyl_align off
+-partition_offset 16
+--mbr-force-bootable
+-append_partition 2 28732ac11ff8d211ba4b00a0c93ec93b --interval:local_fs:2742360d-2750863d::&amp;#39;../jammy-live-server-amd64.iso&amp;#39;
+-appended_part_as_gpt
+-iso_mbr_part_type a2a0d0ebe5b9334487c068b6b72699c7
+-c &amp;#39;/boot.catalog&amp;#39;
+-b &amp;#39;/boot/grub/i386-pc/eltorito.img&amp;#39;
+-no-emul-boot
+-boot-load-size 4
+-boot-info-table
+--grub2-boot-info
+-eltorito-alt-boot
+-e &amp;#39;--interval:appended_partition_2_start_685590s_size_8504d:all::&amp;#39;
+-no-emul-boot
+-boot-load-size 8504
+&lt;/code>&lt;/pre>&lt;p>You have all the secret recipes that is used to create the original live bootable ISO, simply copy and reuse it.&lt;/p>
+&lt;h3 id="an-elegant-method-to-apply-your-customizations-to-the-iso">An elegant method to apply your customizations to the ISO&lt;/h3>
+&lt;p>Most of the existing methods, requires copy the whole content from the ISO to another folder, add the write permission and then apply the changes.
+It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content.
+However, if the original ISO is frequently updated, for example, you are using a early daily build of a new release, you will need to copy and update the files from time to time. Kind of boring and waste of time.
+Inspired by the livefs-edit project, I&amp;rsquo;m now using the overlay fs technology, which isolate the original iso and the customization content into separate layers, and could be updated separately.&lt;/p>
+&lt;ol>
+&lt;li>mount the original iso as lower layer&lt;/li>
+&lt;li>mount the customized content as the upper layer;&lt;/li>
+&lt;li>generate the new iso using the overlay;&lt;/li>
+&lt;/ol>
+&lt;p>With this approach, you could simply mount the new input iso as the lower layer, re-use the upper layer to generate the new customized iso. No need to copy the content and modify the content.
+Super efficient and elegant.
+Here&amp;rsquo;s an step by step example:&lt;/p>
+&lt;pre tabindex="0">&lt;code>$ mkdir content
+$ mkdir content/base
+$ mkdir content/upper
+$ mkdir content/work
+$ mkdir content/ol
+$ mount ubuntu.iso content/base
+\# copy the new content to content/upper
+\# for example a new boot/grub/grub.cfg, the autoinstall files user_data, metadata etc.
+$ mount -t overlay -o lowerdir=content/base,upperdir=content/upper,workdir=content/work non content/ol
+$ xorriso -as mkisofs &amp;lt;the options copied from original recipe&amp;gt; -o &amp;lt;new image&amp;gt;.iso ./content/ol
+&lt;/code>&lt;/pre>&lt;h2 id="acknoledgement">Acknoledgement&lt;/h2>
+&lt;p>Special thanks to the &lt;a class="link" href="https://github.com/mwhudson/livefs-editor" target="_blank" rel="noopener"
+>livefs_edit project&lt;/a>, where I first tried the livefs_edit, and then learned howto use xorriso to retrieve the recipes and reproduce the ISO.&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a class="link" href="https://wiki.debian.org/RepackBootableISO" target="_blank" rel="noopener"
+>Repack Bootable ISO&lt;/a>
+&lt;a class="link" href="https://utcc.utoronto.ca/~cks/space/blog/linux/Ubuntu2004ISOWithUEFI-2" target="_blank" rel="noopener"
+>Ubuntu 20.04 bootable ISO for EFI&lt;/a>
+&lt;a class="link" href="https://www.gnu.org/software/xorriso/man_1_xorrisofs.html" target="_blank" rel="noopener"
+>xorriso man page&lt;/a>
+&lt;a class="link" href="https://help.ubuntu.com/community/LiveCDCustomization" target="_blank" rel="noopener"
+>Ubuntu Live CD Customization&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/images/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Following a force shutdown of the server, the system failed to boot with following message:&lt;/p>
 &lt;blockquote>
 &lt;p>initramfs: waiting for /dev/mapper/ubuntu&amp;ndash;vg-ubuntu&amp;ndash;lv to appear &amp;hellip;&lt;br>
@@ -356,25 +445,25 @@ UserKnownHostsFile ~/.ssh/icx129-ubuntu2204.known_hosts
 &lt;pre>&lt;code>$ ssh-keygen
 &lt;/code>&lt;/pre>
 &lt;p>Copy the ssh key id to target server, enter the password following the prompt.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">$ ssh-copy-id brayden@192.168.8.101
-$ ssh-copy-id brayden@192.168.8.102
-$ ssh-copy-id brayden@192.168.8.103
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="enable-passwordless-sudo">Enable passwordless sudo&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ ssh-copy-id brayden@192.168.8.101
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh-copy-id brayden@192.168.8.102
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ssh-copy-id brayden@192.168.8.103
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="enable-passwordless-sudo">Enable passwordless sudo&lt;/h3>
 &lt;p>Add the line in &lt;strong>BOLD&lt;/strong>  as shown below in the %sudo section, for the user used to provision the k8s cluster. This is required on every node.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ sudo vim /etc/sudoers
 # Allow members of group sudo to execute any command
 %sudo   ALL=(ALL:ALL) ALL
 brayden ALL=(ALL:ALL) NOPASSWD:ALL
 &lt;/code>&lt;/pre>&lt;h3 id="dependencies">Dependencies&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-Bash" data-lang="Bash">$ sudo apt install python3-pip
-$ sudo pip3 install --upgrade pip
-$ pip --version
-pip 21.3.1 from /home/brayden/.local/lib/python3.9/site-packages/pip &lt;span style="color:#f92672">(&lt;/span>python 3.9&lt;span style="color:#f92672">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="download-kubespray">Download kubespray&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git clone https://github.com/kubernetes-sigs/kubespray.git
-$ cd kubespray
-$ sudo pip install -r requirements.txt
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-the-cluster-setup">Configure the cluster setup&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Bash" data-lang="Bash">&lt;span style="display:flex;">&lt;span>$ sudo apt install python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo pip3 install --upgrade pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ pip --version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip 21.3.1 from /home/brayden/.local/lib/python3.9/site-packages/pip &lt;span style="color:#f92672">(&lt;/span>python 3.9&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="download-kubespray">Download kubespray&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ git clone https://github.com/kubernetes-sigs/kubespray.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cd kubespray
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo pip install -r requirements.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-the-cluster-setup">Configure the cluster setup&lt;/h3>
 &lt;p>Copy the required configuration files, scripts to a dedicated folder to this cluster, in this example, the new folder is named as k8s-100-cluster, as the controller api server will be available at 192.168.8.100.&lt;/p>
 &lt;pre>&lt;code>$ cp -rfp inventory/sampe inventory/k8s-100-cluster
 &lt;/code>&lt;/pre>
@@ -386,7 +475,7 @@ $ sudo pip install -r requirements.txt
 &lt;li>&lt;strong>kube_node&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;pre tabindex="0">&lt;code>$ vim inventory/k8s-100-cluster/inventory.ini
-# ## Configure 'ip' variable to bind kubernetes services on a
+# ## Configure &amp;#39;ip&amp;#39; variable to bind kubernetes services on a
 # ## different ip than the default iface
 # ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value.
 [all]
@@ -408,7 +497,7 @@ node-103**
 **node-103**
 &lt;/code>&lt;/pre>&lt;p>Another important configuration file we shall touch is &lt;code>inventoryk8s-100-clustergroup_varsallall.yml&lt;/code>.&lt;/p>
 &lt;p>Here we disable the internal nginx based proxy, and use external load balanced implemented with haproxy.&lt;/p>
-&lt;pre tabindex="0">&lt;code>**apiserver_loadbalancer_domain_name: &amp;quot;lb.npg.intel&amp;quot;**
+&lt;pre tabindex="0">&lt;code>**apiserver_loadbalancer_domain_name: &amp;#34;lb.npg.intel&amp;#34;**
 **loadbalancer_apiserver:**
 **addres: 192.168.8.100**
 **port: 8443**
@@ -419,8 +508,8 @@ node-103**
 **- 8.8.8.8**
 **- 8.8.4.4**
 # Set the proxy, will be populated to apt source and container runtime proxy conf
-**http_proxy: &amp;quot;http://child-prc.intel.com:913&amp;quot;**
-**https_proxy: &amp;quot;http://child-prc.intel.com:913&amp;quot;**
+**http_proxy: &amp;#34;http://child-prc.intel.com:913&amp;#34;**
+**https_proxy: &amp;#34;http://child-prc.intel.com:913&amp;#34;**
 &lt;/code>&lt;/pre>&lt;p>inventory/k8s-100-cluster/group_vars/k8s_cluster/k8s-cluster.yml&lt;/p>
 &lt;pre tabindex="0">&lt;code>**kube_service_addresses: 192.168.0.0/18**
 **kube_pods_subnet: 192.168.64.0/18**
@@ -436,23 +525,23 @@ index 253dbf17..c0077ebf 100644
 --- a/roles/container-engine/docker/vars/ubuntu.yml
 +++ b/roles/container-engine/docker/vars/ubuntu.yml
 @@ -17,16 +17,16 @@ docker_versioned_pkg:
-'latest': docker-ce
-'18.09': docker-ce=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-'19.03': docker-ce=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-- '20.10': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-- 'stable': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-+ '20.10': docker-ce=5:20.10.12~3-0~ubuntu-focal
-+ 'stable': docker-ce=5:20.10.12~3-0~ubuntu-focal
-'edge': docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+&amp;#39;latest&amp;#39;: docker-ce
+&amp;#39;18.09&amp;#39;: docker-ce=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+&amp;#39;19.03&amp;#39;: docker-ce=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- &amp;#39;20.10&amp;#39;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- &amp;#39;stable&amp;#39;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
++ &amp;#39;20.10&amp;#39;: docker-ce=5:20.10.12~3-0~ubuntu-focal
++ &amp;#39;stable&amp;#39;: docker-ce=5:20.10.12~3-0~ubuntu-focal
+&amp;#39;edge&amp;#39;: docker-ce=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
 docker_cli_versioned_pkg:
-'latest': docker-ce-cli
-'18.09': docker-ce-cli=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-'19.03': docker-ce-cli=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-- '20.10': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-- 'stable': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
-+ '20.10': docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
-+ 'stable': docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
-'edge': docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+&amp;#39;latest&amp;#39;: docker-ce-cli
+&amp;#39;18.09&amp;#39;: docker-ce-cli=5:18.09.9~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+&amp;#39;19.03&amp;#39;: docker-ce-cli=5:19.03.15~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- &amp;#39;20.10&amp;#39;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
+- &amp;#39;stable&amp;#39;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
++ &amp;#39;20.10&amp;#39;: docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
++ &amp;#39;stable&amp;#39;: docker-ce-cli=5:20.10.12~3-0~ubuntu-focal
+&amp;#39;edge&amp;#39;: docker-ce-cli=5:20.10.11~3-0~ubuntu-{{ ansible_distribution_release|lower }}
 docker_package_info:
 @@ -44,5 +44,8 @@ docker_repo_info:
 repos:
@@ -488,7 +577,7 @@ $ ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=br
 &lt;pre tabindex="0">&lt;code>$ cd ~
 $ mkdir .kube
 $ cp /etc/kubernetes/admin.conf .kube/
-$ echo &amp;quot;export KUBECONFIG=/home/brayden/.kube/admin.conf&amp;quot;
+$ echo &amp;#34;export KUBECONFIG=/home/brayden/.kube/admin.conf&amp;#34;
 $ kubectl get pods -n kube-system
 NAME READY STATUS RESTARTS AGE
 calico-kube-controllers-5788f6558-kkbf4 1/1 Running 0 38h
@@ -534,7 +623,7 @@ nodelocaldns-cpckx 1/1 Running 0 38h
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;pre tabindex="0">&lt;code># This is the network config written by 'subiquity'
+&lt;pre tabindex="0">&lt;code># This is the network config written by &amp;#39;subiquity&amp;#39;
 network:
 ethernets:
 eno1:
@@ -553,7 +642,7 @@ addresses:
 match:
 macaddress: 00:1e:67:e6:14:ae
 * Cleanup the /etc/resolve.conf, remove the local addresses.
-* Make sure &amp;quot;sudo apt update&amp;quot; could be executed successfully.
+* Make sure &amp;#34;sudo apt update&amp;#34; could be executed successfully.
 &lt;/code>&lt;/pre>&lt;h3 id="coredns-service-crashedbackoff">coredns service crashedbackoff&lt;/h3>
 &lt;p>Server&amp;rsquo;s console will continuous show:&lt;/p>
 &lt;pre>&lt;code>[19713.675335] IPVS: rr: UDP 192.168.0.3:53 - no destination available
@@ -806,17 +895,17 @@ Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 &lt;/table>
 &lt;h2 id="code-blocks">Code Blocks&lt;/h2>
 &lt;h4 id="code-block-with-backticks">Code block with backticks&lt;/h4>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
-&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#a6e22e">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;utf-8&amp;#34;&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;Example HTML5 Document&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">p&lt;/span>&amp;gt;Test&amp;lt;/&lt;span style="color:#f92672">p&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="code-block-indented-with-four-spaces">Code block indented with four spaces&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#a6e22e">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;utf-8&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;Example HTML5 Document&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">p&lt;/span>&amp;gt;Test&amp;lt;/&lt;span style="color:#f92672">p&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="code-block-indented-with-four-spaces">Code block indented with four spaces&lt;/h4>
 &lt;pre>&lt;code>&amp;lt;!doctype html&amp;gt;
 &amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
 &amp;lt;head&amp;gt;
@@ -829,16 +918,16 @@ Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 &amp;lt;/html&amp;gt;
 &lt;/code>&lt;/pre>
 &lt;h4 id="code-block-with-hugos-internal-highlight-shortcode">Code block with Hugo&amp;rsquo;s internal highlight shortcode&lt;/h4>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
-&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#a6e22e">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;utf-8&amp;#34;&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;Example HTML5 Document&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
-&amp;lt;&lt;span style="color:#f92672">p&lt;/span>&amp;gt;Test&amp;lt;/&lt;span style="color:#f92672">p&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
-&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#a6e22e">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;utf-8&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;Example HTML5 Document&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">p&lt;/span>&amp;gt;Test&amp;lt;/&lt;span style="color:#f92672">p&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;h2 id="list-types">List Types&lt;/h2>
 &lt;h4 id="ordered-list">Ordered List&lt;/h4>
 &lt;ol>
@@ -968,10 +1057,10 @@ allowfullscreen="true"
 >Auto-render Extension&lt;/a> or host these scripts locally.&lt;/li>
 &lt;li>Include the partial in your templates like so:&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">{{&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> or .Params.math .Site.Params.math &lt;span style="color:#f92672">}}&lt;/span>
-&lt;span style="color:#f92672">{{&lt;/span> partial &lt;span style="color:#e6db74">&amp;#34;math.html&amp;#34;&lt;/span> . &lt;span style="color:#f92672">}}&lt;/span>
-&lt;span style="color:#f92672">{{&lt;/span> end &lt;span style="color:#f92672">}}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">{{&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> or .Params.math .Site.Params.math &lt;span style="color:#f92672">}}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">{{&lt;/span> partial &lt;span style="color:#e6db74">&amp;#34;math.html&amp;#34;&lt;/span> . &lt;span style="color:#f92672">}}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">{{&lt;/span> end &lt;span style="color:#f92672">}}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>To enable KaTex globally set the parameter &lt;code>math&lt;/code> to &lt;code>true&lt;/code> in a project&amp;rsquo;s configuration&lt;/li>
 &lt;li>To enable KaTex on a per page basis include the parameter &lt;code>math: true&lt;/code> in content files&lt;/li>
 &lt;/ul>
@@ -992,9 +1081,9 @@ $$&lt;/p></description></item><item><title>Emoji Support</title><link>/posts/emo
 >Emoji cheat sheet&lt;/a> is a useful reference for emoji shorthand codes.&lt;/p>
 &lt;hr>
 &lt;p>&lt;strong>N.B.&lt;/strong> The above steps enable Unicode Standard emoji characters and sequences in Hugo, however the rendering of these glyphs depends on the browser and the platform. To style the emoji you can either use a third party emoji font or a font stack; e.g.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">.emoji {
-font-family: Apple Color Emoji, Segoe UI Emoji, NotoColorEmoji, Segoe UI Symbol, Android Emoji, EmojiSymbols;
-}&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Creating a New Theme</title><link>/posts/creating-a-new-theme/</link><pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate><guid>/posts/creating-a-new-theme/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>.emoji {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> font-family: Apple Color Emoji, Segoe UI Emoji, NotoColorEmoji, Segoe UI Symbol, Android Emoji, EmojiSymbols;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Creating a New Theme</title><link>/posts/creating-a-new-theme/</link><pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate><guid>/posts/creating-a-new-theme/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.&lt;/p>
 &lt;p>We&amp;rsquo;ll start with creating a new site with a very basic template. Then we&amp;rsquo;ll add in a few pages and posts. With small variations on that, you will be able to create many different types of web sites.&lt;/p>
 &lt;p>In this tutorial, commands that you enter will start with the &amp;ldquo;$&amp;rdquo; prompt. The output will follow. Lines that start with &amp;ldquo;#&amp;rdquo; are comments that I&amp;rsquo;ve added to explain a point. When I show updates to a file, the &amp;ldquo;:wq&amp;rdquo; on the last line means to save the file.&lt;/p>
@@ -1005,16 +1094,16 @@ this is a command
 ## edit the file
 $ vi foo.md
 +++
-date = &amp;quot;2014-09-28&amp;quot;
-title = &amp;quot;creating a new theme&amp;quot;
+date = &amp;#34;2014-09-28&amp;#34;
+title = &amp;#34;creating a new theme&amp;#34;
 +++
 bah and humbug
 :wq
 ## show it
 $ cat foo.md
 +++
-date = &amp;quot;2014-09-28&amp;quot;
-title = &amp;quot;creating a new theme&amp;quot;
+date = &amp;#34;2014-09-28&amp;#34;
+title = &amp;#34;creating a new theme&amp;#34;
 +++
 bah and humbug
 $
@@ -1156,17 +1245,17 @@ $
 &lt;/code>&lt;/pre>&lt;p>The skeleton includes templates (the files ending in .html), license file, a description of your theme (the theme.toml file), and an empty archetype.&lt;/p>
 &lt;p>Please take a minute to fill out the theme.toml and LICENSE.md files. They&amp;rsquo;re optional, but if you&amp;rsquo;re going to be distributing your theme, it tells the world who to praise (or blame). It&amp;rsquo;s also nice to declare the license so that people will know how they can use the theme.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/theme.toml
-author = &amp;quot;michael d henderson&amp;quot;
-description = &amp;quot;a minimal working template&amp;quot;
-license = &amp;quot;MIT&amp;quot;
-name = &amp;quot;zafta&amp;quot;
-source_repo = &amp;quot;&amp;quot;
-tags = [&amp;quot;tags&amp;quot;, &amp;quot;categories&amp;quot;]
+author = &amp;#34;michael d henderson&amp;#34;
+description = &amp;#34;a minimal working template&amp;#34;
+license = &amp;#34;MIT&amp;#34;
+name = &amp;#34;zafta&amp;#34;
+source_repo = &amp;#34;&amp;#34;
+tags = [&amp;#34;tags&amp;#34;, &amp;#34;categories&amp;#34;]
 :wq
 ## also edit themes/zafta/LICENSE.md and change
-## the bit that says &amp;quot;YOUR_NAME_HERE&amp;quot;
+## the bit that says &amp;#34;YOUR_NAME_HERE&amp;#34;
 &lt;/code>&lt;/pre>&lt;p>Note that the the skeleton&amp;rsquo;s template files are empty. Don&amp;rsquo;t worry, we&amp;rsquo;ll be changing that shortly.&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ find themes/zafta -name '*.html' | xargs ls -l
+&lt;pre tabindex="0">&lt;code>$ find themes/zafta -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 0 Sep 29 17:31 themes/zafta/layouts/_default/list.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 17:31 themes/zafta/layouts/_default/single.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 17:31 themes/zafta/layouts/index.html
@@ -1177,11 +1266,11 @@ $
 &lt;p>Now that we&amp;rsquo;ve got a theme to work with, it&amp;rsquo;s a good idea to add the theme name to the configuration file. This is optional, because you can always add &amp;ldquo;-t zafta&amp;rdquo; on all your commands. I like to put it the configuration file because I like shorter command lines. If you don&amp;rsquo;t put it in the configuration file or specify it on the command line, you won&amp;rsquo;t use the template that you&amp;rsquo;re expecting to.&lt;/p>
 &lt;p>Edit the file to add the theme, add a title for the site, and specify that all of our content will use the TOML format.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi config.toml
-theme = &amp;quot;zafta&amp;quot;
-baseurl = &amp;quot;&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-title = &amp;quot;zafta - totally refreshing&amp;quot;
-MetaDataFormat = &amp;quot;toml&amp;quot;
+theme = &amp;#34;zafta&amp;#34;
+baseurl = &amp;#34;&amp;#34;
+languageCode = &amp;#34;en-us&amp;#34;
+title = &amp;#34;zafta - totally refreshing&amp;#34;
+MetaDataFormat = &amp;#34;toml&amp;#34;
 :wq
 $
 &lt;/code>&lt;/pre>&lt;h3 id="generate-the-site">Generate the Site&lt;/h3>
@@ -1282,7 +1371,7 @@ Watching for changes in /Users/quoha/Sites/zafta/content
 Serving pages from /Users/quoha/Sites/zafta/public
 Web Server is available at http://localhost:1313
 Press Ctrl+C to stop
-INFO: 2014/09/29 File System Event: [&amp;quot;/Users/quoha/Sites/zafta/themes/zafta/layouts/index.html&amp;quot;: MODIFY|ATTRIB]
+INFO: 2014/09/29 File System Event: [&amp;#34;/Users/quoha/Sites/zafta/themes/zafta/layouts/index.html&amp;#34;: MODIFY|ATTRIB]
 Change detected, rebuilding site
 WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 draft content
@@ -1322,7 +1411,7 @@ WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 tags created
 0 categories created
 in 2 ms
-$ find public -type f -name '*.html' | xargs ls -l
+$ find public -type f -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 78 Sep 29 21:26 public/index.html
 $ cat public/index.html
 &amp;lt;!DOCTYPE html&amp;gt;
@@ -1337,10 +1426,10 @@ $ cat public/index.html
 &amp;lt;html&amp;gt;
 &amp;lt;body&amp;gt;
 &amp;lt;p&amp;gt;hugo says hello!&amp;lt;/p&amp;gt;
-&amp;lt;script&amp;gt;document.write('&amp;lt;script src=&amp;quot;http://'
-+ (location.host || 'localhost').split(':')[0]
-+ ':1313/livereload.js?mindelay=10&amp;quot;&amp;gt;&amp;lt;/'
-+ 'script&amp;gt;')&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;
+&amp;lt;script&amp;gt;document.write(&amp;#39;&amp;lt;script src=&amp;#34;http://&amp;#39;
++ (location.host || &amp;#39;localhost&amp;#39;).split(&amp;#39;:&amp;#39;)[0]
++ &amp;#39;:1313/livereload.js?mindelay=10&amp;#34;&amp;gt;&amp;lt;/&amp;#39;
++ &amp;#39;script&amp;gt;&amp;#39;)&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>When you use &lt;code>--watch&lt;/code>, the Live Reload script is added by Hugo. Look for live reload in the documentation to see what it does and how to disable it.&lt;/p>
 &lt;h3 id="build-a-dynamic-home-page">Build a &amp;ldquo;Dynamic&amp;rdquo; Home Page&lt;/h3>
@@ -1358,7 +1447,7 @@ $
 &lt;p>The &amp;ldquo;new&amp;rdquo; command uses an archetype to create the post file. Hugo created an empty default archetype file, but that causes an error when there&amp;rsquo;s a theme. For me, the workaround was to create an archetypes file specifically for the post type.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/archetypes/post.md
 +++
-Description = &amp;quot;&amp;quot;
+Description = &amp;#34;&amp;#34;
 Tags = []
 Categories = []
 +++
@@ -1385,19 +1474,19 @@ total 16
 $ cat content/post/first.md
 +++
 Categories = []
-Description = &amp;quot;&amp;quot;
+Description = &amp;#34;&amp;#34;
 Tags = []
-date = &amp;quot;2014-09-29T21:54:53-05:00&amp;quot;
-title = &amp;quot;first&amp;quot;
+date = &amp;#34;2014-09-29T21:54:53-05:00&amp;#34;
+title = &amp;#34;first&amp;#34;
 +++
 my first post
 $ cat content/post/second.md
 +++
 Categories = []
-Description = &amp;quot;&amp;quot;
+Description = &amp;#34;&amp;#34;
 Tags = []
-date = &amp;quot;2014-09-29T21:57:09-05:00&amp;quot;
-title = &amp;quot;second&amp;quot;
+date = &amp;#34;2014-09-29T21:57:09-05:00&amp;#34;
+title = &amp;#34;second&amp;#34;
 +++
 my second post
 $
@@ -1407,7 +1496,7 @@ $ hugo --verbose
 INFO: 2014/09/29 Using config file: /Users/quoha/Sites/zafta/config.toml
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/themes/zafta/static/ to /Users/quoha/Sites/zafta/public/
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/static/ to /Users/quoha/Sites/zafta/public/
-INFO: 2014/09/29 found taxonomies: map[string]string{&amp;quot;category&amp;quot;:&amp;quot;categories&amp;quot;, &amp;quot;tag&amp;quot;:&amp;quot;tags&amp;quot;}
+INFO: 2014/09/29 found taxonomies: map[string]string{&amp;#34;category&amp;#34;:&amp;#34;categories&amp;#34;, &amp;#34;tag&amp;#34;:&amp;#34;tags&amp;#34;}
 WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 draft content
 0 future content
@@ -1417,7 +1506,7 @@ WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 in 4 ms
 $
 &lt;/code>&lt;/pre>&lt;p>The output says that it created 2 pages. Those are our new posts:&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ find public -type f -name '*.html' | xargs ls -l
+&lt;pre tabindex="0">&lt;code>$ find public -type f -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 78 Sep 29 22:13 public/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:13 public/post/first/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:13 public/post/index.html
@@ -1457,7 +1546,7 @@ $ hugo --verbose
 INFO: 2014/09/29 Using config file: /Users/quoha/Sites/zafta/config.toml
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/themes/zafta/static/ to /Users/quoha/Sites/zafta/public/
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/static/ to /Users/quoha/Sites/zafta/public/
-INFO: 2014/09/29 found taxonomies: map[string]string{&amp;quot;tag&amp;quot;:&amp;quot;tags&amp;quot;, &amp;quot;category&amp;quot;:&amp;quot;categories&amp;quot;}
+INFO: 2014/09/29 found taxonomies: map[string]string{&amp;#34;tag&amp;#34;:&amp;#34;tags&amp;#34;, &amp;#34;category&amp;#34;:&amp;#34;categories&amp;#34;}
 WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 draft content
 0 future content
@@ -1465,7 +1554,7 @@ WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 tags created
 0 categories created
 in 4 ms
-$ find public -type f -name '*.html' | xargs ls -l
+$ find public -type f -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 94 Sep 29 22:23 public/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:23 public/post/first/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:23 public/post/index.html
@@ -1510,7 +1599,7 @@ $ hugo --verbose
 INFO: 2014/09/29 Using config file: /Users/quoha/Sites/zafta/config.toml
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/themes/zafta/static/ to /Users/quoha/Sites/zafta/public/
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/static/ to /Users/quoha/Sites/zafta/public/
-INFO: 2014/09/29 found taxonomies: map[string]string{&amp;quot;tag&amp;quot;:&amp;quot;tags&amp;quot;, &amp;quot;category&amp;quot;:&amp;quot;categories&amp;quot;}
+INFO: 2014/09/29 found taxonomies: map[string]string{&amp;#34;tag&amp;#34;:&amp;#34;tags&amp;#34;, &amp;#34;category&amp;#34;:&amp;#34;categories&amp;#34;}
 WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 draft content
 0 future content
@@ -1518,7 +1607,7 @@ WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 tags created
 0 categories created
 in 4 ms
-$ find public -type f -name '*.html' | xargs ls -l
+$ find public -type f -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 94 Sep 29 22:40 public/index.html
 -rw-r--r-- 1 quoha staff 125 Sep 29 22:40 public/post/first/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:40 public/post/index.html
@@ -1554,7 +1643,7 @@ $
 &amp;lt;html&amp;gt;
 &amp;lt;body&amp;gt;
 {{ range first 10 .Data.Pages }}
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;{{ .Permalink }}&amp;quot;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;{{ .Permalink }}&amp;#34;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
 {{ end }}
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;
@@ -1564,7 +1653,7 @@ $ hugo --verbose
 INFO: 2014/09/29 Using config file: /Users/quoha/Sites/zafta/config.toml
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/themes/zafta/static/ to /Users/quoha/Sites/zafta/public/
 INFO: 2014/09/29 syncing from /Users/quoha/Sites/zafta/static/ to /Users/quoha/Sites/zafta/public/
-INFO: 2014/09/29 found taxonomies: map[string]string{&amp;quot;tag&amp;quot;:&amp;quot;tags&amp;quot;, &amp;quot;category&amp;quot;:&amp;quot;categories&amp;quot;}
+INFO: 2014/09/29 found taxonomies: map[string]string{&amp;#34;tag&amp;#34;:&amp;#34;tags&amp;#34;, &amp;#34;category&amp;#34;:&amp;#34;categories&amp;#34;}
 WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 draft content
 0 future content
@@ -1572,7 +1661,7 @@ WARN: 2014/09/29 Unable to locate layout: [404.html theme/404.html]
 0 tags created
 0 categories created
 in 4 ms
-$ find public -type f -name '*.html' | xargs ls -l
+$ find public -type f -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-r--r-- 1 quoha staff 149 Sep 29 22:44 public/index.html
 -rw-r--r-- 1 quoha staff 125 Sep 29 22:44 public/post/first/index.html
 -rw-r--r-- 1 quoha staff 0 Sep 29 22:44 public/post/index.html
@@ -1581,8 +1670,8 @@ $ cat public/index.html
 &amp;lt;!DOCTYPE html&amp;gt;
 &amp;lt;html&amp;gt;
 &amp;lt;body&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;/post/second/&amp;quot;&amp;gt;second&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;/post/first/&amp;quot;&amp;gt;first&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;/post/second/&amp;#34;&amp;gt;second&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;/post/first/&amp;#34;&amp;gt;first&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;
 $
@@ -1597,16 +1686,16 @@ $
 &lt;p>The default in Hugo is to use the directory structure of the content/ directory to guide the location of the generated html in the public/ directory. Let&amp;rsquo;s verify that by creating an &amp;ldquo;about&amp;rdquo; page at the top level:&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi content/about.md
 +++
-title = &amp;quot;about&amp;quot;
-description = &amp;quot;about this site&amp;quot;
-date = &amp;quot;2014-09-27&amp;quot;
-slug = &amp;quot;about time&amp;quot;
+title = &amp;#34;about&amp;#34;
+description = &amp;#34;about this site&amp;#34;
+date = &amp;#34;2014-09-27&amp;#34;
+slug = &amp;#34;about time&amp;#34;
 +++
 ## about us
-i'm speechless
+i&amp;#39;m speechless
 :wq
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify the results.&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ find public -name '*.html' | xargs ls -l
+&lt;pre tabindex="0">&lt;code>$ find public -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-rw-r-- 1 mdhender staff 334 Sep 27 15:08 public/about-time/index.html
 -rw-rw-r-- 1 mdhender staff 527 Sep 27 15:08 public/index.html
 -rw-rw-r-- 1 mdhender staff 358 Sep 27 15:08 public/post/first-post/index.html
@@ -1618,14 +1707,14 @@ i'm speechless
 &amp;lt;!DOCTYPE html&amp;gt;
 &amp;lt;html&amp;gt;
 &amp;lt;body&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;http://localhost:1313/post/theme/&amp;quot;&amp;gt;creating a new theme&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;http://localhost:1313/about-time/&amp;quot;&amp;gt;about&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;http://localhost:1313/post/second-post/&amp;quot;&amp;gt;second&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
-&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;quot;http://localhost:1313/post/first-post/&amp;quot;&amp;gt;first&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
-&amp;lt;script&amp;gt;document.write('&amp;lt;script src=&amp;quot;http://'
-+ (location.host || 'localhost').split(':')[0]
-+ ':1313/livereload.js?mindelay=10&amp;quot;&amp;gt;&amp;lt;/'
-+ 'script&amp;gt;')&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;http://localhost:1313/post/theme/&amp;#34;&amp;gt;creating a new theme&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;http://localhost:1313/about-time/&amp;#34;&amp;gt;about&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;http://localhost:1313/post/second-post/&amp;#34;&amp;gt;second&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&amp;lt;a href=&amp;#34;http://localhost:1313/post/first-post/&amp;#34;&amp;gt;first&amp;lt;/a&amp;gt;&amp;lt;/h1&amp;gt;
+&amp;lt;script&amp;gt;document.write(&amp;#39;&amp;lt;script src=&amp;#34;http://&amp;#39;
++ (location.host || &amp;#39;localhost&amp;#39;).split(&amp;#39;:&amp;#39;)[0]
++ &amp;#39;:1313/livereload.js?mindelay=10&amp;#34;&amp;gt;&amp;lt;/&amp;#39;
++ &amp;#39;script&amp;gt;&amp;#39;)&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>Notice that the &amp;ldquo;about&amp;rdquo; link is listed with the posts? That&amp;rsquo;s not desirable, so let&amp;rsquo;s change that first.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/layouts/index.html
@@ -1634,14 +1723,14 @@ i'm speechless
 &amp;lt;body&amp;gt;
 &amp;lt;h1&amp;gt;posts&amp;lt;/h1&amp;gt;
 {{ range first 10 .Data.Pages }}
-{{ if eq .Type &amp;quot;post&amp;quot;}}
-&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;quot;{{ .Permalink }}&amp;quot;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
+{{ if eq .Type &amp;#34;post&amp;#34;}}
+&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;#34;{{ .Permalink }}&amp;#34;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
 {{ end }}
 {{ end }}
 &amp;lt;h1&amp;gt;pages&amp;lt;/h1&amp;gt;
 {{ range .Data.Pages }}
-{{ if eq .Type &amp;quot;page&amp;quot; }}
-&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;quot;{{ .Permalink }}&amp;quot;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
+{{ if eq .Type &amp;#34;page&amp;#34; }}
+&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;#34;{{ .Permalink }}&amp;#34;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
 {{ end }}
 {{ end }}
 &amp;lt;/body&amp;gt;
@@ -1649,7 +1738,7 @@ i'm speechless
 :wq
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify the results. The home page has two sections, posts and pages, and each section has the right set of headings and links in it.&lt;/p>
 &lt;p>But, that about page still renders to about-time/index.html.&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ find public -name '*.html' | xargs ls -l
+&lt;pre tabindex="0">&lt;code>$ find public -name &amp;#39;*.html&amp;#39; | xargs ls -l
 -rw-rw-r-- 1 mdhender staff 334 Sep 27 15:33 public/about-time/index.html
 -rw-rw-r-- 1 mdhender staff 645 Sep 27 15:33 public/index.html
 -rw-rw-r-- 1 mdhender staff 358 Sep 27 15:33 public/post/first-post/index.html
@@ -1658,8 +1747,8 @@ i'm speechless
 &lt;/code>&lt;/pre>&lt;p>Knowing that hugo is using the slug to generate the file name, the simplest solution is to change the slug. Let&amp;rsquo;s do it the hard way and change the permalink in the configuration file.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi config.toml
 [permalinks]
-page = &amp;quot;/:title/&amp;quot;
-about = &amp;quot;/:filename/&amp;quot;
+page = &amp;#34;/:title/&amp;#34;
+about = &amp;#34;/:filename/&amp;#34;
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify that this didn&amp;rsquo;t work. Hugo lets &amp;ldquo;slug&amp;rdquo; or &amp;ldquo;URL&amp;rdquo; override the permalinks setting in the configuration file. Go ahead and comment out the slug in content/about.md, then generate the web site to get it to be created in the right place.&lt;/p>
 &lt;h2 id="sharing-templates">Sharing Templates&lt;/h2>
 &lt;p>If you&amp;rsquo;ve been following along, you probably noticed that posts have titles in the browser and the home page doesn&amp;rsquo;t. That&amp;rsquo;s because we didn&amp;rsquo;t put the title in the home page&amp;rsquo;s template (layouts/index.html). That&amp;rsquo;s an easy thing to do, but let&amp;rsquo;s look at a different option.&lt;/p>
@@ -1680,48 +1769,48 @@ $ vi themes/zafta/layouts/partials/footer.html
 :wq
 &lt;/code>&lt;/pre>&lt;h3 id="update-the-home-page-template-to-use-the-partials">Update the Home Page Template to Use the Partials&lt;/h3>
 &lt;p>The most noticeable difference between a template call and a partials call is the lack of path:&lt;/p>
-&lt;pre tabindex="0">&lt;code>{{ template &amp;quot;theme/partials/header.html&amp;quot; . }}
+&lt;pre tabindex="0">&lt;code>{{ template &amp;#34;theme/partials/header.html&amp;#34; . }}
 &lt;/code>&lt;/pre>&lt;p>versus&lt;/p>
-&lt;pre tabindex="0">&lt;code>{{ partial &amp;quot;header.html&amp;quot; . }}
+&lt;pre tabindex="0">&lt;code>{{ partial &amp;#34;header.html&amp;#34; . }}
 &lt;/code>&lt;/pre>&lt;p>Both pass in the context.&lt;/p>
 &lt;p>Let&amp;rsquo;s change the home page template to use these new partials.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/layouts/index.html
-{{ partial &amp;quot;header.html&amp;quot; . }}
+{{ partial &amp;#34;header.html&amp;#34; . }}
 &amp;lt;h1&amp;gt;posts&amp;lt;/h1&amp;gt;
 {{ range first 10 .Data.Pages }}
-{{ if eq .Type &amp;quot;post&amp;quot;}}
-&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;quot;{{ .Permalink }}&amp;quot;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
+{{ if eq .Type &amp;#34;post&amp;#34;}}
+&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;#34;{{ .Permalink }}&amp;#34;&amp;gt;{{ .Title }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
 {{ end }}
 {{ end }}
 &amp;lt;h1&amp;gt;pages&amp;lt;/h1&amp;gt;
 {{ range .Data.Pages }}
-{{ if or (eq .Type &amp;quot;page&amp;quot;) (eq .Type &amp;quot;about&amp;quot;) }}
-&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;quot;{{ .Permalink }}&amp;quot;&amp;gt;{{ .Type }} - {{ .Title }} - {{ .RelPermalink }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
+{{ if or (eq .Type &amp;#34;page&amp;#34;) (eq .Type &amp;#34;about&amp;#34;) }}
+&amp;lt;h2&amp;gt;&amp;lt;a href=&amp;#34;{{ .Permalink }}&amp;#34;&amp;gt;{{ .Type }} - {{ .Title }} - {{ .RelPermalink }}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
 {{ end }}
 {{ end }}
-{{ partial &amp;quot;footer.html&amp;quot; . }}
+{{ partial &amp;#34;footer.html&amp;#34; . }}
 :wq
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify the results. The title on the home page is now &amp;ldquo;your title here&amp;rdquo;, which comes from the &amp;ldquo;title&amp;rdquo; variable in the config.toml file.&lt;/p>
 &lt;h3 id="update-the-default-single-template-to-use-the-partials">Update the Default Single Template to Use the Partials&lt;/h3>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/layouts/_default/single.html
-{{ partial &amp;quot;header.html&amp;quot; . }}
+{{ partial &amp;#34;header.html&amp;#34; . }}
 &amp;lt;h1&amp;gt;{{ .Title }}&amp;lt;/h1&amp;gt;
 {{ .Content }}
-{{ partial &amp;quot;footer.html&amp;quot; . }}
+{{ partial &amp;#34;footer.html&amp;#34; . }}
 :wq
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify the results. The title on the posts and the about page should both reflect the value in the markdown file.&lt;/p>
 &lt;h2 id="add-date-published-to-posts">Add “Date Published” to Posts&lt;/h2>
 &lt;p>It&amp;rsquo;s common to have posts display the date that they were written or published, so let&amp;rsquo;s add that. The front matter of our posts has a variable named &amp;ldquo;date.&amp;rdquo; It&amp;rsquo;s usually the date the content was created, but let&amp;rsquo;s pretend that&amp;rsquo;s the value we want to display.&lt;/p>
 &lt;h3 id="add-date-published-to-the-template">Add “Date Published” to the Template&lt;/h3>
 &lt;p>We&amp;rsquo;ll start by updating the template used to render the posts. The template code will look like:&lt;/p>
-&lt;pre tabindex="0">&lt;code>{{ .Date.Format &amp;quot;Mon, Jan 2, 2006&amp;quot; }}
+&lt;pre tabindex="0">&lt;code>{{ .Date.Format &amp;#34;Mon, Jan 2, 2006&amp;#34; }}
 &lt;/code>&lt;/pre>&lt;p>Posts use the default single template, so we&amp;rsquo;ll change that file.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/layouts/_default/single.html
-{{ partial &amp;quot;header.html&amp;quot; . }}
+{{ partial &amp;#34;header.html&amp;#34; . }}
 &amp;lt;h1&amp;gt;{{ .Title }}&amp;lt;/h1&amp;gt;
-&amp;lt;h2&amp;gt;{{ .Date.Format &amp;quot;Mon, Jan 2, 2006&amp;quot; }}&amp;lt;/h2&amp;gt;
+&amp;lt;h2&amp;gt;{{ .Date.Format &amp;#34;Mon, Jan 2, 2006&amp;#34; }}&amp;lt;/h2&amp;gt;
 {{ .Content }}
-{{ partial &amp;quot;footer.html&amp;quot; . }}
+{{ partial &amp;#34;footer.html&amp;#34; . }}
 :wq
 &lt;/code>&lt;/pre>&lt;p>Generate the web site and verify the results. The posts now have the date displayed in them. There&amp;rsquo;s a problem, though. The &amp;ldquo;about&amp;rdquo; page also has the date displayed.&lt;/p>
 &lt;p>As usual, there are a couple of ways to make the date display only on posts. We could do an &amp;ldquo;if&amp;rdquo; statement like we did on the home page. Another way would be to create a separate template for posts.&lt;/p>
@@ -1730,18 +1819,18 @@ $ vi themes/zafta/layouts/partials/footer.html
 &lt;p>Let&amp;rsquo;s restore the default single template before we forget.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ mkdir themes/zafta/layouts/post
 $ vi themes/zafta/layouts/_default/single.html
-{{ partial &amp;quot;header.html&amp;quot; . }}
+{{ partial &amp;#34;header.html&amp;#34; . }}
 &amp;lt;h1&amp;gt;{{ .Title }}&amp;lt;/h1&amp;gt;
 {{ .Content }}
-{{ partial &amp;quot;footer.html&amp;quot; . }}
+{{ partial &amp;#34;footer.html&amp;#34; . }}
 :wq
 &lt;/code>&lt;/pre>&lt;p>Now we&amp;rsquo;ll update the post&amp;rsquo;s version of the single template. If you remember Hugo&amp;rsquo;s rules, the template engine will use this version over the default.&lt;/p>
 &lt;pre tabindex="0">&lt;code>$ vi themes/zafta/layouts/post/single.html
-{{ partial &amp;quot;header.html&amp;quot; . }}
+{{ partial &amp;#34;header.html&amp;#34; . }}
 &amp;lt;h1&amp;gt;{{ .Title }}&amp;lt;/h1&amp;gt;
-&amp;lt;h2&amp;gt;{{ .Date.Format &amp;quot;Mon, Jan 2, 2006&amp;quot; }}&amp;lt;/h2&amp;gt;
+&amp;lt;h2&amp;gt;{{ .Date.Format &amp;#34;Mon, Jan 2, 2006&amp;#34; }}&amp;lt;/h2&amp;gt;
 {{ .Content }}
-{{ partial &amp;quot;footer.html&amp;quot; . }}
+{{ partial &amp;#34;footer.html&amp;#34; . }}
 :wq
 &lt;/code>&lt;/pre>&lt;p>Note that we removed the date logic from the default template and put it in the post template. Generate the web site and verify the results. Posts have dates and the about page doesn&amp;rsquo;t.&lt;/p>
 &lt;h3 id="dont-repeat-yourself">Don&amp;rsquo;t Repeat Yourself&lt;/h3>
@@ -1935,11 +2024,11 @@ doesn&amp;rsquo;t make a lot of sense. We&amp;rsquo;ve defined a variable in our
 of some pages to turn off the TOC from being displayed.&lt;/p>
 &lt;p>Here is the example front matter:&lt;/p>
 &lt;pre tabindex="0">&lt;code>---
-title: &amp;quot;Permalinks&amp;quot;
-date: &amp;quot;2013-11-18&amp;quot;
+title: &amp;#34;Permalinks&amp;#34;
+date: &amp;#34;2013-11-18&amp;#34;
 aliases:
-- &amp;quot;/doc/permalinks/&amp;quot;
-groups: [&amp;quot;extras&amp;quot;]
+- &amp;#34;/doc/permalinks/&amp;#34;
+groups: [&amp;#34;extras&amp;#34;]
 groups_weight: 30
 notoc: true
 ---
@@ -1954,32 +2043,32 @@ notoc: true
 &lt;p>In your top-level configuration file (eg, &lt;code>config.yaml&lt;/code>) you can define site
 parameters, which are values which will be available to you in chrome.&lt;/p>
 &lt;p>For instance, you might declare:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#f92672">params&lt;/span>:
-&lt;span style="color:#f92672">CopyrightHTML&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Copyright &amp;amp;#xA9; 2013 John Doe. All Rights Reserved.&amp;#34;&lt;/span>
-&lt;span style="color:#f92672">TwitterUser&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;spf13&amp;#34;&lt;/span>
-&lt;span style="color:#f92672">SidebarRecentLimit&lt;/span>: &lt;span style="color:#ae81ff">5&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Within a footer layout, you might then declare a &lt;code>&amp;lt;footer&amp;gt;&lt;/code> which is only
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">params&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">CopyrightHTML&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Copyright &amp;amp;#xA9; 2013 John Doe. All Rights Reserved.&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">TwitterUser&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;spf13&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">SidebarRecentLimit&lt;/span>: &lt;span style="color:#ae81ff">5&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Within a footer layout, you might then declare a &lt;code>&amp;lt;footer&amp;gt;&lt;/code> which is only
 provided if the &lt;code>CopyrightHTML&lt;/code> parameter is provided, and if it is given,
 you would declare it to be HTML-safe, so that the HTML entity is not escaped
 again. This would let you easily update just your top-level config file each
 January 1st, instead of hunting through your templates.&lt;/p>
 &lt;pre tabindex="0">&lt;code>{{if .Site.Params.CopyrightHTML}}&amp;lt;footer&amp;gt;
-&amp;lt;div class=&amp;quot;text-center&amp;quot;&amp;gt;{{.Site.Params.CopyrightHTML | safeHtml}}&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;#34;text-center&amp;#34;&amp;gt;{{.Site.Params.CopyrightHTML | safeHtml}}&amp;lt;/div&amp;gt;
 &amp;lt;/footer&amp;gt;{{end}}
 &lt;/code>&lt;/pre>&lt;p>An alternative way of writing the &amp;ldquo;if&amp;rdquo; and then referencing the same value
 is to use &amp;ldquo;with&amp;rdquo; instead. With rebinds the context &lt;code>.&lt;/code> within its scope,
 and skips the block if the variable is absent:&lt;/p>
-&lt;pre tabindex="0">&lt;code>{{with .Site.Params.TwitterUser}}&amp;lt;span class=&amp;quot;twitter&amp;quot;&amp;gt;
-&amp;lt;a href=&amp;quot;https://twitter.com/{{.}}&amp;quot; rel=&amp;quot;author&amp;quot;&amp;gt;
-&amp;lt;img src=&amp;quot;/images/twitter.png&amp;quot; width=&amp;quot;48&amp;quot; height=&amp;quot;48&amp;quot; title=&amp;quot;Twitter: {{.}}&amp;quot;
-alt=&amp;quot;Twitter&amp;quot;&amp;gt;&amp;lt;/a&amp;gt;
+&lt;pre tabindex="0">&lt;code>{{with .Site.Params.TwitterUser}}&amp;lt;span class=&amp;#34;twitter&amp;#34;&amp;gt;
+&amp;lt;a href=&amp;#34;https://twitter.com/{{.}}&amp;#34; rel=&amp;#34;author&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;/images/twitter.png&amp;#34; width=&amp;#34;48&amp;#34; height=&amp;#34;48&amp;#34; title=&amp;#34;Twitter: {{.}}&amp;#34;
+alt=&amp;#34;Twitter&amp;#34;&amp;gt;&amp;lt;/a&amp;gt;
 &amp;lt;/span&amp;gt;{{end}}
 &lt;/code>&lt;/pre>&lt;p>Finally, if you want to pull &amp;ldquo;magic constants&amp;rdquo; out of your layouts, you can do
 so, such as in this example:&lt;/p>
-&lt;pre tabindex="0">&lt;code>&amp;lt;nav class=&amp;quot;recent&amp;quot;&amp;gt;
+&lt;pre tabindex="0">&lt;code>&amp;lt;nav class=&amp;#34;recent&amp;#34;&amp;gt;
 &amp;lt;h1&amp;gt;Recent Posts&amp;lt;/h1&amp;gt;
 &amp;lt;ul&amp;gt;{{range first .Site.Params.SidebarRecentLimit .Site.Recent}}
-&amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{.RelPermalink}}&amp;quot;&amp;gt;{{.Title}}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;{{.RelPermalink}}&amp;#34;&amp;gt;{{.Title}}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
 {{end}}&amp;lt;/ul&amp;gt;
 &amp;lt;/nav&amp;gt;
 &lt;/code>&lt;/pre></description></item><item><title>Getting Started with Hugo</title><link>/posts/getting_started_with_hugo/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>/posts/getting_started_with_hugo/</guid><description>&lt;h2 id="step-1-install-hugo">Step 1. Install Hugo&lt;/h2>
