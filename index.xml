@@ -196,7 +196,8 @@ Volume id : &amp;#39;Ubuntu-Server 22.04 LTS amd64&amp;#39;
 &lt;/code>&lt;/pre>&lt;p>You have all the secret recipes that is used to create the original live bootable ISO, simply copy and reuse it.&lt;/p>
 &lt;h3 id="an-elegant-method-to-apply-your-customizations-to-the-iso">An elegant method to apply your customizations to the ISO&lt;/h3>
 &lt;p>Most of the existing methods, requires copy the whole content from the ISO to another folder, add the write permission and then apply the changes.
-It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content.
+It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content. (refer to rsync use in &lt;a class="link" href="https://help.ubuntu.com/community/InstallCDCustomization" target="_blank" rel="noopener"
+>Ubuntu install CD Customization&lt;/a>)
 However, if the original ISO is frequently updated, for example, you are using a early daily build of a new release, you will need to copy and update the files from time to time. Kind of boring and waste of time.
 Inspired by the livefs-edit project, I&amp;rsquo;m now using the overlay fs technology, which isolate the original iso and the customization content into separate layers, and could be updated separately.&lt;/p>
 &lt;ol>
@@ -227,6 +228,8 @@ $ xorriso -as mkisofs &amp;lt;the options copied from original recipe&amp;gt; -o
 >Ubuntu 20.04 bootable ISO for EFI&lt;/a>
 &lt;a class="link" href="https://www.gnu.org/software/xorriso/man_1_xorrisofs.html" target="_blank" rel="noopener"
 >xorriso man page&lt;/a>
+&lt;a class="link" href="https://help.ubuntu.com/community/InstallCDCustomization" target="_blank" rel="noopener"
+>Ubuntu install CD Customization&lt;/a>
 &lt;a class="link" href="https://help.ubuntu.com/community/LiveCDCustomization" target="_blank" rel="noopener"
 >Ubuntu Live CD Customization&lt;/a>&lt;/p></description></item><item><title>Recover Ubuntu from initramfs error caused by improper shutdown</title><link>/posts/recover_ubuntu_from_initramfs_error/</link><pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/recover_ubuntu_from_initramfs_error/</guid><description>&lt;img src="/images/initramfs.png" alt="Featured image of post Recover Ubuntu from initramfs error caused by improper shutdown" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Following a force shutdown of the server, the system failed to boot with following message:&lt;/p>
