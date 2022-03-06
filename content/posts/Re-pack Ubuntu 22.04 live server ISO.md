@@ -66,7 +66,7 @@ You have all the secret recipes that is used to create the original live bootabl
 ### An elegant method to apply your customizations to the ISO
 
 Most of the existing methods, requires copy the whole content from the ISO to another folder, add the write permission and then apply the changes.
-It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content.
+It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content. (refer to rsync use in [Ubuntu install CD Customization](https://help.ubuntu.com/community/InstallCDCustomization))
 However, if the original ISO is frequently updated, for example, you are using a early daily build of a new release, you will need to copy and update the files from time to time. Kind of boring and waste of time.
 Inspired by the livefs-edit project, I'm now using the overlay fs technology, which isolate the original iso and the customization content into separate layers, and could be updated separately.
 
@@ -74,7 +74,7 @@ Inspired by the livefs-edit project, I'm now using the overlay fs technology, wh
 1. mount the customized content as the upper layer;
 1. generate the new iso using the overlay;
 
-With this approach, you could simply mount the new input iso as the lower layer, re-use the upper layer to generate the new customized iso. No need to copy the content and modify the content.
+With this approach, you could simply mount the new input iso as the lower layer, re-use the upper layer to generate the new customized iso. No need to copy the content and modify the content. 
 Super efficient and elegant.
 Here's an step by step example:
 ```
