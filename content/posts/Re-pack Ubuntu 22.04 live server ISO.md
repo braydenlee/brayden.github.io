@@ -98,4 +98,5 @@ Special thanks to the [livefs_edit project](https://github.com/mwhudson/livefs-e
 [Repack Bootable ISO](https://wiki.debian.org/RepackBootableISO)
 [Ubuntu 20.04 bootable ISO for EFI](https://utcc.utoronto.ca/~cks/space/blog/linux/Ubuntu2004ISOWithUEFI-2)
 [xorriso man page](https://www.gnu.org/software/xorriso/man_1_xorrisofs.html)
+[Ubuntu install CD Customization](https://help.ubuntu.com/community/InstallCDCustomization)
 [Ubuntu Live CD Customization](https://help.ubuntu.com/community/LiveCDCustomization)
