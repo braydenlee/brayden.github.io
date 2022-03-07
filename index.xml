@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 06 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 07 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
 &lt;p>Learn something new everyday and share something now and then&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="some-useful-tutorial">Some useful tutorial&lt;/h2>
@@ -65,7 +65,76 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;h3 id="performance-profiling--benchmark">Performance profiling &amp;amp; benchmark&lt;/h3>
 &lt;ul>
 &lt;li>WIP&lt;/li>
-&lt;/ul></description></item><item><title>Re-pack Ubuntu 22.04 live server ISO</title><link>/posts/re-pack-ubuntu-22.04-live-server-iso/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>/posts/re-pack-ubuntu-22.04-live-server-iso/</guid><description>&lt;img src="/images/iso_disc.png" alt="Featured image of post Re-pack Ubuntu 22.04 live server ISO" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;/ul></description></item><item><title>Create an autoinstall iso for ubuntu 22.04</title><link>/posts/autoinstall-ubuntu-22.04-jammy/</link><pubDate>Mon, 07 Mar 2022 00:00:00 +0000</pubDate><guid>/posts/autoinstall-ubuntu-22.04-jammy/</guid><description>&lt;img src="/images/automation.jpg" alt="Featured image of post Create an autoinstall iso for ubuntu 22.04" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;p>Automation of OS installation and configuration not only saves tremendous efforts and unifies the installation and configuration which otherwise might be different as various decisions made by the user during the process, but also help you out where you could not perform a normal manual installation. I once installed a board with no video support (only serial console available) while the installer requires GUI for the interactive sections.&lt;br>
+Auto install is nothing new, while we single out ubuntu 22.04, because it obsoleted the legacy preseed approach, replaced with its new installer subiquity.&lt;br>
+There are documents from the community on the new autoinstall. However, for newbees, the doc is simply insufficient. And once you get the autoinstall up and running, you will find all info required already included in the doc.&lt;br>
+I realized that, what the newbees need, is a complete, working example.
+In this guide, we will customize the ubuntu server live ISO, modify the grub menu to add autoinstall parameters, and add autoinstall configuration files to the ISO.
+For repack the ISO, please refer to my previous post &lt;a class="link" href="https://braydenlee.gitee.io/posts/re-pack-ubuntu-22.04-live-server-iso/" target="_blank" rel="noopener"
+>Re-pack Ubuntu 22.04 live ISO&lt;/a>.&lt;/p>
+&lt;h2 id="the-detailed-steps">The detailed steps&lt;/h2>
+&lt;p>It&amp;rsquo;s quite straightforward to customize the ISO with autoinstall:&lt;/p>
+&lt;ul>
+&lt;li>Update the GRUB menu&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ vim boot/grub/grub.cfg
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># add auto=true autoinstall priority=critical locale=en_US ds=&amp;#39;nocloud;s=/cdrom/nocloud/&amp;#39; fsck.mode=skip&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># _autoinstall_ is required if you want to suppress the prompt for confirming the installation. The purpose of asking confirmation is to avoid accidentally reformat a machine with the autoinstall enabled USB drive/ISO image. So if we definitely want to have a fully automated installation, we could add the _autoinstall_.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># _locale=en_US_ to suppress the language window -- as if the locale section comes prior to the autoinstall conf, so for a fully automated installation, we add it to the command line.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># _ds=..._ specify where the autoinstall conf files could be found. Note the ending &amp;#39;/&amp;#39; is a must.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># _fsck.mode=skip_ to skip the installation media check. In most of the cases, we haven&amp;#39;t see problem with the installation media, so skip the check to accelerate the installation process.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># you could keep the original menuentry and create a new one below the original entry, so your ISO supports both manual and automated installation.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>menuentry &lt;span style="color:#e6db74">&amp;#34;Ubuntu Server - *** will wipe your first disk ***&amp;#34;&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> set gfxpayload&lt;span style="color:#f92672">=&lt;/span>keep
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> linux /casper/vmlinuz auto&lt;span style="color:#f92672">=&lt;/span>true autoinstall priority&lt;span style="color:#f92672">=&lt;/span>critical locale&lt;span style="color:#f92672">=&lt;/span>en_US ds&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;nocloud;s=/cdrom/nocloud/&amp;#39;&lt;/span> fsck.mode&lt;span style="color:#f92672">=&lt;/span>skip quiet ---
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> initrd /casper/initrd
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Add the autoinstall conf files&lt;/li>
+&lt;/ul>
+&lt;p>In previous section, we specified /cdrom/nocloud as the source for the autoinstall conf. So we shall create a folder with the name &lt;em>nocloud&lt;/em> within the root directory in the ISO.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ mkdir nocloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cd nocloud
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ touch meta-data
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ vim user-data
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#cloud-config&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>autoinstall:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> version: &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> locale: en_US
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># passwd: *** you should replace this part with your own encrypted password***&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Example (root is the password): &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># $ printf &amp;#39;root&amp;#39; | openssl passwd -6 -salt &amp;#39;FhcddHFVZ7ABA4Gi&amp;#39; -stdin&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> identity: &lt;span style="color:#f92672">{&lt;/span>hostname: ubuntu2204, username: admin, password: &lt;span style="color:#e6db74">&amp;#39;$6$2/pERGoDzVMr3JHf$2je/NWRdDEDQW5/tAEXt5hziH3eTmqj5cMirlPkWuvuXVp0o3KG9eh1aqxjk3DRM/fZr2DrwEaKKDoZ/V9HYU.&amp;#39;&lt;/span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ssh:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> install-server: yes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> allow-pw: yes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> network:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> version: &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ethernets:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> eno1:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> match:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> name: &lt;span style="color:#e6db74">&amp;#34;eno*&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dhcp6: no
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dhcp4: no
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> enp3s0f3:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> critical: true
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dhcp-identifier: mac
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dhcp4: true
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> late-commands:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># in my setup, I have sometime special realtime packages and scripts&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - cp -r /media/cdrom/rt-kits /target/opt/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - curtin in-target --target&lt;span style="color:#f92672">=&lt;/span>/target -- bash -c &lt;span style="color:#e6db74">&amp;#39;apt-get install -f -y /opt/rt-kits/linux-image-*.deb /opt/rt-kits/linux-modules-*.deb&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - curtin in-target --target&lt;span style="color:#f92672">=&lt;/span>/target -- bash -c &lt;span style="color:#e6db74">&amp;#39;source /opt/rt-kits/update_kernel_cmdline.sh&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s all, now it&amp;rsquo;s time to repack the ISO. Refer my previous post &lt;a class="link" href="https://braydenlee.gitee.io/posts/re-pack-ubuntu-22.04-live-server-iso/" target="_blank" rel="noopener"
+>Re-pack Ubuntu 22.04 live ISO&lt;/a>&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;p>&lt;a class="link" href="https://ubuntu.com/server/docs/install/autoinstall" target="_blank" rel="noopener"
+>Ubuntu autoinstall&lt;/a>&lt;br>
+&lt;a class="link" href="https://help.ubuntu.com/lts/installation-guide/amd64/apb.html" target="_blank" rel="noopener"
+>The obsolete method - preseed&lt;/a>&lt;/p></description></item><item><title>Re-pack Ubuntu 22.04 live server ISO</title><link>/posts/re-pack-ubuntu-22.04-live-server-iso/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>/posts/re-pack-ubuntu-22.04-live-server-iso/</guid><description>&lt;img src="/images/iso_disc.png" alt="Featured image of post Re-pack Ubuntu 22.04 live server ISO" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Previously, bootable ISO image usually has the efi.img and ISOLINUX embeded which are required to boot the ISO and facilitate the installer.&lt;br>
 However, Ubuntu 22.04 replaced ISOLINUX package with EI-Torito and the efi.img with the efi boot partition in the live filesystem on the ISO. So previous methods or commands that relies on the isolinux/isolinux.bin, and efi.img no longer work.&lt;br>
 My initial approach was to bring back the efi.img and add the isolinux package, that&amp;rsquo;s what I&amp;rsquo;m fimiliar with, and faster to get the bootable ISO created. Although the principle is quite straightforward, the detailed steps to accomplish is bit complex and in-elegent.&lt;br>
@@ -138,13 +207,13 @@ Here&amp;rsquo;s an step by step example:&lt;/p>
 >livefs_edit project&lt;/a>, where I first tried the livefs_edit, and then learned howto use xorriso to retrieve the recipes and reproduce the ISO.&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a class="link" href="https://wiki.debian.org/RepackBootableISO" target="_blank" rel="noopener"
->Repack Bootable ISO&lt;/a>
+>Repack Bootable ISO&lt;/a>&lt;br>
 &lt;a class="link" href="https://utcc.utoronto.ca/~cks/space/blog/linux/Ubuntu2004ISOWithUEFI-2" target="_blank" rel="noopener"
->Ubuntu 20.04 bootable ISO for EFI&lt;/a>
+>Ubuntu 20.04 bootable ISO for EFI&lt;/a>&lt;br>
 &lt;a class="link" href="https://www.gnu.org/software/xorriso/man_1_xorrisofs.html" target="_blank" rel="noopener"
->xorriso man page&lt;/a>
+>xorriso man page&lt;/a>&lt;br>
 &lt;a class="link" href="https://help.ubuntu.com/community/InstallCDCustomization" target="_blank" rel="noopener"
->Ubuntu install CD Customization&lt;/a>
+>Ubuntu install CD Customization&lt;/a>&lt;br>
 &lt;a class="link" href="https://help.ubuntu.com/community/LiveCDCustomization" target="_blank" rel="noopener"
 >Ubuntu Live CD Customization&lt;/a>&lt;/p></description></item><item><title>Setting Up NFS Server</title><link>/posts/setting_up_nfs_server/</link><pubDate>Sun, 23 Jan 2022 00:00:00 +0000</pubDate><guid>/posts/setting_up_nfs_server/</guid><description>&lt;img src="/images/kissclipart-nfs.png" alt="Featured image of post Setting Up NFS Server" />&lt;p>Setting up a NFS server is quite straight forward, there&amp;rsquo;re user guides from linux distributors and blogs. However, there are always some cornor cases which requires additional steps or configurations to make it work properly.&lt;/p>
 &lt;p>This post is focusing on the trouble shooting part with a reference to guides for the NFS server setup.&lt;/p>
