@@ -17,6 +17,7 @@ image="images/emergence-mode.png"
 ## Issue description
 
 Sometimes, after installing a few packages, or upgrade the kernel, re-generate the initramfs, the filesystem is left dirty, especial, where /boot is mounted. On the next boot, the system will most likely warn and entering emergence mode as shown below:
+![Emergence Mode](/static/images/emergence-mode.png)
 
 ## The solution
 
@@ -51,3 +52,12 @@ Performing changes.
 ```
 
 Done.
+
+Or as an temporary workaround, disable the emergence entry for fs failure:
+
+``` shell
+vi /lib/systemd/system/local-fs.target
+
+#OnFailure=emergency.target
+#OnFailureJobMode=replace-irreversibly
+```
