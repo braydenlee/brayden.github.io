@@ -1,61 +1,13 @@
-<!doctype html><html lang>
-<head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
+<!doctype html><html lang><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
 This memo is a note for deploy a &amp;lsquo;product&amp;rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.
-   Node Role Etcd External IP Internal IP      node-101 Controller yes  192."><title>Deploy k8s Cluster Using kubespray</title><link rel=canonical href=/posts/deploy_k8s_cluster_using_kubespray/>
-<link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Deploy k8s Cluster Using kubespray">
-<meta property="og:description" content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
+   Node Role Etcd External IP Internal IP      node-101 Controller yes  192."><title>Deploy k8s Cluster Using kubespray</title><link rel=canonical href=/posts/deploy_k8s_cluster_using_kubespray/><link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Deploy k8s Cluster Using kubespray"><meta property="og:description" content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
 This memo is a note for deploy a &amp;lsquo;product&amp;rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.
-   Node Role Etcd External IP Internal IP      node-101 Controller yes  192.">
-<meta property="og:url" content="/posts/deploy_k8s_cluster_using_kubespray/">
-<meta property="og:site_name" content="Brayden's Blog">
-<meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="kubespray"><meta property="article:tag" content="k8s"><meta property="article:tag" content="installation"><meta property="article:published_time" content="2021-12-25T00:00:00+00:00"><meta property="article:modified_time" content="2021-12-25T00:00:00+00:00"><meta property="og:image" content="/images/kubernetes-horizontal-color.png">
-<meta name=twitter:title content="Deploy k8s Cluster Using kubespray">
-<meta name=twitter:description content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
+   Node Role Etcd External IP Internal IP      node-101 Controller yes  192."><meta property="og:url" content="/posts/deploy_k8s_cluster_using_kubespray/"><meta property="og:site_name" content="Brayden's Blog"><meta property="og:type" content="article"><meta property="article:section" content="Posts"><meta property="article:tag" content="kubespray"><meta property="article:tag" content="k8s"><meta property="article:tag" content="installation"><meta property="article:published_time" content="2021-12-25T00:00:00+00:00"><meta property="article:modified_time" content="2021-12-25T00:00:00+00:00"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta name=twitter:title content="Deploy k8s Cluster Using kubespray"><meta name=twitter:description content="Introduction Nowadays, there&amp;rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.
 This memo is a note for deploy a &amp;lsquo;product&amp;rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.
-   Node Role Etcd External IP Internal IP      node-101 Controller yes  192."><meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="/images/kubernetes-horizontal-color.png">
-</head><body class="article-page has-toc">
-<script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script>
-<div class="container main-container flex
-extended">
-<div id=article-toolbar>
-<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
-<span>Back</span>
-</a>
-</div><main class="main full-width">
-<article class="has-image main-article">
-<header class=article-header>
-<div class=article-image>
-<a href=/posts/deploy_k8s_cluster_using_kubespray/>
-<img src=/images/kubernetes-horizontal-color.png loading=lazy alt="Featured image of post Deploy k8s Cluster Using kubespray">
-</a>
-</div><div class=article-details>
-<section class=article-tags>
-<a href=/tags/kubespray/>kubespray</a>
+   Node Role Etcd External IP Internal IP      node-101 Controller yes  192."><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="/images/kubernetes-horizontal-color.png"></head><body class="article-page has-toc"><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex
+extended"><div id=article-toolbar><a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg><span>Back</span></a></div><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/posts/deploy_k8s_cluster_using_kubespray/><img src=/images/kubernetes-horizontal-color.png loading=lazy alt="Featured image of post Deploy k8s Cluster Using kubespray"></a></div><div class=article-details><section class=article-tags><a href=/tags/kubespray/>kubespray</a>
 <a href=/tags/k8s/>k8s</a>
-<a href=/tags/installation/>installation</a>
-</section><h2 class=article-title>
-<a href=/posts/deploy_k8s_cluster_using_kubespray/>Deploy k8s Cluster Using kubespray</a>
-</h2><footer class=article-time>
-<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published>Dec 25, 2021</time>
-</div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-<time class=article-time--reading>
-7 minute read
-</time>
-</div></footer></div></header><section class=article-content>
-<h2 id=introduction>Introduction</h2><p>Nowadays, there&rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.</p><p>This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.</p><table>
-<thead>
-<tr>
-<th>Node</th><th>Role</th><th>Etcd</th><th>External IP</th><th>Internal IP</th><th></th></tr></thead><tbody>
-<tr>
-<td>node-101</td><td>Controller</td><td>yes</td><td></td><td>192.168.8.101</td><td>ubuntu22.04</td></tr><tr>
-<td>node-102</td><td>Controller</td><td>yes</td><td></td><td>192.168.8.102</td><td>ubuntu22.04</td></tr><tr>
-<td>node-103</td><td>Controller & worker</td><td>yes</td><td></td><td>192.168.8.103</td><td>ubuntu22.04</td></tr></tbody></table><h2 id=prerequisites>Prerequisites</h2><ol>
-<li>3 servers, with reasonable CPU, memory and disk space</li><li>At least 2 Ethernet interfaces per server
-<ol>
-<li>One interface for Internet access as some packages are downloaded on the fly;</li><li>The other interface used for the cluster management, (as well as pods network in this setup);</li></ol></li><li>Assume ubuntu 22.04 installed;</li></ol><h2 id=detailed-steps>Detailed Steps</h2><h3 id=disable-swap>Disable swap</h3><p>This is required on every node</p><pre><code>$ swapoff -a
+<a href=/tags/installation/>installation</a></section><h2 class=article-title><a href=/posts/deploy_k8s_cluster_using_kubespray/>Deploy k8s Cluster Using kubespray</a></h2><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Dec 25, 2021</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>7 minute read</time></div></footer></div></header><section class=article-content><h2 id=introduction>Introduction</h2><p>Nowadays, there&rsquo;re couples of way to deploy a k8s cluster in various of form factors, from experimental cluster with a single node to production deployment with hundreds of servers.</p><p>This memo is a note for deploy a &lsquo;product&rsquo; k8s cluster using kubespray - limited by the resources for the experiment, no dedicated storage nodes provisioned, and the networking is not covered as well.</p><table><thead><tr><th>Node</th><th>Role</th><th>Etcd</th><th>External IP</th><th>Internal IP</th><th></th></tr></thead><tbody><tr><td>node-101</td><td>Controller</td><td>yes</td><td></td><td>192.168.8.101</td><td>ubuntu22.04</td></tr><tr><td>node-102</td><td>Controller</td><td>yes</td><td></td><td>192.168.8.102</td><td>ubuntu22.04</td></tr><tr><td>node-103</td><td>Controller & worker</td><td>yes</td><td></td><td>192.168.8.103</td><td>ubuntu22.04</td></tr></tbody></table><h2 id=prerequisites>Prerequisites</h2><ol><li>3 servers, with reasonable CPU, memory and disk space</li><li>At least 2 Ethernet interfaces per server<ol><li>One interface for Internet access as some packages are downloaded on the fly;</li><li>The other interface used for the cluster management, (as well as pods network in this setup);</li></ol></li><li>Assume ubuntu 22.04 installed;</li></ol><h2 id=detailed-steps>Detailed Steps</h2><h3 id=disable-swap>Disable swap</h3><p>This is required on every node</p><pre><code>$ swapoff -a
 </code></pre><h3 id=enable-passwordless-login-via-ssh>Enable passwordless login via ssh</h3><p>This is to enable the passwordless login to the target nodes, so this is required to run on the deployment server (where we run the kubespray).</p><p>Generate ssh keys by running ssh-keygen, simply press &ldquo;enter&rdquo; on asking the passphrase.</p><pre><code>$ ssh-keygen
 </code></pre><p>Copy the ssh key id to target server, enter the password following the prompt.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>$ ssh-copy-id brayden@192.168.8.101
 </span></span><span style=display:flex><span>$ ssh-copy-id brayden@192.168.8.102
@@ -73,8 +25,7 @@ brayden ALL=(ALL:ALL) NOPASSWD:ALL
 </span></span><span style=display:flex><span>$ cd kubespray
 </span></span><span style=display:flex><span>$ sudo pip install -r requirements.txt
 </span></span></code></pre></div><h3 id=configure-the-cluster-setup>Configure the cluster setup</h3><p>Copy the required configuration files, scripts to a dedicated folder to this cluster, in this example, the new folder is named as k8s-100-cluster, as the controller api server will be available at 192.168.8.100.</p><pre><code>$ cp -rfp inventory/sampe inventory/k8s-100-cluster
-</code></pre><p>The major configuration about the cluster is done by the inventory.ini, which consists of four major sections</p><ul>
-<li><strong>all</strong></li><li><strong>kube_control_plane</strong></li><li><strong>etcd</strong></li><li><strong>kube_node</strong></li></ul><pre tabindex=0><code>$ vim inventory/k8s-100-cluster/inventory.ini
+</code></pre><p>The major configuration about the cluster is done by the inventory.ini, which consists of four major sections</p><ul><li><strong>all</strong></li><li><strong>kube_control_plane</strong></li><li><strong>etcd</strong></li><li><strong>kube_node</strong></li></ul><pre tabindex=0><code>$ vim inventory/k8s-100-cluster/inventory.ini
 
 # ## Configure &#39;ip&#39; variable to bind kubernetes services on a   
 # ## different ip than the default iface 
@@ -116,8 +67,7 @@ node-103**
 **kube_pods_subnet: 192.168.64.0/18**  
 **container_manager: docker #containerd**  
 **kubelet_deployment_type: host**
-</code></pre><h3 id=required-workaround>Required Workaround</h3><blockquote>
-<p>Only required if docker is selected as the container runtime.</p></blockquote><p>At the time this memo is being written, the ubuntu 22.04 is not yet GA, so some of the URLs or versions for the docker packages are not valid, hardcode required to fix the issue.</p><pre tabindex=0><code>diff --git a/roles/container-engine/docker/vars/ubuntu.yml b/roles/container-engine/docker/vars/ubuntu.yml
+</code></pre><h3 id=required-workaround>Required Workaround</h3><blockquote><p>Only required if docker is selected as the container runtime.</p></blockquote><p>At the time this memo is being written, the ubuntu 22.04 is not yet GA, so some of the URLs or versions for the docker packages are not valid, hardcode required to fix the issue.</p><pre tabindex=0><code>diff --git a/roles/container-engine/docker/vars/ubuntu.yml b/roles/container-engine/docker/vars/ubuntu.yml
 index 253dbf17..c0077ebf 100644
 
 --- a/roles/container-engine/docker/vars/ubuntu.yml
@@ -205,10 +155,7 @@ nodelocaldns-2d477                           1/1    Running    0          38h
 nodelocaldns-cpckx                           1/1    Running    0          38h
 </code></pre><h2 id=troubleshootings>Troubleshootings</h2><h3 id=failed-to-download-container-images>Failed to download container images</h3><p>Initially, the container runtime is default to containerd, and kubespray uses nerdctl which is docker compatible tools to pull the container images.</p><p>kubespray populated the proxy setting for apt source and containerd service according to the all.yml. However, nerdctl is not able to pull the container image, and no luck with &ndash;extra-vars to the ansiable-playbook.</p><pre><code>ansible-playbook -i inventory/k8s-100-cluster/inventory.ini --become --user=brayden cluster.yml --extra-vars &quot;https_proxy=http://child-prc.intel.com:913,http_proxy=http://child-prc.intel.com:913&quot;
 </code></pre><p>While manually run the nerdctl from command line could pull the images successfully.</p><p>So this memo switch the container runtime to docker, which could pull the images with the proxy settings.</p><h3 id=node-102--node-103-failed-to-join-controller-node-101>Node-102 & Node-103 failed to join controller node-101</h3><p>One of the error message reads:</p><pre><code>error execution phase preflight: couldn't validate the identity of the API Server: configmaps &quot;cluster-info&quot; is forbidden: User &quot;system:anonymous&quot; cannot get resource &quot;configmaps&quot; in API group &quot;&quot; in the namespace &quot;kube-public&quot;
-</code></pre><p>No dedicated effort spent to root cause this issue, a few changes made and the node could join the cluster successfully.</p><ul>
-<li>Do reset before relaunch the provision procedure. Refer to section &ldquo;Provision the Cluster&rdquo;.</li><li>Clean up the ip routing, name server setting.
-<ul>
-<li>Configure the Ethernet and nameserver explicitely in /etc/netplan/00-installer-config.yaml</li></ul></li></ul><pre tabindex=0><code># This is the network config written by &#39;subiquity&#39;
+</code></pre><p>No dedicated effort spent to root cause this issue, a few changes made and the node could join the cluster successfully.</p><ul><li>Do reset before relaunch the provision procedure. Refer to section &ldquo;Provision the Cluster&rdquo;.</li><li>Clean up the ip routing, name server setting.<ul><li>Configure the Ethernet and nameserver explicitely in /etc/netplan/00-installer-config.yaml</li></ul></li></ul><pre tabindex=0><code># This is the network config written by &#39;subiquity&#39;
 network:
   ethernets:
     eno1:
@@ -233,64 +180,12 @@ network:
 </code></pre><p>coredns is in crashloopBackoff status:</p><pre><code>kube-system    coredns-576cbf47c7-8phwt    0/1    CrashLoopBackOff     8  
 </code></pre><p>And the coredns container&rsquo;s log reads</p><pre><code>plugin/loop: **Loop** (127.0.0.1:55953 -&gt; :53) **detected for zone &quot;.&quot;**, see https://coredns.io/plugins/loop#troubleshooting. Query: &quot;HINFO 4547991504243258144.3688648895315093531.&quot;
 </code></pre><p>There are also some logs reads</p><pre><code>&quot;... 192.168.0.1 connection refused ...&quot;
-</code></pre><p>This was due to miss-configuration of nameserver, after correct the settings in all.yml, and clean up the /etc/resolv.conf, the issue is fixed.</p><h2 id=reference>Reference</h2><p><a class=link href=https://computingforgeeks.com/deploy-kubernetes-cluster-debian-with-kubespray/ target=_blank rel=noopener>Install Kubernetes Cluster on Debian 10 with Kubespray | ComputingForGeeks</a><br>
-<a class=link href="https://www.youtube.com/watch?v=CJ5G4GpqDy0" target=_blank rel=noopener>Deploying kubernetes using Kubespray - YouTube</a><br>
-<a class=link href=https://kubespray.io/#/ target=_blank rel=noopener>Kubespray</a><br>
-<a class=link href=https://coredns.io/plugins/loop/#troubleshooting target=_blank rel=noopener>loop (coredns.io)</a><br>
-<a class=link href=https://dev.to/mrturkmen/setup-highly-available-kubernetes-cluster-with-haproxy-2dm8 target=_blank rel=noopener>Setup Highly Available Kubernetes Cluster with HAProxy 🇬🇧 - DEV Community</a><br>
-<a class=link href=https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository target=_blank rel=noopener>Install Docker Engine on Ubuntu | Docker Documentation</a><br>
-<a class=link href=https://stdworkflow.com/1247/k8s-join-user-system-anonymous-cannot-get-resource-configmaps-in-api-group-in-the-namespace target=_blank rel=noopener>k8s join User “system:anonymous“ cannot get resource “configmaps“ in API group ““ in the namespace - stdworkflow</a></p></section><footer class=article-footer>
-<header class=article-category>
-<a href=/categories/memos/>
-memos
-</a>
-<a href=/categories/tips/>
-tips
-</a>
-</header></footer></article><aside class=related-contents--wrapper>
-</aside><div class=disqus-container>
-<div id=disqus_thread></div><script type=application/javascript>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//brayblog.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script>
-<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
-</div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{DISQUS&&DISQUS.reset({reload:!0})})</script>
-<footer class=site-footer>
-<section class=copyright>
-&copy;
+</code></pre><p>This was due to miss-configuration of nameserver, after correct the settings in all.yml, and clean up the /etc/resolv.conf, the issue is fixed.</p><h2 id=reference>Reference</h2><p><a class=link href=https://computingforgeeks.com/deploy-kubernetes-cluster-debian-with-kubespray/ target=_blank rel=noopener>Install Kubernetes Cluster on Debian 10 with Kubespray | ComputingForGeeks</a><br><a class=link href="https://www.youtube.com/watch?v=CJ5G4GpqDy0" target=_blank rel=noopener>Deploying kubernetes using Kubespray - YouTube</a><br><a class=link href=https://kubespray.io/#/ target=_blank rel=noopener>Kubespray</a><br><a class=link href=https://coredns.io/plugins/loop/#troubleshooting target=_blank rel=noopener>loop (coredns.io)</a><br><a class=link href=https://dev.to/mrturkmen/setup-highly-available-kubernetes-cluster-with-haproxy-2dm8 target=_blank rel=noopener>Setup Highly Available Kubernetes Cluster with HAProxy 🇬🇧 - DEV Community</a><br><a class=link href=https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository target=_blank rel=noopener>Install Docker Engine on Ubuntu | Docker Documentation</a><br><a class=link href=https://stdworkflow.com/1247/k8s-join-user-system-anonymous-cannot-get-resource-configmaps-in-api-group-in-the-namespace target=_blank rel=noopener>k8s join User “system:anonymous“ cannot get resource “configmaps“ in API group ““ in the namespace - stdworkflow</a></p></section><footer class=article-footer><header class=article-category><a href=/categories/memos/>memos</a>
+<a href=/categories/tips/>tips</a></header></footer></article><aside class=related-contents--wrapper></aside><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//brayblog.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{DISQUS&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
 2021 -
-2022 Brayden's Blog
-</section><section class=powerby>
-Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
-Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.5.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
-</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true>
-<div class=pswp__bg></div><div class=pswp__scroll-wrap>
-<div class=pswp__container>
-<div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden">
-<div class=pswp__top-bar>
-<div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+2022 Brayden's Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.5.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
 <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-<div class=pswp__preloader>
-<div class=pswp__preloader__icn>
-<div class=pswp__preloader__cut>
-<div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-<div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-</button>
-<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-</button>
-<div class=pswp__caption>
-<div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
-</main><aside class="sidebar right-sidebar sticky">
-<section class="widget archives">
-<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
-</div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#introduction>Introduction</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#detailed-steps>Detailed Steps</a>
-<ul>
-<li><a href=#disable-swap>Disable swap</a></li><li><a href=#enable-passwordless-login-via-ssh>Enable passwordless login via ssh</a></li><li><a href=#enable-passwordless-sudo>Enable passwordless sudo</a></li><li><a href=#dependencies>Dependencies</a></li><li><a href=#download-kubespray>Download kubespray</a></li><li><a href=#configure-the-cluster-setup>Configure the cluster setup</a></li><li><a href=#required-workaround>Required Workaround</a></li></ul></li><li><a href=#provision-the-cluster>Provision the Cluster</a>
-<ul>
-<li><a href=#kubectl-conf-settings>Kubectl conf settings</a></li></ul></li><li><a href=#troubleshootings>Troubleshootings</a>
-<ul>
-<li><a href=#failed-to-download-container-images>Failed to download container images</a></li><li><a href=#node-102--node-103-failed-to-join-controller-node-101>Node-102 & Node-103 failed to join controller node-101</a></li><li><a href=#coredns-service-crashedbackoff>coredns service crashedbackoff</a></li></ul></li><li><a href=#reference>Reference</a></li></ul></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script>
-<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script>
-</body></html>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#detailed-steps>Detailed Steps</a><ul><li><a href=#disable-swap>Disable swap</a></li><li><a href=#enable-passwordless-login-via-ssh>Enable passwordless login via ssh</a></li><li><a href=#enable-passwordless-sudo>Enable passwordless sudo</a></li><li><a href=#dependencies>Dependencies</a></li><li><a href=#download-kubespray>Download kubespray</a></li><li><a href=#configure-the-cluster-setup>Configure the cluster setup</a></li><li><a href=#required-workaround>Required Workaround</a></li></ul></li><li><a href=#provision-the-cluster>Provision the Cluster</a><ul><li><a href=#kubectl-conf-settings>Kubectl conf settings</a></li></ul></li><li><a href=#troubleshootings>Troubleshootings</a><ul><li><a href=#failed-to-download-container-images>Failed to download container images</a></li><li><a href=#node-102--node-103-failed-to-join-controller-node-101>Node-102 & Node-103 failed to join controller node-101</a></li><li><a href=#coredns-service-crashedbackoff>coredns service crashedbackoff</a></li></ul></li><li><a href=#reference>Reference</a></li></ul></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

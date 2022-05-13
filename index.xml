@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 07 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brayden's Blog</title><link>/</link><description>Recent content on Brayden's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 13 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Where to start</title><link>/posts/getting_started/</link><pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate><guid>/posts/getting_started/</guid><description>&lt;img src="/images/Getting_started.jpg" alt="Featured image of post Where to start" />&lt;blockquote>
 &lt;p>Learn something new everyday and share something now and then&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="some-useful-tutorial">Some useful tutorial&lt;/h2>
@@ -65,7 +65,51 @@ Not well documented, while the tools are quite straightforward to use, and you c
 &lt;h3 id="performance-profiling--benchmark">Performance profiling &amp;amp; benchmark&lt;/h3>
 &lt;ul>
 &lt;li>WIP&lt;/li>
-&lt;/ul></description></item><item><title>Create an autoinstall iso for ubuntu 22.04</title><link>/posts/autoinstall-ubuntu-22.04-jammy/</link><pubDate>Mon, 07 Mar 2022 00:00:00 +0000</pubDate><guid>/posts/autoinstall-ubuntu-22.04-jammy/</guid><description>&lt;img src="/images/automation.jpg" alt="Featured image of post Create an autoinstall iso for ubuntu 22.04" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;/ul></description></item><item><title>Entering Emergence Mode</title><link>/posts/centos_entering_emergence_mode/</link><pubDate>Fri, 13 May 2022 00:00:00 +0000</pubDate><guid>/posts/centos_entering_emergence_mode/</guid><description>&lt;img src="/images/emergence-mode.png" alt="Featured image of post Entering Emergence Mode" />&lt;h2 id="issue-description">Issue description&lt;/h2>
+&lt;p>Sometimes, after installing a few packages, or upgrade the kernel, re-generate the initramfs, the filesystem is left dirty, especial, where /boot is mounted. On the next boot, the system will most likely warn and entering emergence mode as shown below:
+&lt;figure
+>
+&lt;a href="/static/images/emergence-mode.png" >
+&lt;img src="/static/images/emergence-mode.png"
+loading="lazy"
+alt="Emergence Mode">
+&lt;/a>
+&lt;figcaption>Emergence Mode&lt;/figcaption>
+&lt;/figure>&lt;/p>
+&lt;h2 id="the-solution">The solution&lt;/h2>
+&lt;p>As described in previous section, the most common cause is the filesystem cruption, so the fix in most of the time is quite straighforward:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># fsck.vfat -v -a -w /dev/sda1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>fsck.fat 3.0.20 &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#ae81ff">12&lt;/span> Jun 2013&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>fsck.fat 3.0.20 &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#ae81ff">12&lt;/span> Jun 2013&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Checking we can access the last sector of the filesystem
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>0x25: Dirty bit is set. Fs was not properly unmounted and some data may be corrupt.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Automatically removing dirty bit.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Boot sector contents:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>System ID &lt;span style="color:#e6db74">&amp;#34;MSWIN4.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Media byte 0xf8 &lt;span style="color:#f92672">(&lt;/span>hard disk&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">512&lt;/span> bytes per logical sector
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">4096&lt;/span> bytes per cluster
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">9&lt;/span> reserved sectors
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>First FAT starts at byte &lt;span style="color:#ae81ff">4608&lt;/span> &lt;span style="color:#f92672">(&lt;/span>sector 9&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">2&lt;/span> FATs, &lt;span style="color:#ae81ff">16&lt;/span> bit entries
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">102400&lt;/span> bytes per FAT &lt;span style="color:#f92672">(=&lt;/span> &lt;span style="color:#ae81ff">200&lt;/span> sectors&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Root directory starts at byte &lt;span style="color:#ae81ff">209408&lt;/span> &lt;span style="color:#f92672">(&lt;/span>sector 409&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">512&lt;/span> root directory entries
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Data area starts at byte &lt;span style="color:#ae81ff">225792&lt;/span> &lt;span style="color:#f92672">(&lt;/span>sector 441&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">51144&lt;/span> data clusters &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#ae81ff">209485824&lt;/span> bytes&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">63&lt;/span> sectors/track, &lt;span style="color:#ae81ff">255&lt;/span> heads
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">2048&lt;/span> hidden sectors
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">409600&lt;/span> sectors total
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Reclaiming unconnected clusters.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Performing changes.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/dev/sda1: &lt;span style="color:#ae81ff">18&lt;/span> files, 2868/51144 clusters
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Done.&lt;/p>
+&lt;p>Or as an temporary workaround, disable the emergence entry for fs failure:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>vi /lib/systemd/system/local-fs.target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#OnFailure=emergency.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#OnFailureJobMode=replace-irreversibly&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Create an autoinstall iso for ubuntu 22.04</title><link>/posts/autoinstall-ubuntu-22.04-jammy/</link><pubDate>Mon, 07 Mar 2022 00:00:00 +0000</pubDate><guid>/posts/autoinstall-ubuntu-22.04-jammy/</guid><description>&lt;img src="/images/automation.jpg" alt="Featured image of post Create an autoinstall iso for ubuntu 22.04" />&lt;h2 id="issue-description">Issue description&lt;/h2>
 &lt;p>Automation of OS installation and configuration not only saves tremendous efforts and unifies the installation and configuration which otherwise might be different as various decisions made by the user during the process, but also help you out where you could not perform a normal manual installation. I once installed a board with no video support (only serial console available) while the installer requires GUI for the interactive sections.&lt;br>
 Auto install is nothing new, while we single out ubuntu 22.04, because it obsoleted the legacy preseed approach, replaced with its new installer subiquity.&lt;br>
 There are documents from the community on the new autoinstall. However, for newbees, the doc is simply insufficient. And once you get the autoinstall up and running, you will find all info required already included in the doc.&lt;br>
@@ -178,18 +222,18 @@ This post will present another approach, which is used to create the Ubuntu 22.0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-boot-load-size &lt;span style="color:#ae81ff">8504&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You now have all the secret recipes that is used to create the original live bootable ISO, simply copy and reuse it.&lt;/p>
 &lt;h3 id="an-elegant-method-to-apply-your-customizations-to-the-iso">An elegant method to apply your customizations to the ISO&lt;/h3>
-&lt;p>Most of the existing methods, requires copy the whole content from the ISO to another folder, add the write permission and then apply the changes.
+&lt;p>Most of the existing methods, requires copy the whole content from the ISO to another folder, add the write permission and then apply the changes.&lt;br>
 It works well - except for some ISOs, you need to pay attention to some of the link files which may results in recursive copying the content. (refer to rsync use in &lt;a class="link" href="https://help.ubuntu.com/community/InstallCDCustomization" target="_blank" rel="noopener"
->Ubuntu install CD Customization&lt;/a>)
-However, if the original ISO is frequently updated, for example, you are using an early daily build of a new release, you will need to copy and update the files from time to time. Kind of boring and waste of time.
+>Ubuntu install CD Customization&lt;/a>)&lt;br>
+However, if the original ISO is frequently updated, for example, you are using an early daily build of a new release, you will need to copy and update the files from time to time. Kind of boring and waste of time.&lt;br>
 Inspired by the livefs-edit project, I&amp;rsquo;m now using the overlay fs technology, which isolate the original iso and the customization content into separate layers, and could be updated separately.&lt;/p>
 &lt;ol>
 &lt;li>mount the original iso as lower layer&lt;/li>
 &lt;li>mount the customized content as the upper layer;&lt;/li>
 &lt;li>generate the new iso using the overlay;&lt;/li>
 &lt;/ol>
-&lt;p>With this approach, you could simply mount the new input iso as the lower layer, re-use the upper layer to generate the new customized iso. No need to copy the content and modify the content.
-Super efficient and elegant.
+&lt;p>With this approach, you could simply mount the new input iso as the lower layer, re-use the upper layer to generate the new customized iso. No need to copy the content and modify the content.&lt;br>
+Super efficient and elegant.&lt;br>
 Here&amp;rsquo;s an step by step example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ mkdir content
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ mkdir content/base
@@ -1037,15 +1081,15 @@ Connection to 192.168.8.100 8443 port \[tcp/https\] succeeded\!
 &lt;p>X&lt;!-- raw HTML omitted -->n&lt;!-- raw HTML omitted --> + Y&lt;!-- raw HTML omitted -->n&lt;!-- raw HTML omitted --> = Z&lt;!-- raw HTML omitted -->n&lt;!-- raw HTML omitted -->&lt;/p>
 &lt;p>Press &lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->CTRL&lt;!-- raw HTML omitted -->+&lt;!-- raw HTML omitted -->ALT&lt;!-- raw HTML omitted -->+&lt;!-- raw HTML omitted -->Delete&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted --> to end the session.&lt;/p>
 &lt;p>Most &lt;!-- raw HTML omitted -->salamanders&lt;!-- raw HTML omitted --> are nocturnal, and hunt for insects, worms, and other small creatures.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>The above quote is excerpted from Rob Pike&amp;rsquo;s &lt;a class="link" href="https://www.youtube.com/watch?v=PAAkCSZUG1c" target="_blank" rel="noopener"
 >talk&lt;/a> during Gopherfest, November 18, 2015.&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></description></item><item><title>Rich Content</title><link>/posts/rich-content/</link><pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><guid>/posts/rich-content/</guid><description>&lt;p>Hugo ships with several &lt;a class="link" href="https://gohugo.io/content-management/shortcodes/#use-hugo-s-built-in-shortcodes" target="_blank" rel="noopener"
+&lt;/div></description></item><item><title>Rich Content</title><link>/posts/rich-content/</link><pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><guid>/posts/rich-content/</guid><description>&lt;p>Hugo ships with several &lt;a class="link" href="https://gohugo.io/content-management/shortcodes/#use-hugo-s-built-in-shortcodes" target="_blank" rel="noopener"
 >Built-in Shortcodes&lt;/a> for rich content, along with a &lt;a class="link" href="https://gohugo.io/about/hugo-and-gdpr/" target="_blank" rel="noopener"
 >Privacy Config&lt;/a> and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds.&lt;/p>
 &lt;hr>
