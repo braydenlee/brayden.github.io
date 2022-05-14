@@ -17,7 +17,7 @@ image="images/emergence-mode.png"
 ## Issue description
 
 Sometimes, after installing a few packages, or upgrade the kernel, re-generate the initramfs, the filesystem is left dirty, especial, where /boot is mounted. On the next boot, the system will most likely warn and entering emergence mode as shown below:
-![Emergence Mode](img/emergency.png)
+![Emergence Mode](/images/emergency.png)
 
 ## The solution
 
